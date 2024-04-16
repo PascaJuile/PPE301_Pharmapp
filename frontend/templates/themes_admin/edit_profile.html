@@ -1,0 +1,102 @@
+{% extends "themes_admin/add_category.html" %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'themes_admin/css/edit_profile.css'%}">
+
+<body>
+
+    <!-- Start Body -->
+
+    <div class="body-page" id="body-page">
+        <div class="edit-profile">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        Edit Profile
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <form class="needs-validation" novalidate>
+                                <div class="col">
+                                    <input type="text" class="form-control input" required>
+                                    <span class="focus-input" data-placeholder="Name"></span>
+                                    <div class="invalid-feedback">
+                                        This field is required.
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <input type="email" class="form-control input" required>
+                                    <span class="focus-input" data-placeholder="Email"></span>
+                                    <div class="invalid-feedback">
+                                        This field is required, Please enter a valid email.
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <input type="text" class="form-control input" minlength="10"  onkeypress="return onlyNumberKey(event)">
+                                    <span class="focus-input" data-placeholder="Phone"></span>
+                                    <div class="invalid-feedback">
+                                        Please enter a valid phone number.
+                                    </div>
+
+                                </div>
+                                
+                                <button type="submit" class="btn float-right btn-list">Edit</button>
+                            </form>
+
+                        </div>
+                        <div class="col-lg-6 d-none d-xl-block d-lg-block">
+                            <img src="{% static 'themes_admin/img/user3.jpg'%}" class="img-thumbnail">
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- End Body -->
+    <script>
+        (function () {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.querySelectorAll('.needs-validation')
+
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+        
+        // $(document).ready(function () {
+        //     $('.form-control').on('focus',function(){
+        //         $('.needs-validation').removeClass('was-validated');
+        //     })
+        // });
+
+          // Accept Only Number
+        function onlyNumberKey(evt) {
+
+            // Only ASCII character in that range allowed
+            var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+            if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+                return false;
+            return true;
+        }
+
+    </script>
+</body>
+{% endblock content %}

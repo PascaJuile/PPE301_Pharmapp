@@ -1,0 +1,67 @@
+{% extends "themes_admin/add_category.html" %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
+
+<link rel="stylesheet" href="{% static 'themes_admin/css/notification.css' %}">
+
+<body>
+
+    <!-- Start Body -->
+
+    <div class="body-page" id="body-page">
+        <div class="notification">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        Expired Medicine
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-7 col-md-10">
+                            <table class="table table-striped table-bordered dt-responsive ">
+                                <tbody>
+                                    <tr>
+                                        <th scope="col">Batch Id</th>
+                                        <td>3</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">Product Name</th>
+                                        <td>Paracetamol</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">Product Quantity</th>
+                                        <td>200</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">Production Date</th>
+                                        <td>10/5/2021</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">Warehouse</th>
+                                        <td>war3</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="row d-flex justify-content-end">
+                                <button class="btn btn-success float-right"><i class="fas fa-history"></i>&nbsp; Return</button>
+                                <button class="btn btn-danger float-right"><i class="fas fa-prescription-bottle-alt"></i>&nbsp; Spoliation</button>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 d-none d-xl-block d-lg-block">
+                            <img src="{% static 'themes_admin/img/notification.jpg' %}" class="img-thumbnail">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Body -->
+
+</body>
+{% endblock content %}

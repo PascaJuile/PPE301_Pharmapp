@@ -1,0 +1,115 @@
+{% extends "themes_admin/add_category.html" %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'themes_admin/css/category_list.css' %}">
+<link rel="stylesheet" href="{% static 'themes_admin/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'themes_admin/css/responsive.bootstrap4.min.css' %}">
+
+<body>
+    <!-- Start Body -->
+
+    <div class="body-page" id="body-page">
+        <div class="category-list">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        Category List
+                        <a href="{% url 'add_category' %}"><button type="button" class="btn btn-list"><i
+                                    class="fa fa-plus-square-o"></i> &nbsp;Add Category</button></a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table id="table" class="table table-striped table-bordered dt-responsive nowrap"
+                        style="width:100%">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Category Name</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for categorie in categories %}
+                            <tr>
+                                <th>{{ categorie.id }}</th>
+                                <td>{{ categorie.nomCat }}</td>
+                                <td>
+                                    <div class="row">
+                                        <a href="#"><i class="fas fa-edit"></i></a>
+                                        <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Liquid</td>
+                                <td>
+                                    <div class="row">
+                                        <a href="#"><i class="fas fa-edit"></i></a>
+                                        <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Ointment</td>
+                                <td>
+                                    <div class="row">
+                                        <a href="#"><i class="fas fa-edit"></i></a>
+                                        <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>Cream</td>
+                                <td>
+                                    <div class="row">
+                                        <a href="#"><i class="fas fa-edit"></i></a>
+                                        <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">4</th>
+                                <td>Syrup</td>
+                                <td>
+                                    <div class="row">
+                                        <a href="#"><i class="fas fa-edit"></i></a>
+                                        <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">5</th>
+                                <td>Suppositories</td>
+                                <td>
+                                    <div class="row">
+                                        <a href="#"><i class="fas fa-edit"></i></a>
+                                        <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">6</th>
+                                <td>Capsules</td>
+                                <td>
+                                    <div class="row">
+                                        <a href="#"><i class="fas fa-edit"></i></a>
+                                        <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Body -->
+</body>
+
+{% endblock content %}

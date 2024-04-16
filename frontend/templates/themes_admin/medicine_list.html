@@ -1,0 +1,92 @@
+{% extends "themes_admin/add_category.html" %}
+{% block content %}
+{% load static %}
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
+
+<link rel="stylesheet" href="{% static 'themes_admin/css/medicine_list.css' %}">
+
+<link rel="stylesheet" href="{% static 'themes_admin/css/show_details1.css' %}">
+
+<body>
+
+    <!-- Start Body -->
+
+    <div class="body-page" id="body-page">
+        <div class="medicine-list">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between bd-highlight mb-3">
+                    <div class="p-2 bd-highlight">
+                        Medicine List
+                    </div>
+                    <div class="p-2 bd-highlight">
+                        <a href="{% url 'medicine_grid' %}"><button type="button" class="btn btn-list"><i class="	fa fa-th"></i> &nbsp;Grid View</button></a>
+                        <a href="{% url 'add_medicine' %}"><button type="button" class="btn btn-list"><i class="fa fa-plus-square-o"></i> &nbsp;Add Medicine</button></a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table id="table" class="table table-striped table-bordered dt-responsive nowrap"
+                        style="width:100%;">
+                        <thead>
+
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Medicine Name</th>
+                                <th scope="col">Generic Name</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Age Group</th>
+                                <th scope="col">AEffective Material</th>
+                                <th scope="col">Strength</th>
+                                <th scope="col">Composition</th>
+                                <th scope="col">Alternatives</th>
+                                <th scope="col">Indications</th>
+                                <th scope="col">Product Country</th>
+                                <th scope="col">Manufacturer</th>
+                                <th scope="col">Warehouse</th>
+                                <th scope="col">Prescription</th>
+                                <th scope="col">Image</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Paracetamol</td>
+                                <td>Setamol</td>
+                                <td>Capsules</td>
+                                <td>Analgesic</td>
+                                <td>Adult(19-65)</td>
+                                <td>Parasetamol, caffeine</td>
+                                <td>200ml</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>Syria</td>
+                                <td>Tamiko</td>
+                                <td>Farma</td>
+                                <td>Not Required</td>
+                                <td><img src="{% static 'themes_admin/img/setamol.jpeg' %}" class="medicine-img"></td>
+                                <td>
+                                    <div class="row">
+                                        <a href="#"><i class="fas fa-edit" title="Edit"></i></a>
+                                        <a href="#"><i class="fa fa-trash" title="Delete"></i></a>
+                                        <a href="{% url 'show_details_setamol' %}" title="Display"><i class="fas fa-expand-arrows-alt"></i></a>
+                                        <a href="{% url 'show_batch' %}" title="Display medicine batches"><i class="fas fa-clone"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Body -->
+</body>
+{% endblock content %}

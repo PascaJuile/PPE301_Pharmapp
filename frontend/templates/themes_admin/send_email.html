@@ -1,0 +1,160 @@
+{% extends "themes_admin/add_category.html" %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
+
+<link rel="stylesheet" href="{% static 'themes_admin/css/send_email.css'%}">
+
+<body>
+    <!-- Start Body -->
+
+
+    <div class="body-page" id="body-page">
+        <div class="send-email">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        Send E-mail
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6 form-email">
+                            <form>
+                                <div class="form-row">
+                                    <div class="col form-group">
+                                        <input type="text" name="name" class="form-control toggle1" id="name" placeholder="Full Name" required/>
+                                        <label class="label-input-icon" for="name">
+                                            <i class="fa fa-user"></i>
+                                        </label>
+                                    </div>
+                                    <div class="col form-group">
+                                        <input type="email" class="form-control toggle2" name="email" id="email"
+                                            placeholder="E-mail" required />
+                                        <label class="label-input-icon" for="name">
+                                            <i class="fa fa-envelope"></i>
+                                        </label>
+                                        
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control toggle4" name="subject" id="subject" placeholder="Subject"/>
+                                    <label class="label-input-icon3" for="name">
+                                        <i class="fas fa-book"></i>
+                                    </label>
+                                    
+                                </div>
+                                <div class="form-group">
+                                    <textarea class="form-control toggle3" name="message" rows="5" placeholder="Message"></textarea>
+                                    <label class="label-input-icon2" for="name">
+                                        <i class="fa fa-comment"></i>
+                                    </label>
+                                </div>
+    
+                                <div class="form-group">
+                                    <input type="file" class="form-control col-lg-3" id="image" placeholder="Image" hidden name="file" />
+                                    <label for="image" class="choose-image label-input">Choose file</label>
+                                    <span id="file-chosen" >No file chosen</span>
+                                </div>
+    
+                                <button type="submit" class="btn btn-list"><i class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp; Send</button>
+                                
+                                
+                            </form>
+                        </div>
+                        <div>
+                            <div class="col-lg-6 d-none d-xl-block d-lg-block float-right">
+                                <img class="image " src="{% static 'themes_admin/img/email.jpg' %}">
+                            </div>
+                            
+                        </div>
+
+                    </div>
+
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Body -->
+
+    <script>
+
+            // start choose image
+            const image = document.getElementById('image');
+
+            const fileChosen = document.getElementById('file-chosen');
+
+            image.addEventListener('change', function () {
+                fileChosen.textContent = this.files[0].name
+            })
+            // end choose image
+
+        $('.toggle1').focus(function () {
+            $('.fa-user').addClass('focus1');
+        });
+
+        $('.toggle1').blur(function () {
+            $('.fa-user').removeClass('focus1');
+        });
+
+        $('.toggle2').focus(function () {
+            $('.fa-envelope').addClass('focus2');
+        });
+
+        $('.toggle2').blur(function () {
+            $('.fa-envelope').removeClass('focus2');
+        });
+
+
+        $('.toggle3').focus(function () {
+            $('.fa-comment').addClass('focus3');
+        });
+
+        
+        $('.toggle3').blur(function () {
+            $('.fa-comment').removeClass('focus3');
+        });
+
+
+        $('.toggle4').focus(function () {
+            $('.fa-book').addClass('focus4');
+        });
+
+        
+        $('.toggle4').blur(function () {
+            $('.fa-book').removeClass('focus4');
+        });
+
+
+        (function () {
+
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+
+    </script>
+
+</body>
+{% endblock content %}

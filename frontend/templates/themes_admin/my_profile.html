@@ -1,0 +1,58 @@
+{% extends "themes_admin/add_category.html" %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'themes_admin/css/my_profile.css'%}">
+
+<body>
+    <!-- Start Body -->
+
+    <div class="body-page" id="body-page">
+        <div class="my-profile">
+            <div class="container">
+                <div class="row row-profile">
+                    <div class="card ">
+                        <img src="{% static 'themes_admin/img/myProfile.jpg' %}" class="card-img-top" style="height: 180px;">
+                        <div class="card-body text-center">
+                            <a class="avatar avatar-xl card-avatar card-avatar-top">
+                                <img src="{% static 'themes_admin/img/user3.jpg' %}" class="avatar-img rounded-circle border-card">
+                            </a>
+                            <p class="card-text text-muted">Admin</p>
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td class="text-left">Name: </td>
+                                        <td class="text-right">Tasneem Anas</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Email: </td>
+                                        <td class="text-right">tasneem@gmail.com</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Mobile: </td>
+                                        <td class="text-right">0911111111</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Salary: </td>
+                                        <td class="text-right">2000000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Working Hours: </td>
+                                        <td class="text-right">15</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Branch: </td>
+                                        <td class="text-right">5</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Body -->
+</body>
+
+{% endblock content %}

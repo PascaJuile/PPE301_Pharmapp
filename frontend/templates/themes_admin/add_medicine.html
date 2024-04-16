@@ -1,0 +1,258 @@
+{% extends "themes_admin/add_category.html" %}
+{% block content %}
+{% load static %}
+
+
+<!-- start select -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.min.css">
+<!-- end select -->
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+
+<link rel="stylesheet" href="{% static 'themes_admin/css/add_medicine.css' %}">
+
+<body>
+
+    <!-- Start Body -->
+<div class="body-page" id="body-page">
+        <div class="add-medicine">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between bd-highlight mb-3">
+                    <div class="p-2 bd-highlight">
+                        Add Medicine
+                    </div>
+                    <div class="p-2 bd-highlight">
+                        <a href="{% url 'medicine_list' %}"><button type="button" class="btn btn-list"><i
+                                    class="fa fa-align-justify"></i> &nbsp;Medicine List</button></a>
+                    </div>
+                </div>
+                <div class="card-body">
+
+
+                    <form>
+                        <div class="form-row" style="margin-top: 30px;">
+                            <label for="MedicineName" class="col-lg-2 label-input">Medicine Name <i class="text-danger">
+                                    * </i>:</label>
+                            <input type="text" class="form-control2 col-lg-3" id="MedicineName"
+                                placeholder="Medicine Name" name="medicine_name" required>
+
+                            <div class="col-lg-1"></div>
+
+                            <label for="GenericName" class="col-lg-2 label-input">Generic Name <i class="text-danger"> *
+                                </i>:</label>
+                            <input type="text" class="form-control2 col-lg-3" id="GenericName"
+                                placeholder="Generic Name" name="generic_name" required>
+
+                        </div>
+                        <div class="form-row">
+                            <label class="col-lg-2 label-input">Category:</label>
+                            <select class="selectpicker col-lg-3" data-live-search="true" name="category">
+                                <option value="null">Nothing selected</option>
+                                <option value="c1">c1</option>
+                                <option value="f2">f2</option>
+                                <option value="g3">g3</option>
+                                <option value="n4">n4</option>
+                            </select>
+
+                            <div class="col-lg-1"></div>
+
+                            <label class="col-lg-2 label-input">Type:</label>
+                            <select class="selectpicker col-lg-3" data-live-search="true" name="type">
+                                <option value="null">Nothing selected</option>
+                                <option value="c1">c1</option>
+                                <option value="f2">f2</option>
+                                <option value="g3">g3</option>
+                                <option value="n4">n4</option>
+                            </select>
+
+
+                        </div>
+                        <div class="form-row">
+                            <label class="col-lg-2 label-input">Age Group:</label>
+                            <select class="selectpicker col-lg-3" data-live-search="true" name="agegroup">
+                                <option value="null">Nothing selected</option>
+                                <option value="c1">c1</option>
+                                <option value="f2">f2</option>
+                                <option value="g3">g3</option>
+                                <option value="n4">n4</option>
+                            </select>
+
+                            <div class="col-lg-1"></div>
+
+                            <label class="col-lg-2 label-input">Effective Material:</label>
+                            <select class="selectpicker col-lg-3" data-live-search="true" multiple name="effective_material">
+                                <!-- <option value="null">Nothing selected</option> -->
+                                <option value="c1">c1</option>
+                                <option value="f2">f2</option>
+                                <option value="g3">g3</option>
+                                <option value="n4">n4</option>
+                            </select>
+
+                            <!-- 
+                            <label class="col-lg-2 label-input">Effective Material:</label>
+                            <div class="custom-select-wrapper col-lg-3">
+                                <div class="custom-select2">
+                                    <div class="custom-select__trigger"><span>Select Effective Material</span>
+                                        <div class="arrow"></div>
+                                    </div>
+                                    <div class="custom-options">
+                                        <span class="custom-option selected" data-value="select">Select Effective
+                                            Material</span>
+                                        <span class="custom-option" data-value="">fg</span>
+                                        <span class="custom-option" data-value="">gh</span>
+                                        <span class="custom-option" data-value="">tuj</span>
+                                    </div>
+                                </div>
+                            </div> -->
+
+                        </div>
+
+                        <!-- <div class="form-row">
+                            <label for="ProductionDate" class="col-lg-2 label-input">Production Date <i
+                                class="text-danger"> * </i>:</label>
+                            <input class="form-control col-lg-3" id="ProductionDate" placeholder="Production Date"
+                                data-provide="datepicker" required data-date-format="dd/mm/yyyy">
+
+
+                            <div class="col-lg-1"></div>
+                            <label for="ExpiryDate" class="col-lg-2 label-input">Expiry Date <i
+                                class="text-danger"> * </i>:</label>
+
+                            <input class="form-control col-lg-3" id="ExpiryDate" placeholder="Expiry Date"
+                                data-provide="datepicker" required data-date-format="dd/mm/yyyy">
+                            
+
+                        </div> -->
+
+                        <div class="form-row">
+                            <label for="Strength" class="col-lg-2 label-input">Strength:</label>
+                            <input type="text" class="form-control2 col-lg-3" id="Strength" placeholder="Strength" name="strength">
+                            <div class="col-lg-1"></div>
+                            <label for="composition" class="col-lg-2 label-input">Composition:</label>
+                            <input type="text" class="form-control2  col-lg-3" id="composition" name="composition"
+                                placeholder="Composition">
+
+                        </div>
+
+                        <div class="form-row">
+                            <label for="alternatives" class="col-lg-2 label-input">Alternatives:</label>
+                            <input type="text" class="form-control2 col-lg-3" id="alternatives" name="alternatives"
+                                placeholder="Alternatives">
+                            <div class="col-lg-1"></div>
+                            <label for="indications" class="col-lg-2 label-input">Indications:</label>
+                            <input type="text" class="form-control2  col-lg-3" id="indications" name="indications"
+                                placeholder="Indications">
+
+                        </div>
+
+
+                        <div class="form-row">
+                            <label for="ProductCountry" class="col-lg-2 label-input">Product Country:</label>
+                            <input type="text" class="form-control2 col-lg-3" id="ProductCountry" name="product_country"
+                                placeholder="Product Country">
+                            <div class="col-lg-1"></div>
+                            <label for="Manufacturer" class="col-lg-2 label-input">Manufacturer:</label>
+                            <input type="text" class="form-control2  col-lg-3" id="Manufacturer" name="manufacturer"
+                                placeholder="Manufacturer">
+
+                        </div>
+
+                        
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="col-lg-7"  style="margin-top: 30px;">
+                                    <label for="prescription " class="col-lg-7 col-md-2 label-input">Prescription:</label>
+
+                                    <label class="switch" class="col-md-6">
+                                        <input type="checkbox" name="prescription" class="prescription"
+                                            id="prescription" value="required" name="prescription">
+                                        <span class="slider round"></span>
+                                    </label>
+
+
+                                </div>
+                                <div class="col-lg-12" style="margin-top: 40px; margin-left: 30px;">
+                                    <label class="col-lg-3 col-md-2 label-input">Image:</label>
+                                    <input type="file" class="form-control2" id="image" placeholder="Image" hidden name="image"/>
+                                    <label for="image" class="choose-image label-input">Choose file</label>
+                                    <span id="file-chosen">No file chosen</span>
+
+
+                                </div>
+
+
+                            </div>
+
+                            <div class="col-lg-5 d-none d-xl-block d-lg-block">
+                                <img src="{% static 'themes_admin/img/add-med.jpg'%}" height="200px" class="float-right">
+
+
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-lg-11">
+                                <label for="Status " class="col-lg-2 label-input">Status:</label>
+                                <label class="col-lg-2  container">Active
+                                    <input type="radio" checked="checked" name="radio" value="Active">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <label class="col-lg-2 container">Inactive
+                                    <input type="radio" name="radio" value="Inactive">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div> 
+                        </div>
+
+
+                        <button type="submit" class="btn btn-list float-right">Add</button>
+
+
+                    </form>
+
+
+                    <!-- <input class="radio-prescription" type="radio" name="prescription" id="required"
+                                value="required">
+                            <label class="radio-option" for="required" >
+                                Required
+                            </label>
+                            <input class="radio-prescription" type="radio" name="prescription" id="not_required"
+                                value="not_required">
+                            <label class="radio-option" for="not_required">
+                                Not required
+                            </label> -->
+
+
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- End Body -->
+
+   <script>
+        // start choose image
+        const image = document.getElementById('image');
+
+        const fileChosen = document.getElementById('file-chosen');
+
+        image.addEventListener('change', function () {
+            fileChosen.textContent = this.files[0].name
+        })
+// end choose image
+
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+
+</body>
+
+{% endblock content %}

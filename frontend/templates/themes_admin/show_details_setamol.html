@@ -1,0 +1,187 @@
+{% extends "themes_admin/add_category.html" %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
+
+<link rel="stylesheet" href="{% static 'themes_admin/css/show_details_setamol.css'  %}">
+
+<body>
+    <!-- Start Body -->
+
+    <div class="body-page" id="body-page">
+        <div class="show-details-setamol">
+            <div class="card">
+                <div class="card-header  d-flex justify-content-between bd-highlight mb-3">
+                    <div class="p-2 bd-highlight">
+                        Paracetamol
+                    </div>
+                    <div class="p-2 bd-highlight">
+                        <a href="{% url 'medicine_grid' %}"><button type="button" class="btn btn-list"><i class="	fa fa-th"></i> &nbsp;Grid View</button></a>
+                        <a href="{% url 'add_medicine' %}"><button type="button" class="btn btn-list"><i class="fa fa-plus-square-o"></i> &nbsp;Add Medicine</button></a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="" style="margin-left: 60px; margin-top: 20px; ">
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Medicine Name:
+                                    <label class="value">Paracetamol </label>
+                                </label>
+                                <br>
+                            </div>
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Generic Name: 
+                                    <label class="value">Setamol</label> 
+                                </label>
+                                <br>
+                            </div>
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Category: 
+                                    <label class="value">Capsules</label> 
+                                </label>
+                                <br>
+                            </div>
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Type: 
+                                    <label class="value">Analgesic </label> 
+                                </label>
+                                <br>
+                            </div>
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Age Group: 
+                                    <label class="value">Adult(19-65) </label> 
+                                </label>
+                                <br>
+                            </div>
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Effective Material: 
+                                    <label class="value">Parasetamol, caffeine </label> 
+                                </label>
+                                <br>
+                            </div>
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Strength:
+                                    <label class="value">200ml </label> 
+                                </label>
+                                <br>
+                            </div>
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Composition:
+                                    <label class="value"> </label> 
+                                </label>
+                                <br>
+                            </div>
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Alternatives:
+                                    <label class="value"> </label> 
+                                </label>
+                                <br>
+                            </div>
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Product Country:
+                                    <label class="value">Syria </label> 
+                                </label>
+                                <br>
+                            </div>
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Manufacturer: 
+                                    <label class="value">Tamiko </label> 
+                                </label>
+                                <br>
+                            </div>
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Warehouse: 
+                                    <label class="value">Farma </label> 
+                                </label>
+                                <br>
+                            </div>
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Prescription: 
+                                    <label class="value">Not Required </label> 
+                                </label>
+                                <br>
+                            </div>
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Purchasing Price: 
+                                    <label class="value">1200 S.P</label> 
+                                </label>
+                                <br>
+                            </div>
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Selling Price: 
+                                    <label class="value">1500 S.P </label> 
+                                </label>
+                                <br>
+                            </div>
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Production Date: 
+                                    <label class="value">5/1/2021 </label> 
+                                </label>
+                                <br>
+                            </div>
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Expiry Date: 
+                                    <label class="value">5/1/2022 </label> 
+                                </label>
+                                <br>
+                            </div>
+                            
+                            
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Closet: 
+                                    <label class="value">A2 </label>
+                                </label>
+                                <br>
+                            </div>
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Rack: 
+                                    <label class="value">A2 </label>
+                                </label>
+                                <br>
+                            </div>
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Drawer: 
+                                    <label class="value">C </label>
+                                </label>
+                                <br>
+                            </div>
+                        </div>
+                        <div class="col-lg-1">
+                            <div class="d-flex align-items-center">
+                                <img src="{% static 'themes_admin/img/setamol.jpeg'%}"  class="rounded float-right">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Body -->
+
+</body>
+
+{% endblock content %}

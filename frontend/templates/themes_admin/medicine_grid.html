@@ -1,0 +1,64 @@
+{% extends "themes_admin/add_category.html" %}
+{% block content %}
+{% load static %}
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="{% static 'themes_admin/js/e-search.js'%}"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
+
+<link rel="stylesheet" href="{% static 'themes_admin/css/medicine_grid.css'%}">
+
+<body>
+
+    <!-- Start Body -->
+
+    <div class="body-page" id="body-page">
+        <div class="medicine-grid">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between bd-highlight mb-3">
+                    <div class="p-2 bd-highlight">
+                        Medicine Grid
+                    </div>
+                    <div class="p-2 bd-highlight">
+                        <a href="{% url 'medicine_list' %}"><button type="button" class="btn btn-list"><i
+                                    class="	fa fa-list-ul"></i> &nbsp;List View</button></a>
+                        <a href="{% url 'add_medicine' %}"><button type="button" class="btn btn-list"><i
+                                    class="fa fa-plus-square-o"></i> &nbsp;Add Medicine</button></a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                                <div class="card text-center product">
+                                    <div class="card-header">
+                                        <h3>Setamol</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <img class="card-img-bottom" src="{% static 'themes_admin/img/setamol.jpeg'%}"style="width: 200px; height: 160px;">
+                                        <p>1000 S.P</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <a href="{% url 'show_details_setamol' %}" class="d-flex align-items-center show-detail">
+                                            <span class="mr-2">Show Details</span>
+                                            <span><i class="fas fa-angle-right"></i></span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- End Body -->
+    <script src="{% static 'themes_admin/js/bootbox.min.js' %}"></script>
+
+</body>
+{% endblock content %}
