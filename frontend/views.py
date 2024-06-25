@@ -1,4 +1,6 @@
+from pyexpat.errors import messages
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from gestionStocks.models import *
 
 # Début de la liste des Vues du template client
@@ -85,13 +87,15 @@ def user_list(request):
 
 #Fonction de traitement de la création de catégorie
 def creation_categorie(request):
-    if request.method == "POST" :
-        nomCat = request.POST.get('nomCat', '')
+    if request.method == 'POST':
+        nomCat = request.POST.get('nomCat', '')  
         description = request.POST.get('description', '')
+       
+        categorie = Categorie.objects.create(nom_cat=nomCat, description=description)
 
-        Categorie.objects.create(nomCat=nomCat, description=description)
+        redirect('liste_category')  
 
-        return redirect("liste_category")
+    return render(request, "add_category.html", {'categories':categorie})
     
 def liste_category(request):
     categories = Categorie.objects.all()
