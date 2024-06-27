@@ -34,7 +34,7 @@ urlpatterns = [
     path('user_list', views.user_list, name='user_list'),
 
     #path de création de catégorie
-    path('category', views.creation_categorie, name='creation_categorie'),
+    path('category_creation', views.creation_categorie, name='creation_categorie'),
     path('category_list', views.liste_category, name='liste_category'),
 
 

@@ -36,6 +36,7 @@ def login(request):
     return render(request, 'themes_admin/login.html')
 
 def add_category(request):
+    print("super 2")
     return render(request, 'themes_admin/add_category.html')
 
 def themes(request):
@@ -88,14 +89,12 @@ def user_list(request):
 #Fonction de traitement de la création de catégorie
 def creation_categorie(request):
     if request.method == 'POST':
-        nomCat = request.POST.get('nomCat', '')  
+        nomCat = request.POST.get('nomCat', '')
         description = request.POST.get('description', '')
-       
-        categorie = Categorie.objects.create(nom_cat=nomCat, description=description)
+        categorie = Categorie.objects.create(nomCat=nomCat, description=description)
 
-        redirect('liste_category')  
-
-    return render(request, "add_category.html", {'categories':categorie})
+        redirect('liste_category')
+    return render(request, "themes_admin/add_category.html", {'categories':categorie})
     
 def liste_category(request):
     categories = Categorie.objects.all()
