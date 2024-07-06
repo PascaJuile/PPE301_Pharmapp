@@ -1,7 +1,12 @@
 from pyexpat.errors import messages
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.contrib.auth import authenticate, login
+from .form import LoginForm
+
 from gestionStocks.models import *
+from gestionUtilisateurs.models import *
+
 
 # Début de la liste des Vues du template client
 def index(request):
@@ -88,14 +93,63 @@ def user_list(request):
 
 #Fonction de traitement de la création de catégorie
 def creation_categorie(request):
+    categories = None
     if request.method == 'POST':
         nomCat = request.POST.get('nomCat', '')
         description = request.POST.get('description', '')
+
         categorie = Categorie.objects.create(nomCat=nomCat, description=description)
 
         redirect('liste_category')
     return render(request, "themes_admin/add_category.html", {'categories':categorie})
     
+
+def creation_medicament(request):
+    if request.method == "POST":
+        nomMedicament = request.POST['nomMedicament']
+        libelle = request.POST['libelle']
+        code = request.POST['code']
+        prixUnitaire = request.POST['prixUnitaire']
+        dateExpiration = request.POST['dateExpiration']
+        image = request.FILES.get('image') if 'image' in request.FILES else None
+        categorie_id = request.POST.get('nomCat')
+        preparateur_id = request.POST.get('preparateur')
+        
+        preparateur = PreparateurEnPharmacie.objects.get(pk=preparateur_id)
+        categorie = Categorie.objects.get(pk=categorie_id)
+
+        medicament = Medicament(
+            nomMedicament=nomMedicament,
+            libelle=libelle,
+            code=code,
+            prixUnitaire=prixUnitaire,
+            dateExpiration=dateExpiration,
+            image=image,
+            medicamentPreparateur=preparateur,
+            medicamentCategorie=categorie,
+        )
+        medicament.save()
+    
+    preparateurs = PreparateurEnPharmacie.objects.all()
+    categories = Categorie.objects.all()
+
+    return render(request, 'themes_admin/add_medicine.html', {'categories': categories, 'preparateurs': preparateurs})
+
+def page_connexion(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            # Perform login logic here
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            # Authenticate and login user here
+            return redirect('creation_categorie')  # Redirect to a success page
+    else:
+        form = LoginForm()
+    return render(request, 'themes_admin/login.html', {'form': form})
+    
+
+
 def liste_category(request):
     categories = Categorie.objects.all()
     return render(request, 'category_list.html', {'categories': categories})

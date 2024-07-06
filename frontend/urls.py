@@ -1,6 +1,8 @@
 from . import views
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     #Liste des paths du template client
@@ -15,7 +17,7 @@ urlpatterns = [
 
 
     #Liste des paths du template admin
-    path('admin', views.login, name='login'),
+    path('login', views.login, name='login'),
     path('category', views.add_category, name='add_category'),
     path('themes', views.themes, name='themes'),
     path('category_list', views.category_list, name='category_list'),
@@ -35,9 +37,12 @@ urlpatterns = [
 
     #path de création de catégorie
     path('category_creation', views.creation_categorie, name='creation_categorie'),
-    path('category_list', views.liste_category, name='liste_category'),
+    path('category_medicament', views.creation_medicament, name='creation_medicament'),
+    path('page_connexion', views.page_connexion, name='page_connexion'),
+    path('category_affichage', views.liste_category, name='liste_category'),
 
 
 
 
-]   
+]   + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+

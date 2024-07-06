@@ -5,83 +5,41 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
     <script src="{% static 'themes_admin/font/icon.js' %}" crossorigin="anonymous"></script>
-
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
     <link rel="stylesheet" href="{% static 'themes_admin/css/bootstrap.min.css'%}">
     <script src="{% static 'themes_admin/js/popper.min.js'%}"></script>
-
     <link rel="stylesheet" href="{% static 'themes_admin/css/master.css' %}">
-
     <link rel="stylesheet" href="{% static 'themes_admin/css/login.css' %}">
     <title>Pharmacy</title>
     <link rel="icon" href="{% static 'themes_admin/img/logo.png' %}" sizes="16x16 32x32" type="image/png">
-
 </head>
 
 <body>
-
-
-
     <!-- Start Body -->
-
     <div class="body-page" id="body-page">
         <div class="login">
             <div class="card">
-
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-6 d-none d-xl-block d-lg-block">
                             <img src="{% static 'themes_admin/img/login.jpg' %}" class="img-thumbnail">
-
                         </div>
                         <div class="col-lg-6">
-                            <form>
-                                <div class="header">
-                                    Hello,<br>
-                                    Welcome back
-                                </div>
-                            <div class="col">
-                                <input type="email" class="form-control input">
-                                <span class="focus-input" data-placeholder="Email"></span>
-                            </div>
-                            <div class="col">
-                                <input type="password" class="form-control input">
-                                <span class="focus-input" data-placeholder="Password"></span>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="autoSizingCheck">
-                                <label class="form-check-label" for="autoSizingCheck">
-                                    Remember me
-                                </label>
-                            </div>
-
-                            <a href="{% url 'add_category' %}">
-                                <button type="button" class="btn btn-info">Login</button>
-                            </a>
+                            <form method="post" action="{% url 'page_connexion' %}">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <button type="submit" class="btn btn-info">Se connecter</button>
                             </form>
-
                         </div>
-                        
                     </div>
-
-
                 </div>
             </div>
         </div>
-
     </div>
     <!-- End Body -->
-
-
-
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
@@ -91,16 +49,11 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
-
-
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.2.7/js/responsive.bootstrap4.min.js"></script>
-
-
-
     <script src="{% static 'themes_admin/js/login.js' %}"></script>
 </body>
 

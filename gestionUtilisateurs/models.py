@@ -7,7 +7,7 @@ class Utilisateur(models.Model):
     adresseUtilisateur = models.CharField(max_length=255)
     emailUtilisateur = models.EmailField()
     motDePasse = models.CharField(max_length=100)
-
+    role = models.CharField(max_length=150, default="utilisateur")
     class Meta:
         abstract = True
 

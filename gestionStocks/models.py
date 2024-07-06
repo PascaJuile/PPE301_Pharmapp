@@ -11,6 +11,7 @@ class Medicament(models.Model):
     code = models.CharField(max_length=100)     
     prixUnitaire = models.IntegerField()
     dateExpiration = models.DateTimeField()
+    image = models.ImageField(upload_to='medicament_images/', null=True, blank=True)
 
     medicamentPreparateur = models.ForeignKey(
         PreparateurEnPharmacie,

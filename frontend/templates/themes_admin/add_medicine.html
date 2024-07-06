@@ -24,168 +24,93 @@ href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstr
             <div class="card">
                 <div class="card-header d-flex justify-content-between bd-highlight mb-3">
                     <div class="p-2 bd-highlight">
-                        Add Medicine
+                        Ajout de Médicament
                     </div>
                     <div class="p-2 bd-highlight">
                         <a href="{% url 'medicine_list' %}"><button type="button" class="btn btn-list"><i
-                                    class="fa fa-align-justify"></i> &nbsp;Medicine List</button></a>
+                                    class="fa fa-align-justify"></i> &nbsp;Liste des Médicaments</button></a>
                     </div>
                 </div>
                 <div class="card-body">
 
 
-                    <form>
+                    <form action="{% url 'creation_medicament' %}" method="post" enctype="multipart/form-data">
+                        {%csrf_token%}
+
                         <div class="form-row" style="margin-top: 30px;">
-                            <label for="MedicineName" class="col-lg-2 label-input">Medicine Name <i class="text-danger">
+                            <label for="nomMedicament" class="col-lg-2 label-input">Nom du médicament <i class="text-danger">
                                     * </i>:</label>
-                            <input type="text" class="form-control2 col-lg-3" id="MedicineName"
-                                placeholder="Medicine Name" name="medicine_name" required>
+                            <input type="text" class="form-control2 col-lg-3" id="nomMedicament"
+                                placeholder="Nom du Médicament" name="nomMedicament" required>
 
                             <div class="col-lg-1"></div>
 
-                            <label for="GenericName" class="col-lg-2 label-input">Generic Name <i class="text-danger"> *
+                            <label for="code" class="col-lg-2 label-input">Nom Générique <i class="text-danger"> *
                                 </i>:</label>
-                            <input type="text" class="form-control2 col-lg-3" id="GenericName"
-                                placeholder="Generic Name" name="generic_name" required>
+                            <input type="text" class="form-control2 col-lg-3" id="code"
+                                placeholder="Nom Générique" name="code" required>
 
                         </div>
                         <div class="form-row">
-                            <label class="col-lg-2 label-input">Category:</label>
-                            <select class="selectpicker col-lg-3" data-live-search="true" name="category">
-                                <option value="null">Nothing selected</option>
-                                <option value="c1">c1</option>
-                                <option value="f2">f2</option>
-                                <option value="g3">g3</option>
-                                <option value="n4">n4</option>
+                            <label for="categorie" class="col-lg-2 label-input">Categorie:</label>
+                            <select class="selectpicker col-lg-3" data-live-search="true" name="nomCat" required>
+                                <option value="" disabled selected>Choisissez une catégorie</option>
+                                {% for categorie in categories %}
+                                    <option value="{{ categorie.id }}">{{ categorie.nomCat }}</option>
+                                    
+                                {% endfor %}
+                               <option value="1">1</option>
                             </select>
-
                             <div class="col-lg-1"></div>
 
-                            <label class="col-lg-2 label-input">Type:</label>
-                            <select class="selectpicker col-lg-3" data-live-search="true" name="type">
-                                <option value="null">Nothing selected</option>
-                                <option value="c1">c1</option>
-                                <option value="f2">f2</option>
-                                <option value="g3">g3</option>
-                                <option value="n4">n4</option>
-                            </select>
-
-
-                        </div>
-                        <div class="form-row">
-                            <label class="col-lg-2 label-input">Age Group:</label>
-                            <select class="selectpicker col-lg-3" data-live-search="true" name="agegroup">
-                                <option value="null">Nothing selected</option>
-                                <option value="c1">c1</option>
-                                <option value="f2">f2</option>
-                                <option value="g3">g3</option>
-                                <option value="n4">n4</option>
-                            </select>
-
+                            <label for="prixUnitaire" class="col-lg-2 label-input">Prix Unitaire:</label>
+                            <input type="number" class="form-control2 col-lg-3" id="prixUnitaire" name="prixUnitaire"
+                                placeholder="Prix Unitaire">
                             <div class="col-lg-1"></div>
-
-                            <label class="col-lg-2 label-input">Effective Material:</label>
-                            <select class="selectpicker col-lg-3" data-live-search="true" multiple name="effective_material">
-                                <!-- <option value="null">Nothing selected</option> -->
-                                <option value="c1">c1</option>
-                                <option value="f2">f2</option>
-                                <option value="g3">g3</option>
-                                <option value="n4">n4</option>
-                            </select>
-
-                            <!-- 
-                            <label class="col-lg-2 label-input">Effective Material:</label>
-                            <div class="custom-select-wrapper col-lg-3">
-                                <div class="custom-select2">
-                                    <div class="custom-select__trigger"><span>Select Effective Material</span>
-                                        <div class="arrow"></div>
-                                    </div>
-                                    <div class="custom-options">
-                                        <span class="custom-option selected" data-value="select">Select Effective
-                                            Material</span>
-                                        <span class="custom-option" data-value="">fg</span>
-                                        <span class="custom-option" data-value="">gh</span>
-                                        <span class="custom-option" data-value="">tuj</span>
-                                    </div>
-                                </div>
-                            </div> -->
-
-                        </div>
-
-                        <!-- <div class="form-row">
-                            <label for="ProductionDate" class="col-lg-2 label-input">Production Date <i
-                                class="text-danger"> * </i>:</label>
-                            <input class="form-control col-lg-3" id="ProductionDate" placeholder="Production Date"
-                                data-provide="datepicker" required data-date-format="dd/mm/yyyy">
-
-
-                            <div class="col-lg-1"></div>
-                            <label for="ExpiryDate" class="col-lg-2 label-input">Expiry Date <i
-                                class="text-danger"> * </i>:</label>
-
-                            <input class="form-control col-lg-3" id="ExpiryDate" placeholder="Expiry Date"
-                                data-provide="datepicker" required data-date-format="dd/mm/yyyy">
                             
-
-                        </div> -->
-
-                        <div class="form-row">
-                            <label for="Strength" class="col-lg-2 label-input">Strength:</label>
-                            <input type="text" class="form-control2 col-lg-3" id="Strength" placeholder="Strength" name="strength">
-                            <div class="col-lg-1"></div>
-                            <label for="composition" class="col-lg-2 label-input">Composition:</label>
-                            <input type="text" class="form-control2  col-lg-3" id="composition" name="composition"
-                                placeholder="Composition">
-
                         </div>
 
                         <div class="form-row">
-                            <label for="alternatives" class="col-lg-2 label-input">Alternatives:</label>
-                            <input type="text" class="form-control2 col-lg-3" id="alternatives" name="alternatives"
-                                placeholder="Alternatives">
+                            <label for="libelle" class="col-lg-2 label-input">Description <i class="text-danger">
+                                * </i>:</label>
+                            <input type="text" class="form-control2 col-lg-3" id="libelle"
+                            placeholder="libelle" name="libelle" required>
+
                             <div class="col-lg-1"></div>
-                            <label for="indications" class="col-lg-2 label-input">Indications:</label>
-                            <input type="text" class="form-control2  col-lg-3" id="indications" name="indications"
-                                placeholder="Indications">
 
-                        </div>
-
-
-                        <div class="form-row">
-                            <label for="ProductCountry" class="col-lg-2 label-input">Product Country:</label>
-                            <input type="text" class="form-control2 col-lg-3" id="ProductCountry" name="product_country"
-                                placeholder="Product Country">
-                            <div class="col-lg-1"></div>
-                            <label for="Manufacturer" class="col-lg-2 label-input">Manufacturer:</label>
-                            <input type="text" class="form-control2  col-lg-3" id="Manufacturer" name="manufacturer"
+                            <label for="dateExpiration" class="col-lg-2 label-input">Date d'Expiration:</label>
+                            <input type="date" class="form-control2  col-lg-3" id="dateExpiration" name="dateExpiration"
                                 placeholder="Manufacturer">
-
+                            
+                            
+                            
                         </div>
-
+                        
+                        <div class="form-row">
+                            <label for="preparateur" class="col-lg-2 label-input">Fonction:</label>
+                            <select class="selectpicker col-lg-3" data-live-search="true" name="preparateur" required>
+                                <option value="" disabled selected>Choisissez votre fonction</option>
+                                {% for preparateurEnPharmacie in preparateurEnPharmacies %}
+                                    <option value="{{ preparateurEnPharmacie.id }}">{{ preparateurEnPharmacie.role }}</option>
+                                    
+                                {% endfor %}
+                               <option value="1">1</option>
+                            </select>
+                            
+                        </div>
                         
 
                         <div class="row">
                             <div class="col-lg-6">
-                                <div class="col-lg-7"  style="margin-top: 30px;">
-                                    <label for="prescription " class="col-lg-7 col-md-2 label-input">Prescription:</label>
-
-                                    <label class="switch" class="col-md-6">
-                                        <input type="checkbox" name="prescription" class="prescription"
-                                            id="prescription" value="required" name="prescription">
-                                        <span class="slider round"></span>
-                                    </label>
-
-
+                            
+                                <div class="col-lg-12" style="margin-top: 40px; margin-left: 60px;">
+                            
+                                    <label for="image" class="col-lg-3 col-md-2 label-input">Image:</label>
+                                    <input type="file" class="form-control2" id="image" placeholder="Image" name="image" accept="image/*" hidden name="image"/>
+                                    <label for="image" class="choose-image label-input">Choisir un fichier</label>
+                                    <span id="file-chosen">Aucun fichier disponible</span>
+                                    
                                 </div>
-                                <div class="col-lg-12" style="margin-top: 40px; margin-left: 30px;">
-                                    <label class="col-lg-3 col-md-2 label-input">Image:</label>
-                                    <input type="file" class="form-control2" id="image" placeholder="Image" hidden name="image"/>
-                                    <label for="image" class="choose-image label-input">Choose file</label>
-                                    <span id="file-chosen">No file chosen</span>
-
-
-                                </div>
-
 
                             </div>
 
@@ -195,22 +120,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstr
 
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="col-lg-11">
-                                <label for="Status " class="col-lg-2 label-input">Status:</label>
-                                <label class="col-lg-2  container">Active
-                                    <input type="radio" checked="checked" name="radio" value="Active">
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label class="col-lg-2 container">Inactive
-                                    <input type="radio" name="radio" value="Inactive">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div> 
-                        </div>
 
-
-                        <button type="submit" class="btn btn-list float-right">Add</button>
+                        <button type="submit" class="btn btn-list float-right">Ajouter</button>
 
 
                     </form>
