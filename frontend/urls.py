@@ -20,12 +20,11 @@ urlpatterns = [
     path('login', views.login, name='login'),
     path('category', views.add_category, name='add_category'),
     path('themes', views.themes, name='themes'),
-    path('category_list', views.category_list, name='category_list'),
     path('edit_profile', views.edit_profile, name='edit_profile'),
     path('edit_user', views.edit_user, name='edit_user'),
     path('add_medicine', views.add_medicine, name='add_medicine'),
     path('medicine_grid', views.medicine_grid, name='medicine_grid'),
-    path('medicine_list', views.medicine_list, name='medicine_list'),
+    #path('medicine_list', views.medicine_list, name='medicine_list'),
     path('my_profile', views.my_profile, name='my_profile'),
     path('notification_expired', views.notification_date_expired, name='notification_date_expired'),
     path('notification_out_stock', views.notification_out_of_stock, name='notification_out_of_stock'),
@@ -40,6 +39,8 @@ urlpatterns = [
     path('category_medicament', views.creation_medicament, name='creation_medicament'),
     path('page_connexion', views.page_connexion, name='page_connexion'),
     path('category_affichage', views.liste_category, name='liste_category'),
+    path('supprimer_categorie', views.supprimer_categorie, name='supprimer_categorie'),
+    path('liste_medicaments', views.liste_medicaments, name='liste_medicaments'),
 
 
 

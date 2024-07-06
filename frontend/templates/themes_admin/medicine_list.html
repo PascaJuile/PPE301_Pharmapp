@@ -34,51 +34,43 @@
 
                             <tr>
                                 <th scope="col">ID</th>
-                                <th scope="col">Medicine Name</th>
-                                <th scope="col">Generic Name</th>
-                                <th scope="col">Category</th>
-                                <th scope="col">Type</th>
-                                <th scope="col">Age Group</th>
-                                <th scope="col">AEffective Material</th>
-                                <th scope="col">Strength</th>
-                                <th scope="col">Composition</th>
-                                <th scope="col">Alternatives</th>
-                                <th scope="col">Indications</th>
-                                <th scope="col">Product Country</th>
-                                <th scope="col">Manufacturer</th>
-                                <th scope="col">Warehouse</th>
-                                <th scope="col">Prescription</th>
+                                <th scope="col">Nom du Médicament</th>
+                                <th scope="col">Nom Générique</th>
+                                <th scope="col">Catégorie</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Prix Unitaire</th>
+                                <th scope="col">Date D'expiration</th>
                                 <th scope="col">Image</th>
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Paracetamol</td>
-                                <td>Setamol</td>
-                                <td>Capsules</td>
-                                <td>Analgesic</td>
-                                <td>Adult(19-65)</td>
-                                <td>Parasetamol, caffeine</td>
-                                <td>200ml</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>Syria</td>
-                                <td>Tamiko</td>
-                                <td>Farma</td>
-                                <td>Not Required</td>
-                                <td><img src="{% static 'themes_admin/img/setamol.jpeg' %}" class="medicine-img"></td>
-                                <td>
-                                    <div class="row">
-                                        <a href="#"><i class="fas fa-edit" title="Edit"></i></a>
-                                        <a href="#"><i class="fa fa-trash" title="Delete"></i></a>
-                                        <a href="{% url 'show_details_setamol' %}" title="Display"><i class="fas fa-expand-arrows-alt"></i></a>
-                                        <a href="{% url 'show_batch' %}" title="Display medicine batches"><i class="fas fa-clone"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
+                            {% for medicament in medicaments %}
+                                <tr>
+                                    <th scope="row">{{medicament.id}}</th>
+                                    <td>{{medicament.nomMedicament}}</td>
+                                    <td>{{medicament.code}}</td>
+                                    <td>{{medicament.medicamentCategorie.nomCat}}</td>
+                                    <td>{{medicament.libelle}}</td>
+                                    <td>{{medicament.prixUnitaire}}</td>
+                                    <td>{{medicament.dateExpiration}}</td>
+                                    <td>
+                                        {% if medicament.image and medicament.image.url %}
+                                            <img src="{{ medicament.image.url }}" class="medicine-img" alt="{{ medicament.nomMedicament}}">
+                                        {% else %}
+                                            Image non disponible
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="row">
+                                            <a href="#"><i class="fas fa-edit" title="Edit"></i></a>
+                                            <a href="#"><i class="fa fa-trash" title="Delete"></i></a>
+                                            <a href="{% url 'show_details_setamol' %}" title="Display"><i class="fas fa-expand-arrows-alt"></i></a>
+                                            <a href="{% url 'show_batch' %}" title="Display medicine batches"><i class="fas fa-clone"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
                         
                         </tbody>
                     </table>

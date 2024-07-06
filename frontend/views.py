@@ -1,5 +1,5 @@
 from pyexpat.errors import messages
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
 from .form import LoginForm
@@ -50,9 +50,6 @@ def themes(request):
 def add_medicine(request):
     return render(request, 'themes_admin/add_medicine.html')
 
-def category_list(request):
-    return render(request, 'themes_admin/category_list.html')
-
 def edit_profile(request):
     return render(request, 'themes_admin/edit_profile.html')
 
@@ -61,9 +58,6 @@ def edit_user(request):
 
 def medicine_grid(request):
     return render(request, 'themes_admin/medicine_grid.html')
-
-def medicine_list(request):
-    return render(request, 'themes_admin/medicine_list.html')
 
 def my_profile(request):
     return render(request, 'themes_admin/my_profile.html')
@@ -93,7 +87,7 @@ def user_list(request):
 
 #Fonction de traitement de la création de catégorie
 def creation_categorie(request):
-    categories = None
+    categorie = None
     if request.method == 'POST':
         nomCat = request.POST.get('nomCat', '')
         description = request.POST.get('description', '')
@@ -102,8 +96,8 @@ def creation_categorie(request):
 
         redirect('liste_category')
     return render(request, "themes_admin/add_category.html", {'categories':categorie})
-    
 
+#Fonction de création de médicament  
 def creation_medicament(request):
     if request.method == "POST":
         nomMedicament = request.POST['nomMedicament']
@@ -135,6 +129,7 @@ def creation_medicament(request):
 
     return render(request, 'themes_admin/add_medicine.html', {'categories': categories, 'preparateurs': preparateurs})
 
+#Fonction d'affichage de la page de connexion
 def page_connexion(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -149,9 +144,24 @@ def page_connexion(request):
     return render(request, 'themes_admin/login.html', {'form': form})
     
 
-
+#Fonction d'affichage de catégorie
 def liste_category(request):
     categories = Categorie.objects.all()
-    return render(request, 'category_list.html', {'categories': categories})
+    return render(request, 'themes_admin/category_list.html', {'categories': categories})
 
     
+#Fonction de suppression de catégorie :
+def supprimer_categorie(request):
+    if request.method == 'POST':
+        categorie_id = request.POST.get('categorie_id')
+        categorie = get_object_or_404(Categorie, pk=categorie_id)
+        categorie.delete()
+        return redirect('liste_category')
+    return render(request, 'themes_admin/category_list.html')
+
+def liste_medicaments(request):
+    # Récupérer tous les médicaments avec leurs catégories associées
+    medicaments = Medicament.objects.all()
+    categories = Categorie.objects.all()
+
+    return render(request, 'themes_admin/medicine_list.html', {'medicaments': medicaments, 'categories': categories})

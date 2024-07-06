@@ -37,71 +37,16 @@
                                 <td>
                                     <div class="row">
                                         <a href="#"><i class="fas fa-edit"></i></a>
-                                        <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                        <form action="{% url 'supprimer_categorie' %}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="categorie_id" value="{{ categorie.id }}">
+                                            <button type="submit" class="btn btn-link"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
                             {% endfor %}
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Liquid</td>
-                                <td>
-                                    <div class="row">
-                                        <a href="#"><i class="fas fa-edit"></i></a>
-                                        <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Ointment</td>
-                                <td>
-                                    <div class="row">
-                                        <a href="#"><i class="fas fa-edit"></i></a>
-                                        <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>Cream</td>
-                                <td>
-                                    <div class="row">
-                                        <a href="#"><i class="fas fa-edit"></i></a>
-                                        <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">4</th>
-                                <td>Syrup</td>
-                                <td>
-                                    <div class="row">
-                                        <a href="#"><i class="fas fa-edit"></i></a>
-                                        <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">5</th>
-                                <td>Suppositories</td>
-                                <td>
-                                    <div class="row">
-                                        <a href="#"><i class="fas fa-edit"></i></a>
-                                        <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">6</th>
-                                <td>Capsules</td>
-                                <td>
-                                    <div class="row">
-                                        <a href="#"><i class="fas fa-edit"></i></a>
-                                        <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
+                            
                         </tbody>
                     </table>
                 </div>

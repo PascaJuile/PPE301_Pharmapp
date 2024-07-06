@@ -19,5 +19,6 @@ class Medicament(models.Model):
     )
     medicamentCategorie = models.ForeignKey(
         Categorie,  
-        on_delete=models.RESTRICT
+        on_delete=models.RESTRICT,
+        related_name='medicaments'
     )
