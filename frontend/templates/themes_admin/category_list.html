@@ -37,7 +37,7 @@
                                 <td>
                                     <div class="row">
                                         <a href="#"><i class="fas fa-edit"></i></a>
-                                        <form action="{% url 'supprimer_categorie' %}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');">
+                                        <form action="{% url 'supprimer_categorie' categorie.id %}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');">
                                             {% csrf_token %}
                                             <input type="hidden" name="categorie_id" value="{{ categorie.id }}">
                                             <button type="submit" class="btn btn-link"><i class="fa fa-trash" aria-hidden="true"></i></button>

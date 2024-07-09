@@ -286,6 +286,13 @@
                         <div class="col-lg-6">
                             <form action="{% url 'creation_categorie' %}" method="post" class="needs-validation" enctype="multipart/form-data">
                                 {% csrf_token %}
+
+                                {% if error_message %}
+                                    <div class="alert alert-danger" role="alert">
+                                        {{ error_message }}
+                                    </div>
+                                {% endif %}
+
                                 <div class="col">
                                     <input type="text" class="form-control input" id="nomCat" name="nomCat" required>
                                     <span class="focus-input" data-placeholder="Nom de la catégorie"></span>

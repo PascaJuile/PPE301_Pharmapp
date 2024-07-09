@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     #Liste des paths du template client
-    path('', views.index, name='index'),
+    #path('', views.index, name='index'),
     path('about', views.about, name='about'),
     path('cart', views.cart, name='cart'),
     path('checkout', views.checkout, name='checkout'),
@@ -29,8 +29,6 @@ urlpatterns = [
     path('notification_expired', views.notification_date_expired, name='notification_date_expired'),
     path('notification_out_stock', views.notification_out_of_stock, name='notification_out_of_stock'),
     path('email', views.send_email, name='send_email'),
-    path('batch', views.show_batch, name='show_batch'),
-    path('details', views.show_details_setamol, name='show_details_setamol'),
     path('user_activity', views.user_activity, name='user_medicine'),
     path('user_list', views.user_list, name='user_list'),
 
@@ -39,11 +37,17 @@ urlpatterns = [
     path('category_medicament', views.creation_medicament, name='creation_medicament'),
     path('page_connexion', views.page_connexion, name='page_connexion'),
     path('category_affichage', views.liste_category, name='liste_category'),
-    path('supprimer_categorie', views.supprimer_categorie, name='supprimer_categorie'),
+    path('supprimer_categorie/<int:categorie_id>/', views.supprimer_categorie, name='supprimer_categorie'),
+    path('supprimer_medicament/<int:medicament_id>/', views.supprimer_medicament, name='supprimer_medicament'),
+    path('modifier_medicament/<int:medicament_id>/', views.modifier_medicament, name='vmodifier_medicament'),
     path('liste_medicaments', views.liste_medicaments, name='liste_medicaments'),
+    path('show_details/<int:id>/', views.show_details, name='show_details'),
 
 
-
+    path('', views.liste_medicaments_client, name='liste_medicaments_client'),
 
 ]   + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

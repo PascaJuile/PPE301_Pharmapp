@@ -63,10 +63,14 @@
                                     </td>
                                     <td>
                                         <div class="row">
-                                            <a href="#"><i class="fas fa-edit" title="Edit"></i></a>
-                                            <a href="#"><i class="fa fa-trash" title="Delete"></i></a>
-                                            <a href="{% url 'show_details_setamol' %}" title="Display"><i class="fas fa-expand-arrows-alt"></i></a>
-                                            <a href="{% url 'show_batch' %}" title="Display medicine batches"><i class="fas fa-clone"></i></a>
+                                            <a href="{% url 'vmodifier_medicament' medicament.id %}" title="Edit"><i class="fas fa-edit"></i></a>
+                                            
+                                            <form action="{% url 'supprimer_medicament' medicament.id %}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce médicament ?');">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="medicament.id" value="{{ medicament.id }}">
+                                                <button type="submit" class="btn btn-link"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                            </form>
+                                            <a href="{% url 'show_details' medicament.id %}" title="Display"><i class="fas fa-expand-arrows-alt"></i></a>
                                         </div>
                                     </td>
                                 </tr>

@@ -90,9 +90,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstr
                             <label for="preparateur" class="col-lg-2 label-input">Fonction:</label>
                             <select class="selectpicker col-lg-3" data-live-search="true" name="preparateur" required>
                                 <option value="" disabled selected>Choisissez votre fonction</option>
-                                {% for preparateurEnPharmacie in preparateurEnPharmacies %}
-                                    <option value="{{ preparateurEnPharmacie.id }}">{{ preparateurEnPharmacie.role }}</option>
-                                    
+                                {% for preparateurEnPharmacie in preparateurs %}
+                                    <option value="{{ preparateurEnPharmacie.id }}">{{ preparateurEnPharmacie.role }}</option>    
                                 {% endfor %}
                                <option value="1">1</option>
                             </select>

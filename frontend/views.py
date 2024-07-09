@@ -1,4 +1,5 @@
 from pyexpat.errors import messages
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
@@ -9,8 +10,6 @@ from gestionUtilisateurs.models import *
 
 
 # Début de la liste des Vues du template client
-def index(request):
-    return render(request, 'themes_client/index.html')
 
 def about(request):
     return render(request, 'themes_client/about.html')
@@ -71,12 +70,6 @@ def notification_out_of_stock(request):
 def send_email(request):
     return render(request, 'themes_admin/send_email.html')
 
-def show_batch(request):
-    return render(request, 'themes_admin/show_batch.html')
-
-def show_details_setamol(request):
-    return render(request, 'themes_admin/show_details_setamol.html')
-
 def user_activity(request):
     return render(request, 'themes_admin/user_activity.html')
 
@@ -85,17 +78,25 @@ def user_list(request):
 
 #Fin de la liste des vues du template admin
 
-#Fonction de traitement de la création de catégorie
+# Fonction de traitement de la création de catégorie
 def creation_categorie(request):
     categorie = None
+    error_message = None
+
     if request.method == 'POST':
-        nomCat = request.POST.get('nomCat', '')
-        description = request.POST.get('description', '')
+        nomCat = request.POST.get('nomCat', '').strip()
+        description = request.POST.get('description', '').strip()
 
-        categorie = Categorie.objects.create(nomCat=nomCat, description=description)
+        # Validate that both fields are non-empty and contain only alphabetic characters
+        if not nomCat.isalpha():
+            error_message = "Le nom de la catégorie doit contenir uniquement des lettres."
+        elif not description.isalpha():
+            error_message = "La description doit contenir uniquement des lettres."
+        else:
+            categorie = Categorie.objects.create(nomCat=nomCat, description=description)
+            return redirect('liste_category')
 
-        redirect('liste_category')
-    return render(request, "themes_admin/add_category.html", {'categories':categorie})
+    return render(request, "themes_admin/add_category.html", {'categories': categorie, 'error_message': error_message})
 
 #Fonction de création de médicament  
 def creation_medicament(request):
@@ -151,7 +152,7 @@ def liste_category(request):
 
     
 #Fonction de suppression de catégorie :
-def supprimer_categorie(request):
+def supprimer_categorie(request, categorie_id):
     if request.method == 'POST':
         categorie_id = request.POST.get('categorie_id')
         categorie = get_object_or_404(Categorie, pk=categorie_id)
@@ -159,9 +160,67 @@ def supprimer_categorie(request):
         return redirect('liste_category')
     return render(request, 'themes_admin/category_list.html')
 
+#Fonction d'affichage de médicaments
 def liste_medicaments(request):
     # Récupérer tous les médicaments avec leurs catégories associées
     medicaments = Medicament.objects.all()
     categories = Categorie.objects.all()
 
     return render(request, 'themes_admin/medicine_list.html', {'medicaments': medicaments, 'categories': categories})
+
+# Fonction de suppression de médicament
+def supprimer_medicament(request, medicament_id):
+    if request.method == 'POST':
+        medicament = get_object_or_404(Medicament, pk=medicament_id)
+        medicament.delete()
+        return redirect('liste_medicaments')
+    return render(request, 'themes_admin/medicine_list.html')
+
+def modifier_medicament(request, medicament_id):
+    medicament = get_object_or_404(Medicament, pk=medicament_id)
+    categories = Categorie.objects.all()
+    preparateurs = PreparateurEnPharmacie.objects.all()
+
+    if request.method == 'POST':
+        nomMedicament = request.POST.get('nomMedicament')
+        libelle = request.POST.get('libelle')
+        code = request.POST.get('code')
+        prixUnitaire = request.POST.get('prixUnitaire')
+        dateExpiration = request.POST.get('dateExpiration')
+        image = request.FILES.get('image')
+        categorie_id = request.POST.get('nomCat')
+        preparateur_id = request.POST.get('preparateur')
+
+        if nomMedicament:
+            medicament.nomMedicament = nomMedicament
+        if libelle:
+            medicament.libelle = libelle
+        if code:
+            medicament.code = code
+        if prixUnitaire:
+            medicament.prixUnitaire = prixUnitaire
+        if dateExpiration:
+            medicament.dateExpiration = dateExpiration
+        if image:
+            medicament.image = image
+        if categorie_id:
+            medicament.categorie_id = categorie_id
+        if preparateur_id:
+            medicament.preparateur_id = preparateur_id
+
+        medicament.save()
+
+        return redirect('liste_medicaments')
+
+    return render(request, "themes_admin/edit_medicine.html", {'medicament': medicament, 'categories': categories, 'preparateurs': preparateurs})
+
+def show_details(request, id):
+    medicament = get_object_or_404(Medicament, id=id)
+    return render(request, 'themes_admin/show_details.html', {'medicament': medicament})
+
+def liste_medicaments_client(request):
+    # Récupérer tous les médicaments avec leurs catégories associées
+    medicaments = Medicament.objects.all()
+    categories = Categorie.objects.all()
+
+    return render(request, 'themes_client/index.html', {'medicaments': medicaments, 'categories': categories})
