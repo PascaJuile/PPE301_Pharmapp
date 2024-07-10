@@ -40,6 +40,7 @@ urlpatterns = [
     path('supprimer_categorie/<int:categorie_id>/', views.supprimer_categorie, name='supprimer_categorie'),
     path('supprimer_medicament/<int:medicament_id>/', views.supprimer_medicament, name='supprimer_medicament'),
     path('modifier_medicament/<int:medicament_id>/', views.modifier_medicament, name='vmodifier_medicament'),
+    path('modifier_categorie/<int:categorie_id>/', views.modifier_categorie, name='vmodifier_categorie'),
     path('liste_medicaments', views.liste_medicaments, name='liste_medicaments'),
     path('show_details/<int:id>/', views.show_details, name='show_details'),
 

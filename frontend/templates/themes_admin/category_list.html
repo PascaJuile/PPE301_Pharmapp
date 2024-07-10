@@ -25,7 +25,8 @@
                         <thead>
                             <tr>
                                 <th scope="col">ID</th>
-                                <th scope="col">Category Name</th>
+                                <th scope="col">Nom de Catégorie</th>
+                                <th scope="col">Description</th>
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
@@ -34,9 +35,10 @@
                             <tr>
                                 <th>{{ categorie.id }}</th>
                                 <td>{{ categorie.nomCat }}</td>
+                                <td>{{ categorie.description }}</td>
                                 <td>
                                     <div class="row">
-                                        <a href="#"><i class="fas fa-edit"></i></a>
+                                        <a href="{% url 'vmodifier_categorie' categorie.id %}"><i class="fas fa-edit"></i></a>
                                         <form action="{% url 'supprimer_categorie' categorie.id %}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');">
                                             {% csrf_token %}
                                             <input type="hidden" name="categorie_id" value="{{ categorie.id }}">

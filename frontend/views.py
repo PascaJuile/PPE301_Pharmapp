@@ -214,6 +214,23 @@ def modifier_medicament(request, medicament_id):
 
     return render(request, "themes_admin/edit_medicine.html", {'medicament': medicament, 'categories': categories, 'preparateurs': preparateurs})
 
+def modifier_categorie(request, categorie_id):
+    categorie = get_object_or_404(Categorie, pk=categorie_id)
+    
+    if request.method == 'POST':
+        nomCat = request.POST.get('nomCat')
+        description = request.POST.get('description')
+
+        categorie.nomCat = nomCat
+        categorie.description = description
+
+        categorie.save()
+        
+        return redirect('liste_category')
+
+    return render(request, "themes_admin/edit_category.html", {'categorie': categorie})
+
+
 def show_details(request, id):
     medicament = get_object_or_404(Medicament, id=id)
     return render(request, 'themes_admin/show_details.html', {'medicament': medicament})
