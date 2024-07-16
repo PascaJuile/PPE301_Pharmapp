@@ -4,7 +4,7 @@ from gestionUtilisateurs.models import Caissier,Client,Pharmacien,Livreur
 
 # Create your models here.
 class Ordonnance(models.Model):
-    image = models.ImageField(upload_to='images/', verbose_name='Photo', blank=False)
+    image = models.ImageField(upload_to='ordonnance_images/', verbose_name='Photo', blank=False)
     ordonnanceClient = models.ForeignKey(
         Client,
         on_delete= models.CASCADE

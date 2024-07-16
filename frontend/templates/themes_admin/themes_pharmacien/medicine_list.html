@@ -269,117 +269,77 @@
 
     <!-- Start Body -->
     {% block content %}
-
     <div class="body-page" id="body-page">
-        <div class="add-category">
-            <div class="card">
-                <div class="card-header">
-                    <div class="d-flex justify-content-between align-items-center">
-                        Ajouter une catégorie
-                        <a href="{% url 'liste_category' %}"><button type="button" class="btn btn-list">
-                            <i class="fa fa-align-justify"></i>&nbsp; Liste des catégories</button>
-                        </a>
+        <form method="post" action="{% url 'medicaments_selectionnes' %}">
+            {% csrf_token %}
+            <div class="add-category">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            Liste des médicaments
+                            <a href="{% url 'medicaments_selectionnes' %}"><button type="button" class="btn btn-list" "><i class="fa fa-align-justify"></i>&nbsp;Afficher Sélection</button></a>
+                        </div>
                     </div>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <form action="{% url 'creation_categorie' %}" method="post" class="needs-validation" enctype="multipart/form-data">
-                                {% csrf_token %}
-
-                                {% if error_message %}
-                                    <div class="alert alert-danger" role="alert">
-                                        {{ error_message }}
-                                    </div>
-                                {% endif %}
-
-                                <div class="col">
-                                    <input type="text" class="form-control input" id="nomCat" name="nomCat" required>
-                                    <span class="focus-input" data-placeholder="Nom de la catégorie"></span>
-                                    <div class="invalid-feedback">
-                                        Ce champ est obligatoire.
-                                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                {% for categorie in categories %}
+                                <h3>{{ categorie.nomCat }}</h3>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Image</th>
+                                                <th>Nom</th>
+                                                <th>Libellé</th>
+                                                <th>Prix Unitaire</th>
+                                                <th>Quantité</th>
+                                                <th>Sélectionner</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                {% for medicament in categorie.medicaments.all %}
+                                                <tr>
+                                                    <td>
+                                                        {% if medicament.image and medicament.image.url %}
+                                                        <img src="{{ medicament.image.url }}" alt="{{ medicament.nomMedicament }}" class="img-thumbnail" width="50" height="50">
+                                                        {% else %}
+                                                        Image non disponible
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>{{ medicament.nomMedicament }}</td>
+                                                    <td>{{ medicament.libelle }}</td>
+                                                    <td>{{ medicament.prixUnitaire }} FCFA</td>
+                                                    <td><input type="number" name="quantite_{{ medicament.id }}" class="form-control" min="1" value="1"></td>
+                                                    <td><input type="checkbox" name="selection_{{ medicament.id }}"></td>
+                                                </tr>
+                                                {% endfor %}
+                                    </table>
                                 </div>
-                                <div class="col">
-                                    <input type="text" class="form-control input" id="description" name="description" required>
-                                    <span class="focus-input" data-placeholder="Description"></span>
-                                    <div class="invalid-feedback">
-                                        Ce champ est obligatoire.
-                                    </div>
-                                </div>
-                                
-                                <button type="submit" class="btn float-right btn-list">Ajouter</button>
-
-                                
-                            </form>
-
-                            
-
+                                {% endfor %}
+                            </div>
                         </div>
-                        <div class="col-lg-6 d-none d-xl-block d-lg-block">
-                            <img src="{% static 'themes_admin/img/add_category2.jpg' %}" class="img-thumbnail">
-                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Afficher Sélection</button>
                     </div>
                 </div>
             </div>
-        </div>
-
+        </form>
     </div>
-    <!-- End Body -->
-
-    <script>
-        (function () {
-            'use strict'
-
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            var forms = document.querySelectorAll('.needs-validation')
-
-            // Loop over them and prevent submission
-            Array.prototype.slice.call(forms)
-                .forEach(function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (!form.checkValidity()) {
-                            event.preventDefault()
-                            event.stopPropagation()
-                        }
-
-                        form.classList.add('was-validated')
-                    }, false)
-                })
-        })()
-        
-        // $(document).ready(function () {
-        //     $('.form-control').on('focus',function(){
-        //         $('.needs-validation').removeClass('was-validated');
-        //     })
-        // });
-
-    </script>
-
-
-   {% endblock content %}
-
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
-
-        
+    
+    {% endblock content %}
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7HUiX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.2.7/js/responsive.bootstrap4.min.js"></script>
-
-
-
     <script src="{% static 'themes_admin/js/main.js' %}"></script>
     <script src="{% static 'themes_admin/js/themes.js' %}"></script>
+                
 </body>
 
 </html>

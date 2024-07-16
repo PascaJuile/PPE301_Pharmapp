@@ -21,6 +21,8 @@
 
   <link rel="stylesheet" href="{% static 'themes_client/css/style.css' %}">
 
+  
+
 </head>
 
 <body>
@@ -33,9 +35,18 @@
       <div class="search-wrap">
         <div class="container">
           <a href="#" class="search-close js-search-close"><span class="icon-close2"></span></a>
-          <form action="#" method="post">
-            <input type="text" class="form-control" placeholder="Search keyword and hit enter...">
+          <form id="search-form" action="{% url 'rechercher_medicament' %}" method="post">
+            <input type="text" class="form-control" name="q" placeholder="Rechercher un mot-clé et appuyer sur Entrée...">
           </form>
+        </div>
+      </div>
+
+      <div id="searchModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modal-body">
+                <!-- Les résultats de recherche seront injectés ici -->
+            </div>
         </div>
       </div>
 
@@ -158,7 +169,7 @@
           <div class="col-sm-6 col-lg-4 text-center item mb-4">
             <span class="tag">Sale</span>
             {% for medicament in medicaments %}
-            <a href="{% url 'shop_single' %}"> 
+            <a href="{% url 'shop_single' medicament.id %}"> 
               {% if medicament.image and medicament.image.url %}
                 <img src="{{ medicament.image.url }}" class="medicine-img" alt="{{ medicament.nomMedicament}}">
               {% else %}

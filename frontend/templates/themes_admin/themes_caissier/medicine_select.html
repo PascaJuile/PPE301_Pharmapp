@@ -1,0 +1,42 @@
+{% extends "themes_admin/add_category.html" %}
+{% block content %}
+{% load static %}
+
+<body>
+    <div class="modal" tabindex="-1" role="dialog" id="selectedMedicinesModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Médicaments Sélectionnés</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Quantité</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for medicament in selected_medicaments %}
+                            <tr>
+                                <td>{{ medicament.nomMedicament }}</td>
+                                <td>{{ medicament.quantity }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <a href="{% url 'affichage_medicament_selectionnes' %}" class="btn btn-primary">Envoyer</a>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+{% endblock %}

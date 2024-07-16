@@ -35,95 +35,60 @@ href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstr
 
 
                     <form action="{% url 'creation_medicament' %}" method="post" enctype="multipart/form-data">
-                        {%csrf_token%}
-
+                        {% csrf_token %}
                         <div class="form-row" style="margin-top: 30px;">
-                            <label for="nomMedicament" class="col-lg-2 label-input">Nom du médicament <i class="text-danger">
-                                    * </i>:</label>
-                            <input type="text" class="form-control2 col-lg-3" id="nomMedicament"
-                                placeholder="Nom du Médicament" name="nomMedicament" required>
-
+                            <label for="nomMedicament" class="col-lg-2 label-input">Nom du médicament <i class="text-danger">*</i>:</label>
+                            <input type="text" class="form-control2 col-lg-3" id="nomMedicament" placeholder="Nom du Médicament" name="nomMedicament" required>
                             <div class="col-lg-1"></div>
-
-                            <label for="code" class="col-lg-2 label-input">Nom Générique <i class="text-danger"> *
-                                </i>:</label>
-                            <input type="text" class="form-control2 col-lg-3" id="code"
-                                placeholder="Nom Générique" name="code" required>
-
+                            <label for="code" class="col-lg-2 label-input">Nom Générique <i class="text-danger">*</i>:</label>
+                            <input type="text" class="form-control2 col-lg-3" id="code" placeholder="Nom Générique" name="code" required>
                         </div>
                         <div class="form-row">
                             <label for="categorie" class="col-lg-2 label-input">Categorie:</label>
-                            <select class="selectpicker col-lg-3" data-live-search="true" name="nomCat" required>
+                            <select class="selectpicker col-lg-3" data-live-search="true" id="nomCat" name="nomCat" required>
                                 <option value="" disabled selected>Choisissez une catégorie</option>
                                 {% for categorie in categories %}
                                     <option value="{{ categorie.id }}">{{ categorie.nomCat }}</option>
-                                    
                                 {% endfor %}
-                               <option value="1">1</option>
                             </select>
                             <div class="col-lg-1"></div>
-
                             <label for="prixUnitaire" class="col-lg-2 label-input">Prix Unitaire:</label>
-                            <input type="number" class="form-control2 col-lg-3" id="prixUnitaire" name="prixUnitaire"
-                                placeholder="Prix Unitaire">
+                            <input type="number" class="form-control2 col-lg-3" id="prixUnitaire" name="prixUnitaire" placeholder="Prix Unitaire">
                             <div class="col-lg-1"></div>
-                            
                         </div>
-
                         <div class="form-row">
-                            <label for="libelle" class="col-lg-2 label-input">Description <i class="text-danger">
-                                * </i>:</label>
-                            <input type="text" class="form-control2 col-lg-3" id="libelle"
-                            placeholder="libelle" name="libelle" required>
-
+                            <label for="libelle" class="col-lg-2 label-input">Description <i class="text-danger">*</i>:</label>
+                            <input type="text" class="form-control2 col-lg-3" id="libelle" placeholder="libelle" name="libelle" required>
                             <div class="col-lg-1"></div>
-
                             <label for="dateExpiration" class="col-lg-2 label-input">Date d'Expiration:</label>
-                            <input type="date" class="form-control2  col-lg-3" id="dateExpiration" name="dateExpiration"
-                                placeholder="Manufacturer">
-                            
-                            
-                            
+                            <input type="date" class="form-control2 col-lg-3" id="dateExpiration" name="dateExpiration" placeholder="Manufacturer">
                         </div>
-                        
                         <div class="form-row">
                             <label for="preparateur" class="col-lg-2 label-input">Fonction:</label>
-                            <select class="selectpicker col-lg-3" data-live-search="true" name="preparateur" required>
+                            <select class="selectpicker col-lg-3" data-live-search="true" id="preparateur" name="preparateur" required>
                                 <option value="" disabled selected>Choisissez votre fonction</option>
                                 {% for preparateurEnPharmacie in preparateurs %}
                                     <option value="{{ preparateurEnPharmacie.id }}">{{ preparateurEnPharmacie.role }}</option>    
                                 {% endfor %}
-                               <option value="1">1</option>
                             </select>
-                            
                         </div>
-                        
-
                         <div class="row">
                             <div class="col-lg-6">
-                            
                                 <div class="col-lg-12" style="margin-top: 40px; margin-left: 60px;">
-                            
                                     <label for="image" class="col-lg-3 col-md-2 label-input">Image:</label>
-                                    <input type="file" class="form-control2" id="image" placeholder="Image" name="image" accept="image/*" hidden name="image"/>
+                                    <input type="file" class="form-control2" id="image" name="image" accept="image/*" hidden>
                                     <label for="image" class="choose-image label-input">Choisir un fichier</label>
                                     <span id="file-chosen">Aucun fichier disponible</span>
-                                    
                                 </div>
-
                             </div>
-
                             <div class="col-lg-5 d-none d-xl-block d-lg-block">
                                 <img src="{% static 'themes_admin/img/add-med.jpg'%}" height="200px" class="float-right">
-
-
                             </div>
                         </div>
-
                         <button type="submit" class="btn btn-list float-right">Ajouter</button>
-
-
                     </form>
+                    
+                    
 
 
                     <!-- <input class="radio-prescription" type="radio" name="prescription" id="required"
@@ -149,17 +114,17 @@ href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstr
 
     <!-- End Body -->
 
-   <script>
-        // start choose image
+    <script>
+        $(document).ready(function(){
+            $('.selectpicker').selectpicker();
+        });
+
+        // Script pour choisir l'image
         const image = document.getElementById('image');
-
         const fileChosen = document.getElementById('file-chosen');
-
         image.addEventListener('change', function () {
             fileChosen.textContent = this.files[0].name
-        })
-// end choose image
-
+        });
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 
