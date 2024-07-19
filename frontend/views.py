@@ -1,17 +1,18 @@
 import json
 from pyexpat.errors import messages
-from django.http import Http404, HttpResponse, JsonResponse
+from django.http import Http404, HttpResponse, HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
 from gestionUtilisateurs.forms import ConnexionForm, InscriptionForm
 from django.views.decorators.csrf import csrf_exempt
-
+from django.contrib.auth.decorators import login_required
 from gestionStocks.models import *
 from gestionUtilisateurs.models import *
 from gestionVentes.forms import OrdonnanceForm
 from gestionVentes.models import Ordonnance
+
 
 
 # Début de la liste des Vues du template client
@@ -56,7 +57,9 @@ def edit_user(request):
     return render(request, 'themes_admin/edit_user.html')
 
 def medicine_grid(request):
-    return render(request, 'themes_admin/medicine_grid.html')
+    medicaments = Medicament.objects.all()
+
+    return render(request, 'themes_admin/medicine_grid.html', {'medicaments': medicaments})
 
 def my_profile(request):
     return render(request, 'themes_admin/my_profile.html')
@@ -96,39 +99,56 @@ def creation_categorie(request):
             categorie = Categorie.objects.create(nomCat=nomCat, description=description)
             return redirect('liste_category')
 
-    return render(request, "themes_admin/add_category.html", {'categories': categorie, 'error_message': error_message})
+    # Extraire les informations de l'utilisateur de la session
+    user_name = request.session.get('user_name', 'Utilisateur')
+    user_email = request.session.get('user_email', 'email@example.com')
 
-#Fonction de création de médicament  
+    return render(request, "themes_admin/add_category.html", {'categories': categorie, 'error_message': error_message, 'user_name': user_name,
+        'user_email': user_email,})
+
+
+
+
 def creation_medicament(request):
-    preparateurs = PreparateurEnPharmacie.objects.all()
-    categories = Categorie.objects.all()
+    user_email = request.session.get('user_email')
     
-    if request.method == "POST":
-        nomMedicament = request.POST['nomMedicament']
-        libelle = request.POST['libelle']
-        code = request.POST['code']
-        prixUnitaire = request.POST['prixUnitaire']
-        dateExpiration = request.POST['dateExpiration']
-        image = request.FILES.get('image') if 'image' in request.FILES else None
-        categorie_id = request.POST.get('nomCat')
-        preparateur_id = request.POST.get('preparateur')
+    if user_email:
+        try:
+            preparateur = PreparateurEnPharmacie.objects.get(emailUtilisateur=user_email)
+        except PreparateurEnPharmacie.DoesNotExist:
+            # Redirigez ou affichez un message d'erreur si l'utilisateur n'est pas un préparateur en pharmacie
+            return redirect('inscription')
         
-        preparateur = PreparateurEnPharmacie.objects.get(pk=preparateur_id)
-        categorie = Categorie.objects.get(pk=categorie_id)
+        categories = Categorie.objects.all()
+        
+        if request.method == "POST":
+            nomMedicament = request.POST['nomMedicament']
+            libelle = request.POST['libelle']
+            code = request.POST['code']
+            prixUnitaire = request.POST['prixUnitaire']
+            dateExpiration = request.POST['dateExpiration']
+            image = request.FILES.get('image') if 'image' in request.FILES else None
+            categorie_id = request.POST.get('nomCat')
+            
+            categorie = Categorie.objects.get(pk=categorie_id)
 
-        medicament = Medicament(
-            nomMedicament=nomMedicament,
-            libelle=libelle,
-            code=code,
-            prixUnitaire=prixUnitaire,
-            dateExpiration=dateExpiration,
-            image=image,
-            medicamentPreparateur=preparateur,
-            medicamentCategorie=categorie,
-        )
-        medicament.save()
-    
-    return render(request, 'themes_admin/add_medicine.html', {'categories': categories, 'preparateurs': preparateurs})
+            medicament = Medicament(
+                nomMedicament=nomMedicament,
+                libelle=libelle,
+                code=code,
+                prixUnitaire=prixUnitaire,
+                dateExpiration=dateExpiration,
+                image=image,
+                medicamentPreparateur=preparateur,
+                medicamentCategorie=categorie,
+            )
+            medicament.save()
+            return redirect('liste_medicaments')  # Redirigez vers une page de succès appropriée
+        
+        return render(request, 'themes_admin/add_medicine.html', {'categories': categories})
+    else:
+        # Redirigez vers la page de connexion si l'email de l'utilisateur n'est pas dans la session
+        return redirect('page_connexion')  #
 
 #Fonction d'affichage de la page de connexion
 def page_connexion(request):
@@ -137,43 +157,43 @@ def page_connexion(request):
         if form.is_valid():
             email = form.cleaned_data['email']
             motDePasse = form.cleaned_data['motDePasse']
-            role = form.cleaned_data['role']
             
-            user_model = None
-            if role == 'GestionnairePharmacie':
-                user_model = GestionnairePharmacie
-            elif role == 'PreparateurEnPharmacie':
-                user_model = PreparateurEnPharmacie
-            elif role == 'Caissier':
-                user_model = Caissier
-            elif role == 'Client':
-                user_model = Client
-            elif role == 'Pharmacien':
-                user_model = Pharmacien
-            elif role == 'Livreur':
-                user_model = Livreur
-            
-            try:
-                user = user_model.objects.get(emailUtilisateur=email)
-                if check_password(motDePasse, user.motDePasse):
-                    login(request, user)
-                    if role == 'Client':
-                        return redirect('liste_medicaments_client')
-                    elif role == 'Pharmacien':
-                          return redirect('pharamacien_listeMedicament')
-                    elif role == 'Caissier':
-                          return redirect('affichage_medicament_selectionnes')
+            user = None
+            user_models = [GestionnairePharmacie, PreparateurEnPharmacie, Caissier, Client, Pharmacien, Livreur]
+
+            for user_model in user_models:
+                try:
+                    user = user_model.objects.get(emailUtilisateur=email)
+                    if check_password(motDePasse, user.motDePasse):
+                        login(request, user)
+                        # Stocker les informations de l'utilisateur dans la session
+                        request.session['user_email'] = user.emailUtilisateur
+                        request.session['user_name'] = user.nomUtilisateur
+                        request.session['user_prenom'] = user.prenomUtilisateur
+                        request.session['user_numero'] = user.numeroUtilisateur
+                        request.session['user_adresse'] = user.adresseUtilisateur
+                        request.session['user_role'] = user.role
+                        
+                        if isinstance(user, Client):
+                            return redirect('liste_medicaments_client')
+                        elif isinstance(user, Pharmacien):
+                            return redirect('pharamacien_listeMedicament')
+                        elif isinstance(user, Caissier):
+                            return redirect('affichage_medicament_selectionnes')
+                        else:
+                            return redirect('creation_categorie')
                     else:
-                        return redirect('creation_categorie')
-                else:
-                    form.add_error(None, "Email, mot de passe ou rôle incorrect.")
-            except user_model.DoesNotExist:
-                form.add_error(None, "Email, mot de passe ou rôle incorrect.")
+                        form.add_error(None, "Email ou mot de passe incorrect.")
+                        break
+                except user_model.DoesNotExist:
+                    continue
+
+            if user is None:
+                form.add_error(None, "Email ou mot de passe incorrect.")
     else:
         form = ConnexionForm()
     
     return render(request, 'themes_admin/login.html', {'form': form})
-    
 
 def inscription(request):
     if request.method == 'POST':
@@ -207,6 +227,17 @@ def inscription(request):
     else:
         form = InscriptionForm()
     return render(request, 'themes_admin/inscription.html', {'form': form})
+
+def profil_utilisateur(request):
+    user_info = {
+        'name': request.session.get('user_name'),
+        'prenom': request.session.get('user_prenom'),
+        'email': request.session.get('user_email'),
+        'numero': request.session.get('user_numero'),
+        'adresse': request.session.get('user_adresse'),
+        'role': request.session.get('user_role'),
+    }
+    return render(request, 'themes_admin/my_profile.html', user_info)
 
 #Fonction d'affichage de catégorie
 def liste_category(request):
@@ -340,47 +371,30 @@ def formulaire_achat(request,ordonnance_id):
 
 def pharamacien_listeMedicament(request):
     categories = Categorie.objects.prefetch_related('medicaments').all()
-    return render(request, 'themes_admin/themes_pharmacien/medicine_list.html', {'categories': categories})
+    user_name = request.session.get('user_name', 'Utilisateur')
+    user_email = request.session.get('user_email', 'email@example.com')
+
+    return render(request, 'themes_admin/themes_pharmacien/medicine_list.html', {'categories': categories, 'user_name': user_name,
+        'user_email': user_email,})
 
     
-def medicaments_selectionnes(request):
+def medicaments_selectionnés(request):
     if request.method == 'POST':
-        selected_medicament_ids = request.POST.getlist('medicaments[]')
-        selected_quantities = {key.split('_')[1]: request.POST[key] for key in request.POST if key.startswith('quantite_')}
-        selected_medicaments = Medicament.objects.filter(id__in=selected_medicament_ids)
-        
-        # Créer un dictionnaire pour stocker les médicaments sélectionnés et leurs quantités
-        medicament_data = []
-        for medicament in selected_medicaments:
-            medicament_data.append({
-                'medicament': medicament,
-                'quantite': selected_quantities.get(str(medicament.id), 1)
-            })
-
-        # Rendre la page avec les médicaments sélectionnés
-        return render(request, 'themes_admin/themes_pharmacien/medicine_list.html', {'medicament_data': medicament_data})
-    return redirect('affichage_medicament_selectionnes')
-
-def affichage_medicament_selectionnes(request):
-    if request.method == 'POST':
-        selected_medicament_ids = request.POST.getlist('medicaments[]')
-        selected_quantities = {key.split('_')[1]: request.POST[key] for key in request.POST if key.startswith('quantite_')}
-        selected_medicaments = Medicament.objects.filter(id__in=selected_medicament_ids)
-
-        # Créer un dictionnaire pour stocker les médicaments sélectionnés et leurs quantités
-        medicament_data = []
-        for medicament in selected_medicaments:
-            medicament_data.append({
-                'medicament': medicament,
-                'quantite': selected_quantities.get(str(medicament.id), 1)
-            })
-
-        # Faire quelque chose avec les médicaments sélectionnés, comme les enregistrer dans une commande
-        # par exemple, vous pouvez créer une commande ici
-
-        # Rediriger vers une page de confirmation ou de résumé
-        return render(request, 'themes_admin/themes_caissier/medicine_select.html', {'medicament_data': medicament_data})
-
-    # Pour les requêtes GET, rediriger vers la page principale des médicaments
-    return redirect('affichage_medicament_selectionnes')
+        selected_medicines_data = request.POST.get('selectedMedicinesData')
+        selected_medicines = json.loads(selected_medicines_data)
+        return render(request, 'themes_admin/themes_caissier/medicine_select.html', {'medicines': selected_medicines})
+    else:
+        return render(request, 'themes_admin/themes_pharmacien/medicine_list.html', {'message': 'Invalid request method.'})
     
+def pharmacien_affichage_med(request):
+    # Récupérer tous les médicaments avec leurs catégories associées
+    medicaments = Medicament.objects.all()
+    categories = Categorie.objects.all()
+
+    return render(request, 'themes_admin/themes_pharmacien/affichage_med.html', {'medicaments': medicaments, 'categories': categories})
+
+def pharmacien_affichage_med_grid(request):
+    medicaments = Medicament.objects.all()
+
+    return render(request, 'themes_admin/themes_pharmacien/affichage_med_grid.html', {'medicaments': medicaments})
+

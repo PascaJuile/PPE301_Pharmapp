@@ -52,8 +52,8 @@
                         <img src="{% static 'themes_admin/img/user3.jpg' %}">
                     </div>
                     <div>
-                        <p class="user-name">User Name</p>
-                        <p class="user-email">admin@admin.com</p>
+                        <p class="user-name">{{ request.session.user_name }}</p>
+                        <p class="user-email">{{ request.session.user_email }}</p>
                     </div>
                 </div>
             </div>
@@ -87,11 +87,9 @@
                         data-parent="#accordionExample">
                         <div class="card-body">
                             <ul>
-                                <li><a href="{% url 'creation_categorie' %}">Add Category</a></li>
-                                <li><a href="{% url 'liste_category' %}">Category List</a></li>
-                                <li><a href="{% url 'creation_medicament' %}">Add Medicine</a></li>
-                                <li><a href="{% url 'liste_medicaments' %}">Medicine List</a></li>
-
+                                <li><a href="{% url 'pharamacien_listeMedicament' %}">Ventes de Médicaments</a></li>
+                                <li><a href="#">Liste des commandes</a></li>
+                                <li><a href="{% url 'pharmacien_affichage_med' %}">Liste des médicaments</a></li>
                             </ul>
                         </div>
                     </div>
@@ -208,13 +206,13 @@
 
                             <div class="user-heading">
                                 <div><img src="{% static 'themes_admin/img/user3.jpg' %}" class="user-img2"></div>
-                                <div class="user-name2">Tasneem Anas</div>
-                                <div class="user-email2">tasneem@admin.com</div>
+                                <div class="user-name2">{{ request.session.user_name }}</div>
+                                <div class="user-email2">{{ request.session.user_email }}</div>
                                 </h4>
                             </div>
                             <div class="user-wrapper">
 
-                                <a class="content a-user dropdown-item" href="{% url 'my_profile' %}" id="a-user">
+                                <a class="content a-user dropdown-item" href="{% url 'profil_utilisateur' %}" id="a-user">
 
                                     <div class="drop-item">
                                         <div class="row row-user" style="margin-bottom: -2px;">
@@ -270,64 +268,85 @@
     <!-- Start Body -->
     {% block content %}
     <div class="body-page" id="body-page">
-        <form method="post" action="{% url 'medicaments_selectionnes' %}">
-            {% csrf_token %}
-            <div class="add-category">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="d-flex justify-content-between align-items-center">
-                            Liste des médicaments
-                            <a href="{% url 'medicaments_selectionnes' %}"><button type="button" class="btn btn-list" "><i class="fa fa-align-justify"></i>&nbsp;Afficher Sélection</button></a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                {% for categorie in categories %}
-                                <h3>{{ categorie.nomCat }}</h3>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Image</th>
-                                                <th>Nom</th>
-                                                <th>Libellé</th>
-                                                <th>Prix Unitaire</th>
-                                                <th>Quantité</th>
-                                                <th>Sélectionner</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                                {% for medicament in categorie.medicaments.all %}
-                                                <tr>
-                                                    <td>
-                                                        {% if medicament.image and medicament.image.url %}
-                                                        <img src="{{ medicament.image.url }}" alt="{{ medicament.nomMedicament }}" class="img-thumbnail" width="50" height="50">
-                                                        {% else %}
-                                                        Image non disponible
-                                                        {% endif %}
-                                                    </td>
-                                                    <td>{{ medicament.nomMedicament }}</td>
-                                                    <td>{{ medicament.libelle }}</td>
-                                                    <td>{{ medicament.prixUnitaire }} FCFA</td>
-                                                    <td><input type="number" name="quantite_{{ medicament.id }}" class="form-control" min="1" value="1"></td>
-                                                    <td><input type="checkbox" name="selection_{{ medicament.id }}"></td>
-                                                </tr>
-                                                {% endfor %}
-                                    </table>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">Afficher Sélection</button>
+        <div class="add-category">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        Liste des médicaments
+                        <a href="#"><button type="button" class="btn btn-list" data-toggle="modal" data-target="#selectedMedicinesModal" onclick="showSelectedMedicines()"><i class="fa fa-align-justify"></i>&nbsp;Afficher sélection</button></a>
                     </div>
                 </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            {% for categorie in categories %}
+                            <h3>{{ categorie.nomCat }}</h3>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Image</th>
+                                            <th>Nom</th>
+                                            <th>Prix Unitaire</th>
+                                            <th>Quantité</th>
+                                            <th>Sélectionner</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for medicament in categorie.medicaments.all %}
+                                        <tr>
+                                            <td>
+                                                {% if medicament.image and medicament.image.url %}
+                                                <img src="{{ medicament.image.url }}" alt="{{ medicament.nomMedicament }}" class="img-thumbnail" width="50" height="50">
+                                                {% else %}
+                                                Image non disponible
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ medicament.nomMedicament }}</td>
+                                            <td>{{ medicament.prixUnitaire }} FCFA</td>
+                                            <td><input type="number" name="quantite_{{ medicament.id }}" class="form-control" min="1" value="1"></td>
+                                            <td><input type="checkbox" name="selection_{{ medicament.id }}"></td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#selectedMedicinesModal" onclick="showSelectedMedicines()">Afficher Sélection</button>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
-    
+    <!-- Modal -->
+    <div class="modal fade" id="selectedMedicinesModal" tabindex="-1" role="dialog" aria-labelledby="selectedMedicinesModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="selectedMedicinesModalLabel">Médicaments Sélectionnés</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul id="selectedMedicinesList" class="list-group">
+                        <!-- Medicines will be added here dynamically -->
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <form id="selectedMedicinesForm" method="POST" action="{% url 'medicaments_selectionnés' %}">
+                        {% csrf_token %}
+                        <input type="hidden" id="selectedMedicinesData" name="selectedMedicinesData">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary">Envoyer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     {% endblock content %}
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7HUiX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -339,7 +358,34 @@
     <script src="https://cdn.datatables.net/responsive/2.2.7/js/responsive.bootstrap4.min.js"></script>
     <script src="{% static 'themes_admin/js/main.js' %}"></script>
     <script src="{% static 'themes_admin/js/themes.js' %}"></script>
-                
+    <script>
+        function showSelectedMedicines() {
+            const selectedMedicinesList = document.getElementById('selectedMedicinesList');
+            selectedMedicinesList.innerHTML = ''; // Clear the list
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            let selectedMedicines = [];
+            checkboxes.forEach(checkbox => {
+                const row = checkbox.closest('tr');
+                const id = checkbox.name.split('_')[1];
+                const nom = row.querySelector('td:nth-child(2)').textContent;
+                const libelle = row.querySelector('td:nth-child(3)').textContent;
+                const prix = row.querySelector('td:nth-child(4)').textContent;
+                const quantite = row.querySelector('input[type="number"]').value;
+                const li = document.createElement('li');
+                li.classList.add('list-group-item');
+                li.textContent = `${nom} - ${libelle} - ${prix} - Quantité: ${quantite}`;
+                selectedMedicinesList.appendChild(li);
+                selectedMedicines.push({
+                    id: id,
+                    nom: nom,
+                    libelle: libelle,
+                    prix: prix,
+                    quantite: quantite
+                });
+            });
+            document.getElementById('selectedMedicinesData').value = JSON.stringify(selectedMedicines);
+        }
+    </script>
 </body>
 
 </html>

@@ -1,4 +1,4 @@
-{% extends "themes_admin/add_category.html" %}
+{% extends "themes_admin/themes_pharmacien/medicine_list.html" %}
 {% block content %}
 {% load static %}
 
@@ -20,13 +20,11 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between bd-highlight mb-3">
                     <div class="p-2 bd-highlight">
-                        Medicine Grid
+                       Affichage Médicaments en Grille
                     </div>
                     <div class="p-2 bd-highlight">
-                        <a href="{% url 'liste_medicaments' %}"><button type="button" class="btn btn-list"><i
-                                    class="	fa fa-list-ul"></i> &nbsp;List View</button></a>
-                        <a href="{% url 'creation_medicament' %}"><button type="button" class="btn btn-list"><i
-                                    class="fa fa-plus-square-o"></i> &nbsp;Add Medicine</button></a>
+                        <a href="{% url 'pharmacien_affichage_med' %}"><button type="button" class="btn btn-list"><i
+                                    class="	fa fa-list-ul"></i> &nbsp;Vue en Liste</button></a>
                     </div>
                 </div>
                 <div class="card-body">
