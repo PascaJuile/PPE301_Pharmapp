@@ -74,6 +74,8 @@ urlpatterns = [
     path('pharmacien/medicaments_selectionnés', views.medicaments_selectionnés, name='medicaments_selectionnés'),
     path('pharmacien/list_affichage_medicaments', views.pharmacien_affichage_med, name='pharmacien_affichage_med'),
     path('pharmacien/grid_affichage_medicaments', views.pharmacien_affichage_med_grid, name='pharmacien_affichage_med_grid'),
+    path('pharmacien/show_details/<int:id>/', views.pharmacien_show_details, name='pharmacien_show_details'),
+
 
 
     

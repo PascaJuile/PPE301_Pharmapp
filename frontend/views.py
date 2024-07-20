@@ -398,3 +398,7 @@ def pharmacien_affichage_med_grid(request):
 
     return render(request, 'themes_admin/themes_pharmacien/affichage_med_grid.html', {'medicaments': medicaments})
 
+
+def pharmacien_show_details(request, id):
+    medicament = get_object_or_404(Medicament, id=id)
+    return render(request, 'themes_admin/themes_pharmacien/show_details.html', {'medicament': medicament})

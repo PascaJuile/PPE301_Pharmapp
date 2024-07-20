@@ -1,0 +1,91 @@
+{% extends "themes_admin/themes_pharmacien/medicine_list.html" %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
+
+<link rel="stylesheet" href="{% static 'themes_admin/css/show_details_setamol.css'  %}">
+
+<body>
+    <!-- Start Body -->
+
+    <div class="body-page" id="body-page">
+        <div class="show-details-setamol">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between bd-highlight mb-3">
+                    <div class="p-2 bd-highlight">
+                        
+                    </div>
+                    <div class="p-2 bd-highlight">
+                        <a href="{% url 'pharmacien_affichage_med_grid' %}"><button type="button" class="btn btn-list"><i class="fa fa-th"></i> &nbsp;Grid View</button></a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="" style="margin-left: 60px; margin-top: 20px; ">
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Nom du Médicament:
+                                    <label class="value">{{ medicament.nomMedicament }} </label>
+                                </label>
+                                <br>
+                            </div>
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Nom Générique: 
+                                    <label class="value">{{ medicament.code }}</label> 
+                                </label>
+                                <br>
+                            </div>
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Catégorie: 
+                                    <label class="value">{{ medicament.medicamentCategorie.nomCat }}</label> 
+                                </label>
+                                <br>
+                            </div>
+                            <!-- Add other details similarly -->
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Prix Unitaire:
+                                    <label class="value">{{ medicament.prixUnitaire }} FCFA</label> 
+                                </label>
+                                <br>
+                            </div>
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Date d'Expiration: 
+                                    <label class="value">{{ medicament.dateExpiration }} </label> 
+                                </label>
+                                <br>
+                            </div>
+                            <div class="row-details">
+                                <i class="fa fa-chevron-circle-right"></i>
+                                <label> &nbsp;Description:
+                                    <label class="value">{{ medicament.libelle }} </label> 
+                                </label>
+                                <br>
+                            </div>
+
+                        
+                            
+                        </div>
+                        <div class="col-lg-1">
+                            <div class="d-flex align-items-center">
+                                <img src="{{ medicament.image.url }}" class="rounded float-right" alt="Medicine Image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Body -->
+
+</body>
+
+
+{% endblock content %}
