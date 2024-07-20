@@ -179,7 +179,7 @@ def page_connexion(request):
                         elif isinstance(user, Pharmacien):
                             return redirect('pharamacien_listeMedicament')
                         elif isinstance(user, Caissier):
-                            return redirect('affichage_medicament_selectionnes')
+                            return redirect('medicaments_selectionnés')
                         else:
                             return redirect('creation_categorie')
                     else:
@@ -384,8 +384,8 @@ def medicaments_selectionnés(request):
         selected_medicines = json.loads(selected_medicines_data)
         return render(request, 'themes_admin/themes_caissier/medicine_select.html', {'medicines': selected_medicines})
     else:
-        return render(request, 'themes_admin/themes_pharmacien/medicine_list.html', {'message': 'Invalid request method.'})
-    
+        return render(request, 'themes_admin/themes_pharmacien/medicine_list.html', {'message': 'Invalid request method.'}) 
+       
 def pharmacien_affichage_med(request):
     # Récupérer tous les médicaments avec leurs catégories associées
     medicaments = Medicament.objects.all()

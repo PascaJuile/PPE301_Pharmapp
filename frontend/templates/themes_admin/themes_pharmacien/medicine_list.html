@@ -361,31 +361,50 @@
     <script>
         function showSelectedMedicines() {
             const selectedMedicinesList = document.getElementById('selectedMedicinesList');
-            selectedMedicinesList.innerHTML = ''; // Clear the list
+            selectedMedicinesList.innerHTML = ''; // Vider la liste
             const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
             let selectedMedicines = [];
             checkboxes.forEach(checkbox => {
                 const row = checkbox.closest('tr');
                 const id = checkbox.name.split('_')[1];
                 const nom = row.querySelector('td:nth-child(2)').textContent;
-                const libelle = row.querySelector('td:nth-child(3)').textContent;
-                const prix = row.querySelector('td:nth-child(4)').textContent;
+                const prix = row.querySelector('td:nth-child(3)').textContent; // Correction: prix est en 3ème position
                 const quantite = row.querySelector('input[type="number"]').value;
+    
                 const li = document.createElement('li');
                 li.classList.add('list-group-item');
-                li.textContent = `${nom} - ${libelle} - ${prix} - Quantité: ${quantite}`;
+                li.innerHTML = `
+                    ${nom} - ${prix} - Quantité: ${quantite}
+                    <div class="float-right">
+                        <button type="button" class="btn btn-sm btn-warning" onclick="editMedicine('${id}', '${nom}', '${quantite}')">Modifier</button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="removeMedicine('${id}')">Supprimer</button>
+                    </div>
+                `;
                 selectedMedicinesList.appendChild(li);
+    
                 selectedMedicines.push({
                     id: id,
                     nom: nom,
-                    libelle: libelle,
                     prix: prix,
                     quantite: quantite
                 });
             });
             document.getElementById('selectedMedicinesData').value = JSON.stringify(selectedMedicines);
         }
+    
+        function editMedicine(id, nom, quantite) {
+            const newQuantite = prompt(`Modifier la quantité pour ${nom}:`, quantite);
+            if (newQuantite !== null && newQuantite !== "") {
+                document.querySelector(`input[name="quantite_${id}"]`).value = newQuantite;
+                showSelectedMedicines();
+            }
+        }
+    
+        function removeMedicine(id) {
+            document.querySelector(`input[name="selection_${id}"]`).checked = false;
+            showSelectedMedicines();
+        }
     </script>
-</body>
+    </body>
 
 </html>
