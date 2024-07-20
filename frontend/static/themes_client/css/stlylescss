@@ -1,0 +1,44 @@
+.medicine-img {
+    width: 100%; /* S'assurer que l'image occupe toute la largeur du conteneur */
+    height: auto; /* Maintenir les proportions de l'image */
+  }
+  
+  .item {
+    position: relative; /* Pour positionner le tag */
+    padding: 15px; /* Espacement interne, ajustez selon vos besoins */
+    border: 1px solid #ddd; /* Bordure pour séparer visuellement les éléments */
+    border-radius: 5px; /* Bordures arrondies */
+    background-color: #fff; /* Couleur de fond */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombre légère pour un effet de profondeur */
+  }
+  
+  .item .tag {
+    position: absolute; /* Position absolue pour placer le tag */
+    top: 10px; /* Ajustez selon vos besoins */
+    left: 10px; /* Ajustez selon vos besoins */
+    background-color: #ff0000; /* Couleur de fond du tag, ajustez selon vos besoins */
+    color: #fff; /* Couleur du texte du tag */
+    padding: 5px 10px; /* Espacement interne du tag */
+    font-size: 12px; /* Taille de la police du tag */
+    border-radius: 3px; /* Bordures arrondies du tag */
+  }
+  
+  .price {
+    margin-top: 10px; /* Espace au-dessus du prix */
+    font-size: 16px; /* Taille de la police du prix */
+    color: #333; /* Couleur du texte du prix */
+  }
+  
+  .price del {
+    color: #999; /* Couleur du texte barré */
+  }
+  
+  .text-dark a {
+    color: #333; /* Couleur des liens */
+    text-decoration: none; /* Supprimer la décoration des liens */
+  }
+  
+  .text-dark a:hover {
+    color: #007bff; /* Couleur des liens au survol */
+  }
+  

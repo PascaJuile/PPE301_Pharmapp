@@ -15,13 +15,11 @@
   <link rel="stylesheet" href="{% static 'themes_client/css/jquery-ui.css' %}">
   <link rel="stylesheet" href="{% static 'themes_client/css/owl.carousel.min.css' %}">
   <link rel="stylesheet" href="{% static 'themes_client/css/owl.theme.default.min.css' %}">
-
-
   <link rel="stylesheet" href="{% static 'themes_client/css/aos.css' %}">
+  <link rel="stylesheet" href="{% static 'themes_client/css/style.css' %}"> <!-- Assurez-vous que ce fichier est le dernier -->
+  <link rel="preload" href="{% static 'themes_client/images/R.jpg' %}" as="image">
 
-  <link rel="stylesheet" href="{% static 'themes_client/css/style.css' %}">
-
-  
+    
 
 </head>
 
@@ -54,7 +52,7 @@
         <div class="d-flex align-items-center justify-content-between">
           <div class="logo">
             <div class="site-logo">
-              <a href="{% url 'liste_medicaments_client' %}" class="js-logo-clone">Pharmappppppppppp</a>
+              <a href="{% url 'liste_medicaments_client' %}" class="js-logo-clone"">PharmApp</a>
             </div>
           </div>
           <div class="main-nav d-none d-lg-block">
@@ -62,24 +60,6 @@
               <ul class="site-menu js-clone-nav d-none d-lg-block">
                 <li class="active"><a href="{% url 'liste_medicaments_client' %}">Home</a></li>
                 <li><a href="{% url 'shop' %}">Store</a></li>
-                <li class="has-children">
-                  <a href="#">Dropdown</a>
-                  <ul class="dropdown">
-                    <li><a href="#">Supplements</a></li>
-                    <li class="has-children">
-                      <a href="#">Vitamins</a>
-                      <ul class="dropdown">
-                        <li><a href="#">Supplements</a></li>
-                        <li><a href="#">Vitamins</a></li>
-                        <li><a href="#">Diet &amp; Nutrition</a></li>
-                        <li><a href="#">Tea &amp; Coffee</a></li>
-                      </ul>
-                    </li>
-                    <li><a href="#">Diet &amp; Nutrition</a></li>
-                    <li><a href="#">Tea &amp; Coffee</a></li>
-                    
-                  </ul>
-                </li>
                 <li><a href="{% url 'about' %}">About</a></li>
                 <li><a href="{% url 'contact' %}">Contact</a></li>
               </ul>
@@ -100,21 +80,18 @@
 
     {% block content %}
 
-    <div class="site-blocks-cover" style="background-image: url({% static 'themes_client/images/hero_1.jpg' %});">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-7 mx-auto order-lg-2 align-self-center">
-            <div class="site-block-cover-content text-center">
-              <h2 class="sub-title">Effective Medicine, New Medicine Everyday</h2>
-              <h1>Welcome To Pharma</h1>
-              <p>
-                <a href="#" class="btn btn-primary px-5 py-3">Shop Now</a>
-              </p>
+      <div class="site-blocks-cover" id="slider" style="background-image: url({% static '/images/R.jpg' %});"themes_client>
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-7 mx-auto order-lg-2 align-self-center">
+              <div class="site-block-cover-content text-center">
+                <h2 class="sub-title">Une pharmacie à votre service, où que vous soyez.</h2>
+                <h1>Bienvenue Sur Pharmapp</h1>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
     <div class="site-section">
       <div class="container">
@@ -122,10 +99,9 @@
           <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
             <div class="banner-wrap bg-primary h-100">
               <a href="#" class="h-100">
-                <h5>Free <br> Shipping</h5>
+                <h5>Confiance</h5>
                 <p>
-                  Amet sit amet dolor
-                  <strong>Lorem, ipsum dolor sit amet consectetur adipisicing.</strong>
+                  <strong>Nous veillons à ce que chaque client se sente en sécurité et rassuré en choisissant notre pharmacie.</strong>
                 </p>
               </a>
             </div>
@@ -133,10 +109,9 @@
           <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
             <div class="banner-wrap h-100">
               <a href="#" class="h-100">
-                <h5>Season <br> Sale 50% Off</h5>
+                <h5>Qualité</h5>
                 <p>
-                  Amet sit amet dolor
-                  <strong>Lorem, ipsum dolor sit amet consectetur adipisicing.</strong>
+                  <strong>Nous nous engageons à fournir des produits et des services de la plus haute excellence.</strong>
                 </p>
               </a>
             </div>
@@ -144,10 +119,9 @@
           <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
             <div class="banner-wrap bg-warning h-100">
               <a href="#" class="h-100">
-                <h5>Buy <br> A Gift Card</h5>
+                <h5>Service</h5>
                 <p>
-                  Amet sit amet dolor
-                  <strong>Lorem, ipsum dolor sit amet consectetur adipisicing.</strong>
+                  <strong>Nous nous dévouons à offrir une assistance exceptionnelle et personnalisée à chaque client.</strong>
                 </p>
               </a>
             </div>
@@ -161,7 +135,7 @@
       <div class="container">
         <div class="row">
           <div class="title-section text-center col-12">
-            <h2 class="text-uppercase">Popular Products</h2>
+            <h2 class="text-uppercase">Tous nous produits</h2>
           </div>
         </div>
 
@@ -181,53 +155,6 @@
           </div>
           {% endfor %}
           
-        </div>
-        <div class="row mt-5">
-          <div class="col-12 text-center">
-            <a href="{% url 'shop' %}" class="btn btn-primary px-4 py-3">View All Products</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    
-    <div class="site-section bg-light">
-      <div class="container">
-        <div class="row">
-          <div class="title-section text-center col-12">
-            <h2 class="text-uppercase">New Products</h2>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12 block-3 products-wrap">
-            <div class="nonloop-block-3 owl-carousel">
-
-              <div class="text-center item mb-4">
-                <a href="{% url 'shop_single' %}"> <img src="{% static 'themes_client/images/product_03.png' %}" alt="Image"></a>
-                <h3 class="text-dark"><a href="{% url 'shop_single' %}">Umcka Cold Care</a></h3>
-                <p class="price">$120.00</p>
-              </div>
-
-              <div class="text-center item mb-4">
-                <a href="{% url 'shop_single' %}"> <img src="{% static 'themes_client/images/product_01.png' %}" alt="Image"></a>
-                <h3 class="text-dark"><a href="{% url 'shop_single' %}">Umcka Cold Care</a></h3>
-                <p class="price">$120.00</p>
-              </div>
-
-              <div class="text-center item mb-4">
-                <a href="{% url 'shop_single' %}"> <img src="{% static 'themes_client/images/product_02.png' %}" alt="Image"></a>
-                <h3 class="text-dark"><a href="{% url 'shop_single' %}">Umcka Cold Care</a></h3>
-                <p class="price">$120.00</p>
-              </div>
-
-              <div class="text-center item mb-4">
-                <a href="{% url 'shop_single' %}"> <img src="{% static 'themes_client/images/product_04.png' %}" alt="Image"></a>
-                <h3 class="text-dark"><a href="{% url 'shop_single' %}">Umcka Cold Care</a></h3>
-                <p class="price">$120.00</p>
-              </div>
-
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -378,6 +305,7 @@
   <script src="{% static 'themes_client/js/aos.js' %}"></script>
 
   <script src="{% static 'themes_client/js/main.js' %}"></script>
+  <script src="{% static 'themes_client/js/jsperso.js' %}"></script>
 
 </body>
 
