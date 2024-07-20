@@ -24,4 +24,3 @@ class InscriptionForm(forms.ModelForm):
 class ConnexionForm(forms.Form):
     email = forms.EmailField(label="Adresse Email", required=True)
     motDePasse = forms.CharField(label="Mot de Passe", widget=forms.PasswordInput, required=True)
-    role = forms.ChoiceField(choices=ROLE_CHOICES, required=True)

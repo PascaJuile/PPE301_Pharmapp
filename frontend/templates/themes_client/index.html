@@ -51,6 +51,7 @@
       <div class="container">
         <div class="d-flex align-items-center justify-content-between">
           <div class="logo">
+<<<<<<< HEAD
             <div class="site-logo">
               <a href="{% url 'liste_medicaments_client' %}" class="js-logo-clone"">PharmApp</a>
             </div>
@@ -59,8 +60,27 @@
             <nav class="site-navigation text-right text-md-center" role="navigation">
               <ul class="site-menu js-clone-nav d-none d-lg-block">
                 <li class="active"><a href="{% url 'liste_medicaments_client' %}">Home</a></li>
-                <li><a href="{% url 'shop' %}">Store</a></li>
-                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'shop' %}">Boutique</a></li>
+                <li class="has-children">
+                  <a href="#">liste déroulante</a>
+                  <ul class="dropdown">
+                    <li><a href="#">Supplements</a></li>
+                    <li class="has-children">
+                      <a href="#">Vitamins</a>
+                      <ul class="dropdown">
+                        <li><a href="#">Supplements</a></li>
+                        <li><a href="#">Vitamins</a></li>
+                        <li><a href="#">Diet &amp; Nutrition</a></li>
+                        <li><a href="#">Tea &amp; Coffee</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="#">Diet &amp; Nutrition</a></li>
+                    <li><a href="#">Tea &amp; Coffee</a></li>
+                    
+                  </ul>
+                </li>
+                <li><a href="{% url 'about' %}">A Propos De Nous</a></li>
+>>>>>>> 950be837e7c3747c454ad0fa2a0a1a4a6b90ec41
                 <li><a href="{% url 'contact' %}">Contact</a></li>
               </ul>
             </nav>

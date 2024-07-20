@@ -52,8 +52,8 @@
                         <img src="{% static 'themes_admin/img/user3.jpg' %}">
                     </div>
                     <div>
-                        <p class="user-name">User Name</p>
-                        <p class="user-email">admin@admin.com</p>
+                        <p class="user-name">{{ request.session.user_name }}</p>
+                        <p class="user-email">{{ request.session.user_email }}</p>
                     </div>
                 </div>
             </div>
@@ -208,13 +208,13 @@
 
                             <div class="user-heading">
                                 <div><img src="{% static 'themes_admin/img/user3.jpg' %}" class="user-img2"></div>
-                                <div class="user-name2">Tasneem Anas</div>
-                                <div class="user-email2">tasneem@admin.com</div>
+                                <div class="user-name2">{{ request.session.user_name }}</div>
+                                <div class="user-email2">{{ request.session.user_email }}</div>
                                 </h4>
                             </div>
                             <div class="user-wrapper">
 
-                                <a class="content a-user dropdown-item" href="{% url 'my_profile' %}" id="a-user">
+                                <a class="content a-user dropdown-item" href="{% url 'profil_utilisateur' %}" id="a-user">
 
                                     <div class="drop-item">
                                         <div class="row row-user" style="margin-bottom: -2px;">
@@ -222,7 +222,7 @@
                                                 <i class="	fa fa-user-o" id="fa-user" style="margin-top: 1px"></i>
                                             </div>
                                             <div class="p-user">
-                                                <p>My Profile</p>
+                                                <p>Mon Profil</p>
                                             </div>
                                         </div>
                                     </div>
