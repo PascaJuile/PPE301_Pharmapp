@@ -30,7 +30,34 @@
                         <div class="col-lg-6">
                             <form method="post" action="{% url 'inscription' %}">
                                 {% csrf_token %}
-                                {{ form.as_p }}
+                                <div class="form-group">
+                                    {{ form.nomUtilisateur.label_tag }}
+                                    {{ form.nomUtilisateur }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.prenomUtilisateur.label_tag }}
+                                    {{ form.prenomUtilisateur }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.numeroUtilisateur.label_tag }}
+                                    {{ form.numeroUtilisateur }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.adresseUtilisateur.label_tag }}
+                                    {{ form.adresseUtilisateur }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.emailUtilisateur.label_tag }}
+                                    {{ form.emailUtilisateur }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.motDePasse.label_tag }}
+                                    {{ form.motDePasse }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.role.label_tag }}
+                                    {{ form.role }}
+                                </div>
                                 <button type="submit" class="btn btn-info">S'inscrire</button>
                                 <p>Vous avez déjà un compte ? <a href="{% url 'page_connexion' %}" >Connecter vous ici</a></p>
                             </form>

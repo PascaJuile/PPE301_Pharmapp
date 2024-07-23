@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="{% static 'themes_admin/css/add_category.css' %}">
     
 
-    <title>Pharmacy</title>
+    <title>PharmApp</title>
     <link rel="icon" href="{% static 'themes_admin/img/logo.png' %}" sizes="16x16 32x32" type="image/png">
 
 </head>
@@ -40,7 +40,7 @@
                 <a href="#">
                     <div class="row">
                         <i class="fas fa-laptop-medical"></i>
-                        <h3>Pharmacy</h3>
+                        <h3>PharmApp</h3>
                     </div>
                 </a>
             </div>
@@ -65,7 +65,7 @@
                         <h2>
                             <button class="btn btn-link btn-block text-left" type="button">
                                 <a href="#" class="icon-home"><i class="fa fa-fw fa-home"></i><span
-                                        style="margin-left: 2px;">Home</span></a>
+                                        style="margin-left: 2px;">Acceuil</span></a>
                             </button>
                         </h2>
                     </div>
@@ -79,7 +79,7 @@
                                 data-toggle="collapse" data-target="#collapseThree" aria-expanded="false"
                                 aria-controls="collapseThree">
                                 <a class="option-name"><i class="fas fa-capsules"></i><span
-                                        style="margin-left:4px;">Medicine</span></a>
+                                        style="margin-left:4px;">Medicaments</span></a>
                             </button>
                         </h2>
                     </div>
@@ -87,10 +87,10 @@
                         data-parent="#accordionExample">
                         <div class="card-body">
                             <ul>
-                                <li><a href="{% url 'creation_categorie' %}">Add Category</a></li>
-                                <li><a href="{% url 'liste_category' %}">Category List</a></li>
-                                <li><a href="{% url 'creation_medicament' %}">Add Medicine</a></li>
-                                <li><a href="{% url 'liste_medicaments' %}">Medicine List</a></li>
+                                <li><a href="{% url 'creation_categorie' %}">Ajout de catégorie</a></li>
+                                <li><a href="{% url 'liste_category' %}">Liste de catégorie</a></li>
+                                <li><a href="{% url 'creation_medicament' %}">Ajout de médicaments</a></li>
+                                <li><a href="{% url 'liste_medicaments' %}">Liste de médicaments</a></li>
 
                             </ul>
                         </div>
@@ -105,8 +105,7 @@
                                 data-toggle="collapse" data-target="#collapseFSixteen" aria-expanded="false"
                                 aria-controls="collapseFSixteen">
                                 <a class="option-name"><i class="fa fa-cog" aria-hidden="true"
-                                        style="margin-left: 3px;"></i><span style="margin-left: 2px;">Application
-                                        Setting</span></a>
+                                        style="margin-left: 3px;"></i><span style="margin-left: 2px;">Parametres</span></a>
                             </button>
                         </h2>
                     </div>
@@ -114,8 +113,8 @@
                         data-parent="#accordionExample">
                         <div class="card-body">
                             <ul>
-                                <li><a href="#">Language</a></li>
-                                <li><a href="{% url 'themes' %}">Themes</a></li>
+                                <li><a href="#">Langage</a></li>
+                                <li><a href="{% url 'themes' %}">Thèmes</a></li>
                             </ul>
                         </div>
                     </div>
@@ -151,7 +150,7 @@
 
                             <div class="notification-heading">
                                 <h4 class="menu-title">NOTIFICATIONS</h4>
-                                <h4 class="menu-title pull-right">View all<i
+                                <h4 class="menu-title pull-right">Tout voir<i
                                         class="glyphicon glyphicon-circle-arrow-right"></i>
                                 </h4>
                             </div>
@@ -165,7 +164,7 @@
                                                 <i class="fas fa-hourglass-end"></i>
                                             </div>
                                             <div>
-                                                <h4 class="item-title">Date Expired Medicine</h4>
+                                                <h4 class="item-title">Date de péremption du médicament</h4>
                                                 <p class="item-info">Marketing 101, Video Assignment</p>
                                             </div>
                                         </div>

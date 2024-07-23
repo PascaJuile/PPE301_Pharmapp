@@ -22,8 +22,8 @@ body{
     --color-second: rgb(197, 223, 245);
 }
 .purpule{
-    --color-main: #f58682;
-    --color-second:  #fceaea;
+    --color-main: #19a713;
+    --color-second:  #c2dcc066;
 }
 
 ::selection {

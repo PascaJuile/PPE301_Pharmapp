@@ -180,17 +180,31 @@ a:hover {
 }
 
 /* Navbar */
+.logo {
+  display: flex;
+  justify-content: flex-end; /* Aligner à droite */
+}
+
 .site-logo a {
   text-transform: uppercase;
   letter-spacing: .2em;
-  font-size: 15px; /* Taille de police de base */
+  font-size: 25px; /* Taille de police de base */
   color: #fff !important; /* Couleur du texte en blanc */
   font-weight: 900;
-  display: inline-block;
   transform: scale(2.5); /* Ajustez cette valeur selon la taille désirée */
   transform-origin: 0 0; /* Assurez-vous que le texte reste aligné au coin supérieur gauche */
   margin-bottom: 43px;
 }
+
+.top-right-image {
+  position: absolute;
+  top: 10px; /* Ajustez la valeur pour positionner l'image par rapport au haut */
+  left: 10px; /* Ajustez la valeur pour positionner l'image par rapport à la droite */
+  width: 300px; /* Ajustez la largeur selon vos besoins */
+  height: auto; /* Conserver les proportions de l'image */
+}
+
+
 
 .site-logo a:hover {
   text-decoration: none;

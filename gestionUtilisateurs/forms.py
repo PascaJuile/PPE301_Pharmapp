@@ -1,5 +1,6 @@
 # gestionUtilisateurs/forms.py
 from django import forms
+from django.contrib.auth.models import User
 from .models import Client, GestionnairePharmacie, PreparateurEnPharmacie, Caissier, Pharmacien, Livreur
 
 ROLE_CHOICES = [
@@ -24,3 +25,11 @@ class InscriptionForm(forms.ModelForm):
 class ConnexionForm(forms.Form):
     email = forms.EmailField(label="Adresse Email", required=True)
     motDePasse = forms.CharField(label="Mot de Passe", widget=forms.PasswordInput, required=True)
+
+class EditProfileForm(forms.ModelForm):
+    mobile = forms.CharField(max_length=15, required=True)
+    address = forms.CharField(max_length=255, required=True)
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
