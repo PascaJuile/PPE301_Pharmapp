@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'gestionStocks',
     'gestionUtilisateurs',
     'gestionVentes',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -72,7 +73,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Pharmapp.wsgi.application'
+ASGI_APPLICATION = 'Pharmapp.asgi.application'
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        "hosts": [('127.0.0.1', 6379)],
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -82,7 +90,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'pharmapp',
         'USER': 'root',
-        'PASSWORD': '46676997',
+        'PASSWORD': '96741711',
         'HOST': 'localhost',  
         'PORT': '3307',     
     }
@@ -123,7 +131,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 
 # Default primary key field type

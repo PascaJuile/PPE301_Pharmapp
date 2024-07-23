@@ -1,4 +1,4 @@
-{% extends "themes_admin/add_category.html" %}
+{% extends "themes_admin/themes_pharmacien/medicine_list.html" %}
 {% block content %}
 {% load static %}
 
@@ -19,8 +19,7 @@
                         
                     </div>
                     <div class="p-2 bd-highlight">
-                        <a href="{% url 'medicine_grid' %}"><button type="button" class="btn btn-list"><i class="fa fa-th"></i> &nbsp;Grid View</button></a>
-                        <a href="{% url 'creation_medicament' %}"><button type="button" class="btn btn-list"><i class="fa fa-plus-square-o"></i> &nbsp;Add Medicine</button></a>
+                        <a href="{% url 'pharmacien_affichage_med_grid' %}"><button type="button" class="btn btn-list"><i class="fa fa-th"></i> &nbsp;Grid View</button></a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -75,7 +74,7 @@
                         </div>
                         <div class="col-lg-1">
                             <div class="d-flex align-items-center">
-                                <img src="{{ medicament.image.url }}" class="rounded float-right" alt="{{ medicament.nomMedicament }}">
+                                <img src="{{ medicament.image.url }}" class="rounded float-right" alt="Medicine Image">
                             </div>
                         </div>
                     </div>
@@ -87,5 +86,6 @@
     <!-- End Body -->
 
 </body>
+
 
 {% endblock content %}
