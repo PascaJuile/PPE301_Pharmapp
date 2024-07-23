@@ -12,7 +12,8 @@ from gestionStocks.models import *
 from gestionUtilisateurs.models import *
 from gestionVentes.forms import OrdonnanceForm
 from gestionVentes.models import Ordonnance
-
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 
 # Début de la liste des Vues du template client
@@ -60,9 +61,6 @@ def medicine_grid(request):
     medicaments = Medicament.objects.all()
 
     return render(request, 'themes_admin/medicine_grid.html', {'medicaments': medicaments})
-
-def my_profile(request):
-    return render(request, 'themes_admin/my_profile.html')
 
 def notification_date_expired(request):
     return render(request, 'themes_admin/notification_date_expired.html')
@@ -271,43 +269,55 @@ def supprimer_medicament(request, medicament_id):
     return render(request, 'themes_admin/medicine_list.html')
 
 def modifier_medicament(request, medicament_id):
-    medicament = get_object_or_404(Medicament, pk=medicament_id)
-    categories = Categorie.objects.all()
-    preparateurs = PreparateurEnPharmacie.objects.all()
+    user_email = request.session.get('user_email')
+    
+    if user_email:
+        try:
+            preparateur = PreparateurEnPharmacie.objects.get(emailUtilisateur=user_email)
+        except PreparateurEnPharmacie.DoesNotExist:
+            # Redirigez ou affichez un message d'erreur si l'utilisateur n'est pas un préparateur en pharmacie
+            return redirect('inscription')
+        
+        medicament = get_object_or_404(Medicament, pk=medicament_id)
+        categories = Categorie.objects.all()
 
-    if request.method == 'POST':
-        nomMedicament = request.POST.get('nomMedicament')
-        libelle = request.POST.get('libelle')
-        code = request.POST.get('code')
-        prixUnitaire = request.POST.get('prixUnitaire')
-        dateExpiration = request.POST.get('dateExpiration')
-        image = request.FILES.get('image')
-        categorie_id = request.POST.get('nomCat')
-        preparateur_id = request.POST.get('preparateur')
+        if request.method == 'POST':
+            nomMedicament = request.POST.get('nomMedicament')
+            libelle = request.POST.get('libelle')
+            code = request.POST.get('code')
+            prixUnitaire = request.POST.get('prixUnitaire')
+            dateExpiration = request.POST.get('dateExpiration')
+            image = request.FILES.get('image')
+            categorie_id = request.POST.get('nomCat')
 
-        if nomMedicament:
-            medicament.nomMedicament = nomMedicament
-        if libelle:
-            medicament.libelle = libelle
-        if code:
-            medicament.code = code
-        if prixUnitaire:
-            medicament.prixUnitaire = prixUnitaire
-        if dateExpiration:
-            medicament.dateExpiration = dateExpiration
-        if image:
-            medicament.image = image
-        if categorie_id:
-            medicament.categorie_id = categorie_id
-        if preparateur_id:
-            medicament.preparateur_id = preparateur_id
+            if nomMedicament:
+                medicament.nomMedicament = nomMedicament
+            if libelle:
+                medicament.libelle = libelle
+            if code:
+                medicament.code = code
+            if prixUnitaire:
+                medicament.prixUnitaire = prixUnitaire
+            if dateExpiration:
+                medicament.dateExpiration = dateExpiration
+            if image:
+                medicament.image = image
+            if categorie_id:
+                categorie = Categorie.objects.get(pk=categorie_id)
+                medicament.medicamentCategorie = categorie
 
-        medicament.save()
+            # Affecter le préparateur connecté au médicament
+            medicament.medicamentPreparateur = preparateur
 
-        return redirect('liste_medicaments')
+            medicament.save()
 
-    return render(request, "themes_admin/edit_medicine.html", {'medicament': medicament, 'categories': categories, 'preparateurs': preparateurs})
+            return redirect('liste_medicaments')
 
+        return render(request, "themes_admin/edit_medicine.html", {
+            'medicament': medicament, 
+            'categories': categories,
+        })
+    
 def modifier_categorie(request, categorie_id):
     categorie = get_object_or_404(Categorie, pk=categorie_id)
     

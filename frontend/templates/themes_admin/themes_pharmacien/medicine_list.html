@@ -368,7 +368,7 @@
                 const row = checkbox.closest('tr');
                 const id = checkbox.name.split('_')[1];
                 const nom = row.querySelector('td:nth-child(2)').textContent;
-                const prix = row.querySelector('td:nth-child(3)').textContent; // Correction: prix est en 3ème position
+                const prix = row.querySelector('td:nth-child(3)').textContent; 
                 const quantite = row.querySelector('input[type="number"]').value;
     
                 const li = document.createElement('li');

@@ -13,7 +13,7 @@
                     <th>Quantité</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="medicinesTableBody">
                 {% for medicament in medicines %}
                 <tr>
                     <td>{{ medicament.nom }}</td>
@@ -23,10 +23,115 @@
                 {% endfor %}
             </tbody>
         </table>
+        <p>Total: <span id="totalPrice">0.00</span></p>
+        <div class="form-group">
+            <label for="amountReceived">Montant Reçu:</label>
+            <input type="number" class="form-control" id="amountReceived" placeholder="Entrez le montant reçu" oninput="calculateChange()">
+        </div>
+        <p>Reliquat: <span id="changeDue">0.00</span></p>
+        <button class="btn btn-primary" onclick="printReceipt()">Imprimer le Reçu</button>
     </div>
+    
+    <div id="printableReceipt" style="display:none;">
+        <div class="receipt">
+            <h2>Pharmacie XYZ</h2>
+            <p>Adresse: Rue Exemple, Ville</p>
+            <p>Date: {{ date }}</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prix Unitaire</th>
+                        <th>Quantité</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for medicament in medicines %}
+                    <tr>
+                        <td>{{ medicament.nom }}</td>
+                        <td>{{ medicament.prix }}</td>
+                        <td>{{ medicament.quantite }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p>Total: <span id="printTotalPrice">0.00</span></p>
+            <p>Montant Reçu: <span id="printAmountReceived">0.00</span></p>
+            <p>Reliquat: <span id="printChangeDue">0.00</span></p>
+        </div>
+    </div>
+
+    <style>
+        .receipt {
+            width: 300px;
+            padding: 20px;
+            margin: auto;
+            border: 1px solid #000;
+            font-family: Arial, sans-serif;
+        }
+        .receipt h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .receipt p {
+            margin: 5px 0;
+        }
+        .receipt table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .receipt table, .receipt th, .receipt td {
+            border: 1px solid black;
+        }
+        .receipt th, .receipt td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    </body>
+    <script>
+        function calculateTotalPrice() {
+            var totalPrice = 0;
+            var rows = document.querySelectorAll("#medicinesTableBody tr");
+            rows.forEach(function(row) {
+                var price = parseFloat(row.cells[1].innerText);
+                var quantity = parseInt(row.cells[2].innerText);
+                totalPrice += price * quantity;
+            });
+            document.getElementById('totalPrice').innerText = totalPrice.toFixed(2);
+            document.getElementById('printTotalPrice').innerText = totalPrice.toFixed(2);
+        }
+
+        function calculateChange() {
+            var amountReceived = parseFloat(document.getElementById('amountReceived').value);
+            var totalPrice = parseFloat(document.getElementById('totalPrice').innerText);
+            var changeDue = amountReceived - totalPrice;
+
+            document.getElementById('changeDue').innerText = changeDue.toFixed(2);
+        }
+
+        function printReceipt() {
+            var amountReceived = parseFloat(document.getElementById('amountReceived').value);
+            var changeDue = parseFloat(document.getElementById('changeDue').innerText);
+
+            document.getElementById('printAmountReceived').innerText = amountReceived.toFixed(2);
+            document.getElementById('printChangeDue').innerText = changeDue.toFixed(2);
+
+            var printContents = document.getElementById('printableReceipt').innerHTML;
+            var originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+            window.location.reload(); // Reload to restore the original state
+        }
+
+        // Call calculateTotalPrice on page load to initialize the total price
+        window.onload = calculateTotalPrice;
+    </script>
+</body>
 
 {% endblock %}
