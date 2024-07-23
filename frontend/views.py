@@ -14,6 +14,8 @@ from gestionVentes.forms import OrdonnanceForm
 from gestionVentes.models import Ordonnance
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from django.contrib import messages
+
 
 
 # Début de la liste des Vues du template client
@@ -52,8 +54,33 @@ def themes(request):
 
 
 def edit_profile(request):
-    return render(request, 'themes_admin/edit_profile.html')
+    if request.method == 'POST':
+        # Récupérer les données du formulaire
+        first_name = request.POST.get('first_name')
+        email = request.POST.get('email')
+        mobile = request.POST.get('mobile')
+        address = request.POST.get('address')
 
+        # Mettre à jour les informations dans la session
+        request.session['user_name'] = first_name
+        request.session['user_email'] = email
+        request.session['user_numero'] = mobile
+        request.session['user_adresse'] = address
+
+        # Afficher un message de succès
+        messages.success(request, 'Profile updated successfully.')
+
+        return redirect('profil_utilisateur')
+    else:
+        # Pré-remplir les informations du formulaire avec les données de la session
+        user_info = {
+            'name': request.session.get('user_name'),
+            'email': request.session.get('user_email'),
+            'mobile': request.session.get('user_numero'),
+            'address': request.session.get('user_adresse'),
+        }
+        return render(request, 'themes_admin/edit_profile.html', user_info)
+    
 def edit_user(request):
     return render(request, 'themes_admin/edit_user.html')
 
