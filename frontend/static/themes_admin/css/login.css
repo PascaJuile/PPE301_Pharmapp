@@ -1,50 +1,59 @@
-/* themes_admin/css/login.css */
-.body-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f8f9fa;
+/* Conteneur de la carte pour le formulaire */
+.login .card {
+    max-width: 1000px; /* Réduit la largeur maximale du conteneur */
+    margin: 0 auto; /* Centre le conteneur horizontalement */
+    padding: 20px; /* Ajoute un peu d'espace interne */
+    border-radius: 8px; /* Bords arrondis pour une meilleure apparence */
 }
-
-.login {
-    width: 100%;
-    max-width: 900px; /* Agrandissez cette valeur pour rendre la zone plus large */
-}
-
-.card {
-    border-radius: 1rem;
-    padding: 20px; /* Ajoutez du padding si nécessaire */
-    min-height: 80vh; /* Ajoutez une hauteur minimale pour agrandir la zone en hauteur */
+.form-group {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    margin-bottom: 15px;
+    margin-top: 40px;
 }
 
-.card-body {
-    padding: 2rem;
-    flex-grow: 1; /* Permet à card-body de prendre tout l'espace disponible */
+.form-group label {
+    font-size: 18px; /* Taille de la police des étiquettes */
+    font-weight: bold; /* Mettre les étiquettes en gras */
+    margin-bottom: 2px; /* Espacement en bas de l'étiquette */
 }
 
-/* Ajout de margin-top à l'image */
-.img-thumbnail {
-    max-width: 100%; /* Assurez-vous que l'image prend toute la largeur disponible */
-    height: auto; /* Conserver le ratio de l'image */
-    margin-top: 200px; /* Ajustez cette valeur selon vos besoins */
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group select {
+    width: 80%; /* Prendre toute la largeur */
+    padding: 10px; /* Espacement interne */
+    border: 1px solid #ccc; /* Bordure */
+    border-radius: 30px; /* Bords arrondis */
+    box-sizing: border-box; /* Inclure le padding et la bordure dans la largeur totale */
+    font-size: 14px; /* Taille de la police */
 }
 
 
-.form-group {
-    margin-bottom: 1.5rem;
-    margin-top: 3.5rem;
+
+button[type="submit"].btn.btn-info {
+    width: 60%; /* Prendre toute la largeur */
+    padding: 15px; /* Espacement interne */
+    font-size: 18px; /* Taille de la police */
+    border-radius: 4px; /* Bords arrondis */
 }
 
-.btn-info {
-    background-color: #17a2b8;
-    border-color: #17a2b8;
+.login p {
+    font-size: 18px; /* Taille de la police pour le texte */
+    margin-top: 20px; /* Espacement en haut */
 }
 
-.btn-info:hover {
-    background-color: #138496;
-    border-color: #117a8b;
+.login p a {
+    font-size: 18px; /* Taille de la police pour le lien */
+    color: #007bff; /* Couleur du lien */
+    text-decoration: none; /* Supprimer le soulignement */
 }
+
+.login p a:hover {
+    text-decoration: underline; /* Soulignement au survol */
+}
+
+
+
+

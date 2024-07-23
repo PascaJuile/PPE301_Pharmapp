@@ -21,10 +21,23 @@ class InscriptionForm(forms.ModelForm):
         widgets = {
             'motDePasse': forms.PasswordInput(),
         }
+        labels = {
+            'nomUtilisateur': 'Nom de l\'utilisateur',
+            'prenomUtilisateur': 'Prénom de l\'utilisateur',
+            'numeroUtilisateur': 'Numéro de l\'utilisateur',
+            'adresseUtilisateur': 'Adresse',
+            'emailUtilisateur': 'Adresse email',
+            'motDePasse': 'Mot de passe',
+            'role': 'Rôle',
+        }
+        # Enlever les deux-points après les labels
+        label_suffix = ''
 
 class ConnexionForm(forms.Form):
     email = forms.EmailField(label="Adresse Email", required=True)
     motDePasse = forms.CharField(label="Mot de Passe", widget=forms.PasswordInput, required=True)
+    # Enlever les deux-points après les labels
+    label_suffix = ''
 
 class EditProfileForm(forms.ModelForm):
     mobile = forms.CharField(max_length=15, required=True)
@@ -33,3 +46,5 @@ class EditProfileForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
+        # Enlever les deux-points après les labels
+        label_suffix = ''
