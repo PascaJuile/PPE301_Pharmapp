@@ -20,13 +20,13 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between bd-highlight mb-3">
                     <div class="p-2 bd-highlight">
-                        Medicine Grid
+                        Médicaments en vue grille
                     </div>
                     <div class="p-2 bd-highlight">
                         <a href="{% url 'liste_medicaments' %}"><button type="button" class="btn btn-list"><i
-                                    class="	fa fa-list-ul"></i> &nbsp;List View</button></a>
+                                    class="	fa fa-list-ul"></i> &nbsp;Vue en liste</button></a>
                         <a href="{% url 'creation_medicament' %}"><button type="button" class="btn btn-list"><i
-                                    class="fa fa-plus-square-o"></i> &nbsp;Add Medicine</button></a>
+                                    class="fa fa-plus-square-o"></i> &nbsp;Ajout de médicaments</button></a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -46,7 +46,7 @@
                                     
                                     <div class="card-footer">
                                         <a href="{% url 'show_details' medicament.id %}" class="d-flex align-items-center show-detail">
-                                            <span class="mr-2">Show Details</span>
+                                            <span class="mr-2">Plus de détails</span>
                                             <span><i class="fas fa-angle-right"></i></span>
                                         </a>
                                     </div>

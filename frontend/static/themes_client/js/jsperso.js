@@ -9,18 +9,24 @@ $(document).ready(function() {
       }
     );
     const images = [
-        "/static/themes_client/images/R1.jpg",
-        "/static/themes_client/images/R2.jpg",
-        "/static/themes_client/images/R3.jpg",
-        "/static/themes_client/images/R4.jpg",
-      ];
-    
-      let currentIndex = 0;
-    
-      function changeBackground() {
-        currentIndex = (currentIndex + 1) % images.length;
-        $('#slider').css('background-image', `url(${images[currentIndex]})`);
-      }
-    
-      setInterval(changeBackground, 3000); // Change every 3 seconds
+      "/static/themes_client/images/Back.jpg",
+      "/static/themes_client/images/Back1.jpg",
+      "/static/themes_client/images/Back2.jpg",
+      "/static/themes_client/images/Back3.jpg",
+      "/static/themes_client/images/Back4.jpg",
+  ];
+
+  let currentIndex = 0;
+
+  function changeBackground() {
+      currentIndex = (currentIndex + 1) % images.length;
+      $('#slider').css('background-image', `url(${images[currentIndex]})`);
+  }
+
+  $(document).ready(function() {
+      // Set the initial background image
+      $('#slider').css('background-image', `url(${images[currentIndex]})`);
+      // Change the background image every 3 seconds
+      setInterval(changeBackground, 3000);
+    });
   });

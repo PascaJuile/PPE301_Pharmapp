@@ -11,7 +11,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
-                        Edit Profile
+                        Modifier mon profil
                     </div>
                 </div>
                 <div class="card-body">
@@ -23,31 +23,31 @@
                                     <input type="text" class="form-control input" name="first_name" value="{{ name }}" required>
                                     <span class="focus-input" data-placeholder="Name"></span>
                                     <div class="invalid-feedback">
-                                        This field is required.
+                                        Ce champ est obligatoire.
                                     </div>
                                 </div>
                                 <div class="col">
                                     <input type="email" class="form-control input" name="email" value="{{ email }}" required>
                                     <span class="focus-input" data-placeholder="Email"></span>
                                     <div class="invalid-feedback">
-                                        This field is required, Please enter a valid email.
+                                        Ce champ est obligatoire, veuillez saisir une adresse e-mail valide.
                                     </div>
                                 </div>
                                 <div class="col">
                                     <input type="text" class="form-control input" name="mobile" value="{{ mobile }}" minlength="10" onkeypress="return onlyNumberKey(event)" required>
                                     <span class="focus-input" data-placeholder="Phone"></span>
                                     <div class="invalid-feedback">
-                                        Please enter a valid phone number.
+                                        Veuillez saisir un numéro de téléphone valide.
                                     </div>
                                 </div>
                                 <div class="col">
                                     <input type="text" class="form-control input" name="address" value="{{ address }}" required>
                                     <span class="focus-input" data-placeholder="Address"></span>
                                     <div class="invalid-feedback">
-                                        This field is required.
+                                        Ce champ est obligatoire.
                                     </div>
                                 </div>
-                                <button type="submit" class="btn float-right btn-list">Edit</button>
+                                <button type="submit" class="btn float-right btn-list">Modifier</button>
                             </form>
                             {% if messages %}
                                 <div class="messages">

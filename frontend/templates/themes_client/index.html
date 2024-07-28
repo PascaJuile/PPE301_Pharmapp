@@ -58,7 +58,7 @@
           <div class="main-nav d-none d-lg-block">
             <nav class="site-navigation text-right text-md-center" role="navigation">
               <ul class="site-menu js-clone-nav d-none d-lg-block">
-                <li class="active"><a href="{% url 'liste_medicaments_client' %}">Home</a></li>
+                <li class="active"><a href="{% url 'liste_medicaments_client' %}">Acceuil</a></li>
                 <li><a href="{% url 'shop' %}">Boutique</a></li>
                 <li class="has-children">
                   <a href="#">liste déroulante</a>
@@ -98,7 +98,7 @@
 
     {% block content %}
 
-      <div class="site-blocks-cover" id="slider" style="background-image: url({% static '/images/R.jpg' %});"themes_client>
+      <div class="site-blocks-cover" id="slider" style="background-image: url({% static '/images/Back.jpg' %});"themes_client>
         <div class="container">
           <div class="row">
             <div class="col-lg-7 mx-auto order-lg-2 align-self-center">
@@ -158,23 +158,27 @@
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-sm-6 col-lg-4 text-center item mb-4">
-            <span class="tag">Sale</span>
-            {% for medicament in medicaments %}
-            <a href="{% url 'shop_single' medicament.id %}"> 
-              {% if medicament.image and medicament.image.url %}
-                <img src="{{ medicament.image.url }}" class="medicine-img" alt="{{ medicament.nomMedicament}}">
-              {% else %}
-                  Image non disponible
-              {% endif %}
-            <h3 class="text-dark"><a href="{% url 'shop_single' %}">{{ medicament.nomMedicament }}</a></h3>
-            <p class="price"><del>{{ medicament.prixUnitaire }}</del> &mdash; {{ medicament.prixUnitaire }}</p>
-            
+        <div class="row medicaments-row">
+          {% for medicament in medicaments %}
+          <div class="col-sm-6 col-lg-4 text-center item mb-4 medicament-item">
+              <span class="tag">Sale</span>
+              <a href="{% url 'shop_single' medicament.id %}"> 
+                  {% if medicament.image and medicament.image.url %}
+                  <div class="image-container">
+                      <img src="{{ medicament.image.url }}" class="medicine-img" alt="{{ medicament.nomMedicament }}">
+                  </div>
+                  {% else %}
+                  <div class="image-container">
+                      <div class="no-image">Image non disponible</div>
+                  </div>
+                  {% endif %}
+                  <h3 class="text-dark"><a href="{% url 'shop_single' %}">{{ medicament.nomMedicament }}</a></h3>
+                  <p class="price"><del>{{ medicament.prixUnitaire }}</del> &mdash; {{ medicament.prixUnitaire }}</p>
+              </a>
           </div>
           {% endfor %}
-          
         </div>
+
       </div>
     </div>
 
@@ -182,7 +186,7 @@
       <div class="container">
         <div class="row">
           <div class="title-section text-center col-12">
-            <h2 class="text-uppercase">Testimonials</h2>
+            <h2 class="text-uppercase">Temoignages</h2>
           </div>
         </div>
         <div class="row">
@@ -192,7 +196,7 @@
               <div class="testimony">
                 <blockquote>
                   <img src="{% static 'themes_client/images/person_1.jpg' %}" alt="Image" class="img-fluid w-25 mb-4 rounded-circle">
-                  <p>&ldquo;Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo omnis voluptatem consectetur quam tempore obcaecati maiores voluptate aspernatur iusto eveniet, placeat ab quod tenetur ducimus. Minus ratione sit quaerat unde.&rdquo;</p>
+                  <p>&ldquo;PharmApp est un véritable coup de pouce pour moi. Les prix sont compétitifs, et la livraison est très rapide. En plus, le service client est toujours disponible pour répondre à mes questions, ce qui est très rassurant.&rdquo;</p>
                 </blockquote>
 
                 <p>&mdash; Kelly Holmes</p>
@@ -201,9 +205,8 @@
               <div class="testimony">
                 <blockquote>
                   <img src="{% static 'themes_client/images/person_2.jpg' %}" alt="Image" class="img-fluid w-25 mb-4 rounded-circle">
-                  <p>&ldquo;Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo omnis voluptatem consectetur quam tempore
-                    obcaecati maiores voluptate aspernatur iusto eveniet, placeat ab quod tenetur ducimus. Minus ratione sit quaerat
-                    unde.&rdquo;</p>
+                  <p>&ldquo;Commander mes médicaments en ligne avec cette pharmacie a été une expérience très positive. Les descriptions des produits sont claires, et la plateforme est facile à utiliser. 
+                  Je me sens en confiance avec leur service de livraison rapide et fiable.&rdquo;</p>
                 </blockquote>
               
                 <p>&mdash; Rebecca Morando</p>
@@ -212,9 +215,8 @@
               <div class="testimony">
                 <blockquote>
                   <img src="{% static 'themes_client/images/person_3.jpg' %}" alt="Image" class="img-fluid w-25 mb-4 rounded-circle">
-                  <p>&ldquo;Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo omnis voluptatem consectetur quam tempore
-                    obcaecati maiores voluptate aspernatur iusto eveniet, placeat ab quod tenetur ducimus. Minus ratione sit quaerat
-                    unde.&rdquo;</p>
+                  <p>&ldquo;Je suis une cliente fidèle de cette pharmacie en ligne depuis plusieurs mois. La qualité des produits est excellente et les conseils des pharmaciens en ligne sont très précieux. 
+                  Je recommande vivement cette pharmacie pour sa commodité et son professionnalisme.&rdquo;</p>
                 </blockquote>
               
                 <p>&mdash; Lucas Gallone</p>
@@ -223,9 +225,8 @@
               <div class="testimony">
                 <blockquote>
                   <img src="{% static 'themes_client/images/person_4.jpg' %}" alt="Image" class="img-fluid w-25 mb-4 rounded-circle">
-                  <p>&ldquo;Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo omnis voluptatem consectetur quam tempore
-                    obcaecati maiores voluptate aspernatur iusto eveniet, placeat ab quod tenetur ducimus. Minus ratione sit quaerat
-                    unde.&rdquo;</p>
+                  <p>&ldquo;Je suis ravie d'avoir découvert cette pharmacie en ligne. Le processus de commande est simple et rapide, 
+                  et les médicaments arrivent toujours dans les délais. Je peux maintenant gérer mes prescriptions sans me déplacer, ce qui est un vrai gain de temps."&rdquo;</p>
                 </blockquote>
               
                 <p>&mdash; Andrew Neel</p>
@@ -243,8 +244,8 @@
           <div class="col-lg-6 mb-5 mb-lg-0">
             <a href="#" class="banner-1 h-100 d-flex" style="background-image: url({% static 'themes_client/images/bg_1.jpg' %});">
               <div class="banner-1-inner align-self-center">
-                <h2>Pharma Products</h2>
-                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestiae ex ad minus rem odio voluptatem.
+                <h2>Les produits de PharmApp</h2>
+                <p>Les produits de PharmApp garantissent une efficacité maximale. Nous travaillons avec des fabricants réputés pour vous offrir des solutions fiables.
                 </p>
               </div>
             </a>
@@ -253,7 +254,7 @@
             <a href="#" class="banner-1 h-100 d-flex" style="background-image: url({% static 'themes_client/images/bg_2.jpg' %});">
               <div class="banner-1-inner ml-auto  align-self-center">
                 <h2>Rated by Experts</h2>
-                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestiae ex ad minus rem odio voluptatem.
+                <p>Les produits de PharmApp garantissent une efficacité maximale. Évalués par des experts, ils vous offrent des solutions fiables et de qualité.
                 </p>
               </div>
             </a>
@@ -269,14 +270,13 @@
           <div class="col-md-6 col-lg-3 mb-4 mb-lg-0">
 
             <div class="block-7">
-              <h3 class="footer-heading mb-4">About Us</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius quae reiciendis distinctio voluptates
-                sed dolorum excepturi iure eaque, aut unde.</p>
+              <h3 class="footer-heading mb-4">A propos</h3>
+              <p>PharmApp vous offre des produits de santé fiables et efficaces, soutenus par l’expertise de notre équipe.</p>
             </div>
 
           </div>
           <div class="col-lg-3 mx-auto mb-5 mb-lg-0">
-            <h3 class="footer-heading mb-4">Quick Links</h3>
+            <h3 class="footer-heading mb-4">Liens</h3>
             <ul class="list-unstyled">
               <li><a href="#">Supplements</a></li>
               <li><a href="#">Vitamins</a></li>
@@ -287,11 +287,11 @@
 
           <div class="col-md-6 col-lg-3">
             <div class="block-5 mb-5">
-              <h3 class="footer-heading mb-4">Contact Info</h3>
+              <h3 class="footer-heading mb-4">Contact</h3>
               <ul class="list-unstyled">
                 <li class="address">203 Fake St. Mountain View, San Francisco, California, USA</li>
-                <li class="phone"><a href="tel://23923929210">+2 392 3929 210</a></li>
-                <li class="email">emailaddress@domain.com</li>
+                <li class="phone"><a href="tel://96926150">+228 22232324</a></li>
+                <li class="email">pharmapp@hotmail.com</li>
               </ul>
             </div>
 
@@ -315,7 +315,7 @@
     </footer>
   </div>
 
-  <script src="{% static 'themes_client/js/jquery-3.3.1.min.js' %}"></script>
+  <script src="{% static 'themes_client/js/jquery-3.7.1.min.js' %}"></script>
   <script src="{% static 'themes_client/js/jquery-ui.js' %}"></script>
   <script src="{% static 'themes_client/js/popper.min.js' %}"></script>
   <script src="{% static 'themes_client/js/bootstrap.min.js' %}"></script>
