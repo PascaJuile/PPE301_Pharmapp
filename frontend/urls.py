@@ -20,6 +20,8 @@ urlpatterns = [
     path('formulaire_achat/<int:ordonnance_id>/', views.formulaire_achat, name='formulaire_achat'),
 
     # Paths pour le template admin
+    path('preparateur/homepage', views.homepage_prepa, name='homepage_prepa'),
+    path('pharmacien/homepage', views.homepage_phar, name='homepage_phar'),
     path('themes', views.themes, name='themes'),
     path('edit_profile', views.edit_profile, name='edit_profile'),
     path('edit_user', views.edit_user, name='edit_user'),
@@ -33,6 +35,7 @@ urlpatterns = [
     path('preparateur/medicament_creation', views.creation_medicament, name='creation_medicament'),
     path('page_connexion', views.page_connexion, name='page_connexion'),
     path('inscription', views.inscription, name='inscription'),
+    path('deconnexion', views.deconnexion, name='deconnexion'),
     path('preparateur/category_affichage', views.liste_category, name='liste_category'),
     path('preparateur/supprimer_categorie/<int:categorie_id>/', views.supprimer_categorie, name='supprimer_categorie'),
     path('preparateur/supprimer_medicament/<int:medicament_id>/', views.supprimer_medicament, name='supprimer_medicament'),
@@ -46,9 +49,12 @@ urlpatterns = [
     path('pharmacien/list_affichage_medicaments', views.pharmacien_affichage_med, name='pharmacien_affichage_med'),
     path('pharmacien/grid_affichage_medicaments', views.pharmacien_affichage_med_grid, name='pharmacien_affichage_med_grid'),
     path('pharmacien/show_details/<int:id>/', views.pharmacien_show_details, name='pharmacien_show_details'),
+    path('pharmacien/listeCommande', views.journal_medicaments_selectionnes, name='journal_medicaments_selectionnes'),
+    path('pharmacien/medicaments_selectionnés', views.medicaments_selectionnés, name='medicaments_selectionnés'),
+
 
     # Paths pour le caissier
-    path('caissier/medicaments_selectionnés', views.medicaments_selectionnés, name='medicaments_selectionnés'),
+    path('afficher-medicaments-selectionnes', views.afficher_medicaments_selectionnes, name='afficher_medicaments_selectionnes'),
 
     # Path profil utilisateur
     path('profil_utilisateur', views.profil_utilisateur, name='profil_utilisateur'),

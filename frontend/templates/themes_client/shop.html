@@ -9,7 +9,7 @@
     <div class="bg-light py-3">
       <div class="container">
         <div class="row">
-          <div class="col-md-12 mb-0"><a href="{% url 'index' %}">Home</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Store</strong></div>
+          <div class="col-md-12 mb-0"><a href="{% url 'liste_medicaments_client' %}">Home</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Store</strong></div>
         </div>
       </div>
     </div>
@@ -39,6 +39,13 @@
         </div>
     
         <div class="row">
+          {% for medicament in medicaments %}
+          <div class="col-sm-6 col-lg-4 text-center item mb-4">
+            <a href="{% url 'shop_single' %}"> <img src="{{ medicament.image.url }}" alt="{{ medicament.nomMedicament}}"></a>
+            <h3 class="text-dark"><a href="{% url 'shop_single' %}">{{ medicament.nomMedicament }}</a></h3>
+            <p class="price">{{ medicament.prixUnitaire }}</p>
+          </div>
+          {% endfor %}
           <div class="col-sm-6 col-lg-4 text-center item mb-4">
             <span class="tag">Sale</span>
             <a href="{% url 'shop_single' %}"> <img src="{% static 'themes_client/images/product_01.png' %}" alt="Image"></a>

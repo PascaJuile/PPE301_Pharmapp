@@ -19,30 +19,44 @@
                         <div class="col-lg-6">
                             <form class="needs-validation" novalidate method="POST" action="{% url 'edit_profile' %}">
                                 {% csrf_token %}
-                                <div class="col">
-                                    <input type="text" class="form-control input" name="first_name" value="{{ name }}" required>
-                                    <span class="focus-input" data-placeholder="Name"></span>
+                                <div class="form-group">
+                                    <label for="first_name">Name</label>
+                                    <input type="text" class="form-control" id="first_name" name="first_name" value="{{ name }}" required>
                                     <div class="invalid-feedback">
                                         This field is required.
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <input type="email" class="form-control input" name="email" value="{{ email }}" required>
-                                    <span class="focus-input" data-placeholder="Email"></span>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" value="{{ email }}" required>
                                     <div class="invalid-feedback">
                                         This field is required, Please enter a valid email.
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <input type="text" class="form-control input" name="mobile" value="{{ mobile }}" minlength="10" onkeypress="return onlyNumberKey(event)" required>
-                                    <span class="focus-input" data-placeholder="Phone"></span>
+                                <div class="form-group">
+                                    <label for="mobile">Phone</label>
+                                    <input type="text" class="form-control" id="mobile" name="mobile" value="{{ mobile }}" minlength="10" onkeypress="return onlyNumberKey(event)" required>
                                     <div class="invalid-feedback">
                                         Please enter a valid phone number.
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <input type="text" class="form-control input" name="address" value="{{ address }}" required>
-                                    <span class="focus-input" data-placeholder="Address"></span>
+                                <div class="form-group">
+                                    <label for="address">Address</label>
+                                    <input type="text" class="form-control" id="address" name="address" value="{{ address }}" required>
+                                    <div class="invalid-feedback">
+                                        This field is required.
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="old_password">Old Password</label>
+                                    <input type="password" class="form-control" id="old_password" name="old_password" required>
+                                    <div class="invalid-feedback">
+                                        This field is required.
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="new_password">New Password</label>
+                                    <input type="password" class="form-control" id="new_password" name="new_password" required>
                                     <div class="invalid-feedback">
                                         This field is required.
                                     </div>

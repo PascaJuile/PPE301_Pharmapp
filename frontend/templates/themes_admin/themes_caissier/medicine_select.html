@@ -1,10 +1,12 @@
-{% extends "themes_admin/add_category.html" %}
+{% extends "themes_admin/themes_pharmacien/medicine_list.html" %}
 {% block content %}
 {% load static %}
 
 <body>
     <div class="container">
-        <h1 class="mt-5">Médicaments Sélectionnés</h1>
+        <h1 class="mt-5">Médicaments Sélectionnés Non Validés</h1>
+        {% for selection in non_validated_medicines %}
+        <h2>Selection ID: {{ selection.id }}</h2>
         <table class="table table-bordered mt-3">
             <thead>
                 <tr>
@@ -13,8 +15,8 @@
                     <th>Quantité</th>
                 </tr>
             </thead>
-            <tbody id="medicinesTableBody">
-                {% for medicament in medicines %}
+            <tbody>
+                {% for medicament in selection.donnees %}
                 <tr>
                     <td>{{ medicament.nom }}</td>
                     <td>{{ medicament.prix }}</td>
@@ -23,15 +25,24 @@
                 {% endfor %}
             </tbody>
         </table>
-        <p>Total: <span id="totalPrice">0.00</span></p>
-        <div class="form-group">
-            <label for="amountReceived">Montant Reçu:</label>
-            <input type="number" class="form-control" id="amountReceived" placeholder="Entrez le montant reçu" oninput="calculateChange()">
+        <button class="btn btn-primary" onclick="validerCommande('{{ selection.id }}')">Valider la commande</button>
+        <div id="details-{{ selection.id }}" style="display: none; margin-top: 20px;">
+            <p>Total: <span id="totalPrice-{{ selection.id }}">0.00</span></p>
+            <div class="form-group">
+                <label for="amountReceived-{{ selection.id }}">Montant Reçu:</label>
+                <input type="number" class="form-control" id="amountReceived-{{ selection.id }}" placeholder="Entrez le montant reçu" oninput="calculateChange('{{ selection.id }}')">
+            </div>
+            <p>Reliquat: <span id="changeDue-{{ selection.id }}">0.00</span></p>
+            <form method="post" action="{% url 'afficher_medicaments_selectionnes' %}">
+                {% csrf_token %}
+                <input type="hidden" name="selection_id" value="{{ selection.id }}">
+                <input type="hidden" name="total_price" id="hiddenTotalPrice-{{ selection.id }}" value="">
+                <button class="btn btn-success" type="submit">Down</button>
+            </form>
         </div>
-        <p>Reliquat: <span id="changeDue">0.00</span></p>
-        <button class="btn btn-primary" onclick="printReceipt()">Imprimer le Reçu</button>
+        {% endfor %}
     </div>
-    
+
     <div id="printableReceipt" style="display:none;">
         <div class="receipt">
             <h2>Pharmacie XYZ</h2>
@@ -46,13 +57,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for medicament in medicines %}
-                    <tr>
-                        <td>{{ medicament.nom }}</td>
-                        <td>{{ medicament.prix }}</td>
-                        <td>{{ medicament.quantite }}</td>
-                    </tr>
-                    {% endfor %}
+                    <!-- This will be filled dynamically -->
                 </tbody>
             </table>
             <p>Total: <span id="printTotalPrice">0.00</span></p>
@@ -89,34 +94,32 @@
         }
     </style>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script>
-        function calculateTotalPrice() {
+        function validerCommande(selectionId) {
             var totalPrice = 0;
-            var rows = document.querySelectorAll("#medicinesTableBody tr");
+            var rows = document.querySelectorAll(`#details-${selectionId} tbody tr`);
             rows.forEach(function(row) {
                 var price = parseFloat(row.cells[1].innerText);
                 var quantity = parseInt(row.cells[2].innerText);
                 totalPrice += price * quantity;
             });
-            document.getElementById('totalPrice').innerText = totalPrice.toFixed(2);
-            document.getElementById('printTotalPrice').innerText = totalPrice.toFixed(2);
+            document.getElementById('totalPrice-' + selectionId).innerText = totalPrice.toFixed(2);
+            document.getElementById('details-' + selectionId).style.display = 'block';
         }
 
-        function calculateChange() {
-            var amountReceived = parseFloat(document.getElementById('amountReceived').value);
-            var totalPrice = parseFloat(document.getElementById('totalPrice').innerText);
+        function calculateChange(selectionId) {
+            var amountReceived = parseFloat(document.getElementById('amountReceived-' + selectionId).value);
+            var totalPrice = parseFloat(document.getElementById('totalPrice-' + selectionId).innerText);
             var changeDue = amountReceived - totalPrice;
 
-            document.getElementById('changeDue').innerText = changeDue.toFixed(2);
+            document.getElementById('changeDue-' + selectionId).innerText = changeDue.toFixed(2);
         }
 
-        function printReceipt() {
-            var amountReceived = parseFloat(document.getElementById('amountReceived').value);
-            var changeDue = parseFloat(document.getElementById('changeDue').innerText);
+        function printReceipt(selectionId) {
+            var amountReceived = parseFloat(document.getElementById('amountReceived-' + selectionId).value);
+            var changeDue = parseFloat(document.getElementById('changeDue-' + selectionId).innerText);
 
+            document.getElementById('printTotalPrice').innerText = totalPrice.toFixed(2);
             document.getElementById('printAmountReceived').innerText = amountReceived.toFixed(2);
             document.getElementById('printChangeDue').innerText = changeDue.toFixed(2);
 
@@ -128,10 +131,6 @@
             document.body.innerHTML = originalContents;
             window.location.reload(); // Reload to restore the original state
         }
-
-        // Call calculateTotalPrice on page load to initialize the total price
-        window.onload = calculateTotalPrice;
     </script>
 </body>
-
 {% endblock %}

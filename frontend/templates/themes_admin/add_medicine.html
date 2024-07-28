@@ -36,6 +36,9 @@ href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstr
 
                     <form action="{% url 'creation_medicament' %}" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
+                        {% if error_message %}
+                            <div class="alert alert-danger">{{ error_message }}</div>
+                        {% endif %}
                         <div class="form-row" style="margin-top: 30px;">
                             <label for="nomMedicament" class="col-lg-2 label-input">Nom du médicament <i class="text-danger">*</i>:</label>
                             <input type="text" class="form-control2 col-lg-3" id="nomMedicament" placeholder="Nom du Médicament" name="nomMedicament" required>

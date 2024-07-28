@@ -1,0 +1,30 @@
+{% extends "themes_admin/themes_pharmacien/medicine_list.html" %}
+{% block content %}
+<div class="container">
+    <h2>Journal des Commandes </h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Date de Création</th>
+                <th>Données des Médicaments</th>
+                <th>État de Validation</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for selection in selections %}
+            <tr>
+                <td>{{ selection.dateCreation }}</td>
+                <td>
+                    <ul>
+                        {% for med in selection.donnees %}
+                        <li>{{ med.nom }} - {{ med.prix }} - Quantité: {{ med.quantite }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td>{{ selection.etatDeValidation|yesno:"Validé,Non Validé" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

@@ -64,7 +64,7 @@
                     <div class="card-header">
                         <h2>
                             <button class="btn btn-link btn-block text-left" type="button">
-                                <a href="#" class="icon-home"><i class="fa fa-fw fa-home"></i><span
+                                <a href="{% url 'homepage_phar' %}" class="icon-home"><i class="fa fa-fw fa-home"></i><span
                                         style="margin-left: 2px;">Home</span></a>
                             </button>
                         </h2>
@@ -88,14 +88,32 @@
                         <div class="card-body">
                             <ul>
                                 <li><a href="{% url 'pharamacien_listeMedicament' %}">Ventes de Médicaments</a></li>
-                                <li><a href="#">Liste des commandes</a></li>
                                 <li><a href="{% url 'pharmacien_affichage_med' %}">Liste des médicaments</a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
-            
+                <div class="card">
+                    <div class="card-header" id="headingFour">
+                        <h2>
+                            <button class="btn btn-link btn-block text-left collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapseFour" aria-expanded="false"
+                                aria-controls="collapseFour">
+                                <a class="option-name"><i class="fas fa-capsules"></i><span
+                                        style="margin-left:4px;">Commandes</span></a>
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapseFour" class="collapse" aria-labelledby="headingFour"
+                        data-parent="#accordionExample">
+                        <div class="card-body">
+                            <ul>
+                                <li><a href="{% url 'journal_medicaments_selectionnes' %}">Liste des commandes</a></li>                            </ul>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="card">
                     <div class="card-header" id="headingSixteen">
                         <h2>
@@ -242,7 +260,7 @@
                                 </a>
                                 <li class="divider"></li>
 
-                                <a class="content a-sign dropdown-item" href="#" id="a-user">
+                                <a class="content a-sign dropdown-item" href="{% url 'deconnexion' %}" id="a-user">
                                     <div class="drop-item">
                                         <div class="row row-user" style="margin-top: 5px">
                                             <div class="">
@@ -275,6 +293,13 @@
                         Liste des médicaments
                         <a href="#"><button type="button" class="btn btn-list" data-toggle="modal" data-target="#selectedMedicinesModal" onclick="showSelectedMedicines()"><i class="fa fa-align-justify"></i>&nbsp;Afficher sélection</button></a>
                     </div>
+                    {% if messages %}
+                        <ul class="messages">
+                            {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -340,6 +365,7 @@
                     <form id="selectedMedicinesForm" method="POST" action="{% url 'medicaments_selectionnés' %}">
                         {% csrf_token %}
                         <input type="hidden" id="selectedMedicinesData" name="selectedMedicinesData">
+                        <input type="hidden" id="pharmacienId" name="pharmacien_id" value="{{ pharmacien.id }}">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                         <button type="submit" class="btn btn-primary">Envoyer</button>
                     </form>
@@ -405,6 +431,4 @@
             showSelectedMedicines();
         }
     </script>
-    </body>
-
-</html>
+    

@@ -1,9 +1,10 @@
+from datetime import datetime
 import json
 from pyexpat.errors import messages
 from django.http import Http404, HttpResponse, HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login, logout
 from django.contrib.auth.hashers import check_password
 from gestionUtilisateurs.forms import ConnexionForm, InscriptionForm
 from django.views.decorators.csrf import csrf_exempt
@@ -11,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from gestionStocks.models import *
 from gestionUtilisateurs.models import *
 from gestionVentes.forms import OrdonnanceForm
-from gestionVentes.models import Ordonnance
+from gestionVentes.models import CommandePresentielle, Ordonnance, SelectionMedicament
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib import messages
@@ -36,16 +37,26 @@ def shop_single(request):
     return render(request, 'themes_client/shop-single.html')
 
 def shop(request):
-    return render(request, 'themes_client/shop.html')
+    medicaments = Medicament.objects.all()
+    categories = Categorie.objects.all()
+
+    return render(request, 'themes_client/shop.html', {'medicaments':medicaments, 'categories':categories})
 
 def thankyou(request):
     return render(request, 'themes_client/thankyou.html')
+
+
 
 #Fin de la liste des vues du template client
 
 #Début de la liste des Vues du template admin
 
 
+def homepage_prepa(request):
+    return render(request, 'themes_admin/homepage_prepa.html')
+
+def homepage_phar(request):
+    return render(request, 'themes_admin/themes_pharmacien/homepage_phar.html')
 
 
 def themes(request):
@@ -55,31 +66,40 @@ def themes(request):
 
 def edit_profile(request):
     if request.method == 'POST':
-        # Récupérer les données du formulaire
+        old_password = request.POST.get('old_password')
+        new_password = request.POST.get('new_password')
         first_name = request.POST.get('first_name')
         email = request.POST.get('email')
         mobile = request.POST.get('mobile')
         address = request.POST.get('address')
+        user_email = request.session.get('user_email')
 
-        # Mettre à jour les informations dans la session
-        request.session['user_name'] = first_name
-        request.session['user_email'] = email
-        request.session['user_numero'] = mobile
-        request.session['user_adresse'] = address
+        if old_password and new_password:
+            try:
+                user = PreparateurEnPharmacie.objects.get(emailUtilisateur=user_email)
+                if check_password(old_password, user.motDePasse):
+                    user.nomUtilisateur = first_name
+                    user.emailUtilisateur = email
+                    user.numeroUtilisateur = mobile
+                    user.adresseUtilisateur = address
+                    user.set_password(new_password)
+                    user.save()
+                    messages.success(request, 'Profile updated successfully.')
+                    return redirect('profil_utilisateur')  # Redirect to the same profile page after update
+                else:
+                    messages.error(request, 'Old password is incorrect.')
+            except PreparateurEnPharmacie.DoesNotExist:
+                messages.error(request, 'User does not exist.')
+        else:
+            messages.error(request, 'Please fill out both password fields.')
 
-        # Afficher un message de succès
-        messages.success(request, 'Profile updated successfully.')
-
-        return redirect('profil_utilisateur')
-    else:
-        # Pré-remplir les informations du formulaire avec les données de la session
-        user_info = {
-            'name': request.session.get('user_name'),
-            'email': request.session.get('user_email'),
-            'mobile': request.session.get('user_numero'),
-            'address': request.session.get('user_adresse'),
-        }
-        return render(request, 'themes_admin/edit_profile.html', user_info)
+    user_info = {
+        'name': request.session.get('user_name'),
+        'email': request.session.get('user_email'),
+        'mobile': request.session.get('user_numero'),
+        'address': request.session.get('user_adresse'),
+    }
+    return render(request, 'themes_admin/edit_profile.html', user_info)
     
 def edit_user(request):
     return render(request, 'themes_admin/edit_user.html')
@@ -145,7 +165,8 @@ def creation_medicament(request):
             return redirect('inscription')
         
         categories = Categorie.objects.all()
-        
+        today = datetime.today().date()
+
         if request.method == "POST":
             nomMedicament = request.POST['nomMedicament']
             libelle = request.POST['libelle']
@@ -155,6 +176,16 @@ def creation_medicament(request):
             image = request.FILES.get('image') if 'image' in request.FILES else None
             categorie_id = request.POST.get('nomCat')
             
+            # Convertir la dateExpiration en objet date
+            dateExpiration_obj = datetime.strptime(dateExpiration, '%Y-%m-%d').date()
+
+            if dateExpiration_obj < today:
+                return render(request, 'themes_admin/add_medicine.html', {
+                    'categories': categories,
+                    'today': today,
+                    'error_message': 'La date d\'expiration ne peut pas être antérieure à aujourd\'hui.'
+                })
+
             categorie = Categorie.objects.get(pk=categorie_id)
 
             medicament = Medicament(
@@ -170,10 +201,12 @@ def creation_medicament(request):
             medicament.save()
             return redirect('liste_medicaments')  # Redirigez vers une page de succès appropriée
         
-        return render(request, 'themes_admin/add_medicine.html', {'categories': categories})
+        return render(request, 'themes_admin/add_medicine.html', {
+            'categories': categories,
+            'today': today
+        })
     else:
-        # Redirigez vers la page de connexion si l'email de l'utilisateur n'est pas dans la session
-        return redirect('page_connexion')  #
+        return redirect('page_connexion')
 
 #Fonction d'affichage de la page de connexion
 def page_connexion(request):
@@ -202,11 +235,11 @@ def page_connexion(request):
                         if isinstance(user, Client):
                             return redirect('liste_medicaments_client')
                         elif isinstance(user, Pharmacien):
-                            return redirect('pharamacien_listeMedicament')
+                            return redirect('homepage_phar')
                         elif isinstance(user, Caissier):
-                            return redirect('medicaments_selectionnés')
+                            return redirect('afficher_medicaments_selectionnes')
                         else:
-                            return redirect('creation_categorie')
+                            return redirect('homepage_prepa')
                     else:
                         form.add_error(None, "Email ou mot de passe incorrect.")
                         break
@@ -414,15 +447,97 @@ def pharamacien_listeMedicament(request):
     return render(request, 'themes_admin/themes_pharmacien/medicine_list.html', {'categories': categories, 'user_name': user_name,
         'user_email': user_email,})
 
-    
+  
 def medicaments_selectionnés(request):
+    user_email = request.session.get('user_email')
+    
+    if user_email:
+        try:
+            pharmacien = Pharmacien.objects.get(emailUtilisateur=user_email)
+        except Pharmacien.DoesNotExist:
+            messages.error(request, 'Pharmacien non trouvé.')
+            return redirect('inscription')
+    else:
+        messages.error(request, 'Utilisateur non authentifié.')
+        return redirect('page_connexion')
+
     if request.method == 'POST':
         selected_medicines_data = request.POST.get('selectedMedicinesData')
         selected_medicines = json.loads(selected_medicines_data)
-        return render(request, 'themes_admin/themes_caissier/medicine_select.html', {'medicines': selected_medicines})
+
+        try:
+            SelectionMedicament.objects.create(
+                donnees=selected_medicines,
+                pharmacien=pharmacien
+            )
+            messages.success(request, 'Données envoyées avec succès.')
+        except Exception as e:
+            messages.error(request, f'Erreur lors de l\'enregistrement des données : {e}')
+
+            return redirect('afficher_medicaments_selectionnes')
+        
+        return render(request, 'themes_admin/themes_pharmacien/medicine_list.html', {'message': 'Données envoyées avec succès.'})
     else:
-        return render(request, 'themes_admin/themes_pharmacien/medicine_list.html', {'message': 'Invalid request method.'}) 
-       
+        return render(request, 'themes_admin/themes_pharmacien/medicine_list.html', {'message': 'Invalid request method.'})
+    
+def journal_medicaments_selectionnes(request):   
+    user_email = request.session.get('user_email')
+    
+    if user_email:
+        try:
+            pharmacien = Pharmacien.objects.get(emailUtilisateur=user_email)
+        except Pharmacien.DoesNotExist:
+            messages.error(request, 'Pharmacien non trouvé.')
+            return redirect('inscription')
+    else:
+        messages.error(request, 'Utilisateur non authentifié.')
+        return redirect('page_connexion')
+
+    selections = SelectionMedicament.objects.filter(pharmacien=pharmacien).order_by('-dateCreation')
+    
+    return render(request, 'themes_admin/themes_pharmacien/commandes_list.html', {'selections': selections})
+        
+def afficher_medicaments_selectionnes(request):
+    user_email = request.session.get('user_email')
+    
+    if user_email:
+        try:
+            caissier = Caissier.objects.get(emailUtilisateur=user_email)
+        except Caissier.DoesNotExist:
+            messages.error(request, 'Caissier non trouvé.')
+            return redirect('inscription')
+    else:
+        messages.error(request, 'Utilisateur non authentifié.')
+        return redirect('page_connexion')
+    
+    if request.method == 'POST':
+        selection_id = request.POST.get('selection_id')
+        total_price = request.POST.get('total_price')
+        
+        try:
+            selection_medicaments = SelectionMedicament.objects.get(id=selection_id)
+        except SelectionMedicament.DoesNotExist:
+            messages.error(request, 'Médicaments sélectionnés non trouvés.')
+            return redirect('some_error_page')
+
+        # Créer une instance de CommandePresentielle
+        CommandePresentielle.objects.create(
+            prixTotal=total_price,
+            selection_medicaments=selection_medicaments,
+            caissier=caissier
+        )
+        
+        # Mettre à jour l'attribut etatDeValidation de SelectionMedicament
+        selection_medicaments.etatDeValidation = True
+        selection_medicaments.save()
+
+        messages.success(request, 'Commande validée avec succès.')
+
+    # Récupérer toutes les instances de SelectionMedicament non validées
+    non_validated_medicines = SelectionMedicament.objects.filter(etatDeValidation=False).order_by('-id')
+    
+    return render(request, 'themes_admin/themes_caissier/medicine_select.html', {'non_validated_medicines': non_validated_medicines})
+        
 def pharmacien_affichage_med(request):
     # Récupérer tous les médicaments avec leurs catégories associées
     medicaments = Medicament.objects.all()
@@ -439,3 +554,7 @@ def pharmacien_affichage_med_grid(request):
 def pharmacien_show_details(request, id):
     medicament = get_object_or_404(Medicament, id=id)
     return render(request, 'themes_admin/themes_pharmacien/show_details.html', {'medicament': medicament})
+
+def deconnexion(request):
+    logout(request)
+    return redirect('page_connexion')

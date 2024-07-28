@@ -64,7 +64,7 @@
                     <div class="card-header">
                         <h2>
                             <button class="btn btn-link btn-block text-left" type="button">
-                                <a href="#" class="icon-home"><i class="fa fa-fw fa-home"></i><span
+                                <a href="{% url 'homepage_prepa' %}" class="icon-home"><i class="fa fa-fw fa-home"></i><span
                                         style="margin-left: 2px;">Acceuil</span></a>
                             </button>
                         </h2>
@@ -243,7 +243,7 @@
                                 </a>
                                 <li class="divider"></li>
 
-                                <a class="content a-sign dropdown-item" href="#" id="a-user">
+                                <a class="content a-sign dropdown-item" href="{% url 'deconnexion' %}" id="a-user">
                                     <div class="drop-item">
                                         <div class="row row-user" style="margin-top: 5px">
                                             <div class="">
@@ -264,11 +264,11 @@
         </nav>
     </div>
 
+
     <!-- End Navbar -->
 
     <!-- Start Body -->
     {% block content %}
-
     <div class="body-page" id="body-page">
         <div class="add-category">
             <div class="card">
