@@ -46,6 +46,33 @@
     text-align: right;
 }
 
+/* Assurez-vous que le body-page est un conteneur flex */
+.body-page {
+    display: flex;
+    justify-content: center; /* Centre horizontalement */
+    align-items: center;     /* Centre verticalement */
+    min-height: 100vh;       /* Prend au moins la hauteur de la fenêtre */
+}
+
+.add-medicine {
+    width: 100%;
+    max-width: 800px; /* Ajustez la largeur maximale selon vos besoins */
+    margin: 0 auto;  /* Centre le conteneur */
+}
+
+.card {
+    height: auto;
+    margin-bottom: 20px;
+    padding-bottom: 40px;
+    box-shadow: 0 1rem 1rem rgb(0 0 0 / 8%);
+}
+
+/* Assurez-vous que la largeur de la carte est contrôlée par le conteneur add-medicine */
+.add-medicine .card-body {
+    padding: 20px; /* Ajustez le padding si nécessaire */
+}
+
+
 @media (max-width: 991px) {
     .add-medicine .label-input{
         text-align: left;

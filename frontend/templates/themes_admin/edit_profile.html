@@ -11,7 +11,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
-                        Edit Profile
+                        Modifier mon profil
                     </div>
                 </div>
                 <div class="card-body">
@@ -23,21 +23,21 @@
                                     <label for="first_name">Name</label>
                                     <input type="text" class="form-control" id="first_name" name="first_name" value="{{ name }}" required>
                                     <div class="invalid-feedback">
-                                        This field is required.
+                                        Ce champ est obligatoire.
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email</label>
                                     <input type="email" class="form-control" id="email" name="email" value="{{ email }}" required>
                                     <div class="invalid-feedback">
-                                        This field is required, Please enter a valid email.
+                                        Ce champ est obligatoire, veuillez saisir une adresse e-mail valide.
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="mobile">Phone</label>
                                     <input type="text" class="form-control" id="mobile" name="mobile" value="{{ mobile }}" minlength="10" onkeypress="return onlyNumberKey(event)" required>
                                     <div class="invalid-feedback">
-                                        Please enter a valid phone number.
+                                        Veuillez saisir un numéro de téléphone valide.
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -58,10 +58,10 @@
                                     <label for="new_password">New Password</label>
                                     <input type="password" class="form-control" id="new_password" name="new_password" required>
                                     <div class="invalid-feedback">
-                                        This field is required.
+                                        Ce champ est obligatoire.
                                     </div>
                                 </div>
-                                <button type="submit" class="btn float-right btn-list">Edit</button>
+                                <button type="submit" class="btn float-right btn-list">Modifier</button>
                             </form>
                             {% if messages %}
                                 <div class="messages">

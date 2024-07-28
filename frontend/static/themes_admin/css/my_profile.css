@@ -1,68 +1,94 @@
-
-.my-profile .card{
-    height: 500px;
-    margin-bottom: 20px;
-    padding-bottom: 40px;
-    font-size: 15px;
-    box-shadow: 0 1rem 1rem rgb(0 0 0 / 8%);
-    width: 400px;
-    
-}
-.my-profile.card-header{
-    font-size: 20px;
-    padding:15px;
-    background-color:white;
-    margin-bottom: 15px;
+/* Style pour le conteneur du profil */
+.my-profile .container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Aligne le contenu vers le haut */
+    height: 100vh; /* Remplit la hauteur de la fenêtre */
+    padding: 40px; /* Augmente le padding autour du conteneur */
 }
 
-.me-2 {
-    margin-right: .5rem!important;
+/* Style pour la carte de profil */
+.my-profile .card {
+    width: 500px; /* Largeur augmentée de la carte */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Ombre douce */
+    border-radius: 15px; /* Coins arrondis */
+    overflow: hidden; /* Cache les débordements */
+    background: #ffffff; /* Fond blanc */
+    transition: transform 0.3s ease; /* Transition pour l'effet de survol */
+    position: relative; /* Position relative pour le positionnement de l'avatar */
+    margin-top: 30px; /* Espace au-dessus de la carte */
 }
 
-.my-profile .img-profile{
-    margin-top: 20px;
+/* Style pour l'image du haut de la carte */
+.my-profile .card-img-top {
+    width: 100%;
+    height: 220px; /* Hauteur augmentée de l'image */
+    object-fit: cover; /* Recadre l'image */
 }
 
+/* Style pour le corps de la carte */
+.my-profile .card-body {
+    text-align: center;
+    padding: 25px 20px; /* Espacement interne augmenté */
+}
+
+/* Style pour l'avatar */
+.my-profile .card-avatar {
+    position: absolute;
+    top: 50%; /* Centrage vertical */
+    left: 50%; /* Centrage horizontal */
+    transform: translate(-50%, -50%); /* Ajuste la position de l'avatar */
+    z-index: 1;
+    margin-top: -160px; /* Ajuste la position verticale de l'avatar pour le chevauchement */
+}
+
+/* Style pour l'image de l'avatar */
 .my-profile .avatar-img {
-    width: 250%;
-    height: 250%;
-    -o-object-fit: cover;
-    object-fit: cover;
+    width: 150px; /* Largeur augmentée de l'avatar */
+    height: 150px; /* Hauteur augmentée de l'avatar */
+    border: 6px solid #ffffff; /* Bord blanc */
+    border-radius: 50%; /* Rond */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Ombre autour de l'avatar */
 }
 
-.card-avatar-top.avatar-xl{
-    margin-top: -15px;
-}
-.avatar{
-    position: relative;
-    color: #fff;
-    display: -webkit-inline-box;
-    display: -ms-inline-flexbox;
-    display: inline-flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    vertical-align: middle;
-    font-size: 16px;
-    font-size: 1rem;
-    font-weight: 600;
-    height: 50px;
-    height: 3.125rem;
-    width: 50px;
-    width: 3.125rem;
-
+/* Style pour le texte du rôle */
+.my-profile .card-text {
+    font-size: 22px; /* Taille de police augmentée */
+    color: #666; /* Couleur grise plus sombre */
+    margin-bottom: 25px; /* Espacement sous le texte */
 }
 
-.my-profile .card-text{
-    margin-top: 30px;
+/* Style pour la table des informations */
+.my-profile .table {
+    margin: 0 auto; /* Centre la table */
+    width: 100%; /* Utilise toute la largeur disponible */
+    border-collapse: collapse; /* Supprime les espacements entre les cellules */
 }
 
-.my-profile .table{
-    margin-left: -10px;
+.my-profile .table td {
+    padding: 20px; /* Espacement interne augmenté */
+    border-bottom: 1px solid #e0e0e0; /* Bord inférieur des cellules */
 }
-.row-profile {
-    justify-content: center;
+
+/* Taille de police des cellules de la table */
+.my-profile .table td.text-left,
+.my-profile .table td.text-right {
+    font-size: 20px; /* Taille de police augmentée */
+}
+
+/* Style pour le texte à gauche et à droite dans les cellules */
+.my-profile .table td.text-left {
+    text-align: left;
+    font-weight: bold;
+}
+
+.my-profile .table td.text-right {
+    text-align: right;
+    font-size: 20px; /* Taille de police augmentée */
+}
+
+/* Effet de survol pour la carte */
+.my-profile .card:hover {
+    transform: translateY(-12px); /* Légère élévation */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Ombre plus prononcée */
 }

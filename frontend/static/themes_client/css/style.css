@@ -330,7 +330,7 @@ a:hover {
   border-radius: 50%;
   display: block;
   text-align: center;
-  background: #51eaea;
+  background: #03BB00 ;
   color: #fff;
   -webkit-transition: .2s all ease-in-out;
   -o-transition: .2s all ease-in-out;
@@ -423,7 +423,7 @@ a:hover {
   top: 100%;
   position: absolute;
   text-align: left;
-  border-top: 2px solid #51eaea;
+  border-top: 2px solid #03BB00 ;
   -webkit-box-shadow: 0 0px 4px 0px rgba(0, 0, 0, 0.05);
   box-shadow: 0 0px 4px 0px rgba(0, 0, 0, 0.05);
   border-left: 1px solid #edf0f5;
@@ -448,7 +448,7 @@ a:hover {
 }
 
 .site-navbar .site-navigation .site-menu .has-children .dropdown .active>a {
-  color: #51eaea !important;
+  color: #03BB00  !important;
 }
 
 .site-navbar .site-navigation .site-menu .has-children .dropdown>li {
@@ -609,7 +609,7 @@ a:hover {
 }
 
 .site-mobile-menu .site-nav-wrap a:hover {
-  color: #51eaea;
+  color: #03BB00 ;
 }
 
 .site-mobile-menu .site-nav-wrap li {
@@ -618,7 +618,7 @@ a:hover {
 }
 
 .site-mobile-menu .site-nav-wrap li.active>a {
-  color: #51eaea;
+  color: #03BB00 ;
 }
 
 .site-mobile-menu .site-nav-wrap .arrow-collapse {
@@ -739,7 +739,7 @@ a:hover {
 .site-blocks-cover h1 {
   font-size: 50px;
   font-weight: 900;
-  color: #19A713;
+  color: #ffffff;
   margin-bottom: 30px;
   text-transform: uppercase;
 }
@@ -777,6 +777,83 @@ a:hover {
 .site-blocks-cover .sub-title {
   color: #fff;
 }
+.medicaments-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/*la partie permettant d'afficher les medicaments*/
+.medicaments-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 60px; /* Ajoute de l'espace entre les colonnes */
+  justify-content: center; /* Centre les éléments horizontalement */
+}
+
+.medicaments-row .col-sm-6.col-lg-4 {
+  flex: 0 0 25%; /* Réduire la largeur à 25% pour afficher 4 articles par ligne */
+  max-width: 25%;
+  box-sizing: border-box;
+  padding: 0; /* Retirer le padding pour ne pas ajouter d'espace supplémentaire */
+}
+
+.medicaments-row .item {
+  text-align: center;
+  position: relative;
+  background-color: white; /* Couleur de fond initiale */
+  transition: background-color 0.3s ease; /* Transition douce pour l'effet de survol */
+  margin-bottom: 15px; /* Ajoute de l'espace entre les lignes */
+}
+
+.medicaments-row .item:hover {
+  background-color: #f0f0f0; /* Fond gris clair au survol */
+}
+
+.medicaments-row .image-container {
+  width: 100%;
+  padding-top: 100%; /* Maintient un ratio carré pour le conteneur */
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.medicaments-row .medicine-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Assurer que l'image couvre toute la zone */
+  display: block;
+  transition: transform 0.3s ease; /* Transition douce pour l'effet de survol */
+}
+
+.medicaments-row .item:hover .medicine-img {
+  transform: scale(1.1); /* Agrandir légèrement l'image au survol */
+}
+
+.medicaments-row .no-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+  color: #999;
+}
+
+.medicaments-row .tag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: red;
+  color: white;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+
 .item {
   display: inline-block; /* Affichage en inline-block */
   width: calc(25% - 10px); /* Ajuster la largeur pour 4 éléments par ligne avec un espace de 10px */
@@ -989,7 +1066,7 @@ a:hover {
 }
 
 .block-3 .owl-dots .owl-dot.active>span {
-  background: #51eaea;
+  background: #03BB00 ;
 }
 
 .block-3 .product {
@@ -1039,7 +1116,7 @@ a:hover {
   left: 0;
   font-size: 20px;
   line-height: 1;
-  color: #51eaea;
+  color: #03BB00 ;
 }
 
 .block-5 ul li.address:before {
@@ -1123,7 +1200,7 @@ a:hover {
 }
 
 .site-blocks-table tbody tr:first-child td {
-  border-top: 1px solid #51eaea !important;
+  border-top: 1px solid #03BB00  !important;
 }
 
 .site-block-order-table th {
@@ -1200,7 +1277,7 @@ a:hover {
   height: 16px;
   border-radius: 50%;
   border: none !important;
-  background: #51eaea;
+  background: #03BB00 ;
 }
 
 #slider-range .ui-slider-handle:focus,
@@ -1209,7 +1286,7 @@ a:hover {
 }
 
 #slider-range .ui-slider-range {
-  background-color: #51eaea;
+  background-color: #03BB00 ;
 }
 
 .color-item .color {
@@ -1283,7 +1360,7 @@ a:hover {
   line-height: 20px;
   color: #000;
   font-size: 12px;
-  background: #51eaea;
+  background: #03BB00 ;
   right: -5px;
 }
 
@@ -1347,7 +1424,7 @@ a:hover {
 
 .title-section h2 {
   padding-left: 30px;
-  border-left: 4px solid #51eaea;
+  border-left: 4px solid #03BB00 ;
   display: inline-block;
   color: #000;
 }
@@ -1369,7 +1446,7 @@ a:hover {
   transform: translateX(-50%);
   width: 70px;
   height: 4px;
-  background: #51eaea;
+  background: #03BB00 ;
   content: "";
 }
 
@@ -1649,7 +1726,7 @@ a:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(81, 234, 234, 0.9);
+  background: #0085B2 ;
   z-index: 1;
 }
 

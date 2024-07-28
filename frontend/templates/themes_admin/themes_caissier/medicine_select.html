@@ -2,6 +2,93 @@
 {% block content %}
 {% load static %}
 
+<style>
+    /* Agrandir le titre principal */
+    h1 {
+        font-size: 2.8em;
+        margin-top: 40px;
+    }
+
+    /* Agrandir les éléments de la table */
+    .table {
+        font-size: 2em;
+    }
+
+    .table th, .table td {
+        padding: 30px;
+    }
+
+    /* Agrandir le texte des paragraphes */
+    p {
+        font-size: 1.8em;
+    }
+
+    /* Agrandir les champs de saisie */
+    .form-control {
+        font-size: 1.2em;
+        padding: 12px;
+    }
+
+    /* Agrandir les boutons */
+    .btn {
+        font-size: 1.2em;
+        padding: 10px 20px;
+    }
+
+    <style>
+        #printableReceipt {
+            display: block;
+            text-align: center;
+        }
+
+        .receipt {
+            display: inline-block;
+            width: 80%;
+            padding: 20px;
+            margin: 0 auto;
+            border: 1px solid #000;
+            border-radius: 10px;
+            font-family: Arial, sans-serif;
+            position: relative;
+            background-color: #fff;
+        }
+
+        .top-right-image {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 100px; /* Réduit la taille de l'image */
+            height: auto;
+        }
+
+        .receipt h2 {
+            margin: 20px 0;
+        }
+
+        .receipt p {
+            margin: 10px 0;
+        }
+
+        .receipt table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .receipt table, .receipt th, .receipt td {
+            border: 1px solid black;
+        }
+
+        .receipt th, .receipt td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        .receipt th {
+            background-color: #f2f2f2;
+        }
+</style>
+</head>
 <body>
     <div class="container">
         <h1 class="mt-5">Médicaments Sélectionnés Non Validés</h1>
@@ -65,34 +152,23 @@
             <p>Reliquat: <span id="printChangeDue">0.00</span></p>
         </div>
     </div>
+</div>
 
-    <style>
-        .receipt {
-            width: 300px;
-            padding: 20px;
-            margin: auto;
-            border: 1px solid #000;
-            font-family: Arial, sans-serif;
-        }
-        .receipt h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .receipt p {
-            margin: 5px 0;
-        }
-        .receipt table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .receipt table, .receipt th, .receipt td {
-            border: 1px solid black;
-        }
-        .receipt th, .receipt td {
-            padding: 8px;
-            text-align: left;
-        }
-    </style>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script>
+    function calculateTotalPrice() {
+        var totalPrice = 0;
+        var rows = document.querySelectorAll("#medicinesTableBody tr");
+        rows.forEach(function(row) {
+            var price = parseFloat(row.cells[1].innerText);
+            var quantity = parseInt(row.cells[2].innerText);
+            totalPrice += price * quantity;
+        });
+        document.getElementById('totalPrice').innerText = totalPrice.toFixed(2);
+        document.getElementById('printTotalPrice').innerText = totalPrice.toFixed(2);
+    }
 
     <script>
         function validerCommande(selectionId) {
@@ -123,14 +199,11 @@
             document.getElementById('printAmountReceived').innerText = amountReceived.toFixed(2);
             document.getElementById('printChangeDue').innerText = changeDue.toFixed(2);
 
-            var printContents = document.getElementById('printableReceipt').innerHTML;
-            var originalContents = document.body.innerHTML;
-
-            document.body.innerHTML = printContents;
-            window.print();
-            document.body.innerHTML = originalContents;
-            window.location.reload(); // Reload to restore the original state
-        }
-    </script>
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+        window.location.reload(); // Reload to restore the original state
+    }
+</script>
 </body>
 {% endblock %}
