@@ -520,23 +520,27 @@ def afficher_medicaments_selectionnes(request):
             messages.error(request, 'Médicaments sélectionnés non trouvés.')
             return redirect('some_error_page')
 
+        # Convert total_price to integer before saving to the database
+        total_price_int = int(float(total_price))
+
         # Créer une instance de CommandePresentielle
         CommandePresentielle.objects.create(
-            prixTotal=total_price,
+            prixTotal=total_price_int,
             selection_medicaments=selection_medicaments,
             caissier=caissier
         )
         
-        # Mettre à jour l'attribut etatDeValidation de SelectionMedicament
         selection_medicaments.etatDeValidation = True
         selection_medicaments.save()
 
         messages.success(request, 'Commande validée avec succès.')
 
-    # Récupérer toutes les instances de SelectionMedicament non validées
     non_validated_medicines = SelectionMedicament.objects.filter(etatDeValidation=False).order_by('-id')
     
-    return render(request, 'themes_admin/themes_caissier/medicine_select.html', {'non_validated_medicines': non_validated_medicines})
+    context = {
+        'non_validated_medicines': non_validated_medicines,
+    }
+    return render(request, 'themes_admin/themes_caissier/medicine_select.html', context)
         
 def pharmacien_affichage_med(request):
     # Récupérer tous les médicaments avec leurs catégories associées

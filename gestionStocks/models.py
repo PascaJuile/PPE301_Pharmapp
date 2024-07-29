@@ -22,3 +22,6 @@ class Medicament(models.Model):
         on_delete=models.RESTRICT,
         related_name='medicaments'
     )
+
+    def calculer_prix_total(self, quantite):
+        return self.prixUnitaire * quantite
