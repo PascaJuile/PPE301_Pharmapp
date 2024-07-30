@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.contrib.auth import login, logout
 from django.contrib.auth.hashers import check_password
-from gestionUtilisateurs.forms import ConnexionForm, InscriptionForm
+from gestionUtilisateurs.forms import ClientInscription, ConnexionForm, InscriptionForm
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from gestionStocks.models import *
@@ -45,7 +45,20 @@ def shop(request):
 def thankyou(request):
     return render(request, 'themes_client/thankyou.html')
 
+def commande_client(request):
+    return render(request, 'themes_client/formulaire_commande.html')
 
+def inscription_client(request):
+    if request.method == 'POST':
+        form = ClientInscription(request.POST)
+        if form.is_valid():
+            client = form.save(commit=False)
+            client.set_password(form.cleaned_data['motDePasse'])
+            client.save()
+            return redirect('page_connexion')  # Remplacez 'accueil' par la redirection souhaitée
+    else:
+        form = ClientInscription()
+    return render(request, 'themes_client/inscription_client.html', {'form': form})
 
 #Fin de la liste des vues du template client
 
@@ -233,7 +246,7 @@ def page_connexion(request):
                         request.session['user_role'] = user.role
                         
                         if isinstance(user, Client):
-                            return redirect('liste_medicaments_client')
+                            return redirect('commande_client')
                         elif isinstance(user, Pharmacien):
                             return redirect('homepage_phar')
                         elif isinstance(user, Caissier):
