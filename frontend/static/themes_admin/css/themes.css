@@ -120,16 +120,16 @@
     height: 50px;
     width: 50px;
     border-radius: 50px;
-    background-color:  #19a713 !important;
-    border-color:  #19a713 !important;
+    background-color:  #03BB00 !important;
+    border-color:  #03BB00 !important;
 }
 
 .themes .btn-danger:hover{
-    background-color:  #19a713 !important;
+    background-color:  #03BB00 !important;
 }
 
 
 .btn-danger:not(:disabled):not(.disabled):active, .btn-danger:not(:disabled):not(.disabled).active, .show > .btn-danger.dropdown-toggle {
-    background-color:  #19a713 !important;
-    border-color:  #19a713 !important;
+    background-color:  #03BB00 !important;
+    border-color:  #03BB00 !important;
 }

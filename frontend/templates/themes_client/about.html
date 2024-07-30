@@ -1,17 +1,30 @@
 {% extends "themes_client/index.html" %}
 {% block content %}
 {% load static %}
+  <style>
+  .custom-color-truck {
+    color: #03BB00; /* Change this to your desired color for the truck icon */
+  }
+
+  .custom-color-refresh {
+    color: #03BB00; /* Change this to your desired color for the refresh icon */
+  }
+
+  .custom-color-help {
+    color: #03BB00; /* Change this to your desired color for the help icon */
+  }
+  </style>
 <body>
 
   <div class="site-wrap">
 
-    <div class="site-blocks-cover inner-page" style="background-image: url({% static 'themes_client/images/hero_1.jpg' %});">
+    <div class="site-blocks-cover inner-page" style="background-image: url({% static 'themes_client/images/Back.jpg' %});">
       <div class="container">
         <div class="row">
           <div class="col-lg-7 mx-auto align-self-center">
             <div class=" text-center">
-              <h1>About Us</h1>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum obcaecati natus iure voluptatum eveniet harum recusandae ducimus saepe.</p>ˀ
+              <h1>A Propos</h1>
+              <p>PharmApp est une pharmacie en ligne dédiée à rendre les soins de santé plus accessibles et pratiques, avec une équipe de pharmaciens passionnés fournissant des produits de haute qualité et des conseils fiables. Nous offrons une livraison rapide, des retours gratuits et un service à la clientèle exceptionnel pour améliorer l'accès aux soins de santé et maintenir notre réputation d'excellence</p>
             </div>
           </div>
         </div>
@@ -25,31 +38,21 @@
             <div class="block-16">
               <figure>
                 <img src="{% static 'themes_client/images/bg_1.jpg' %}" alt="Image placeholder" class="img-fluid rounded">
-                <a href="https://vimeo.com/channels/staffpicks/93951774" class="play-button popup-vimeo"><span
-                    class="icon-play"></span></a>
-    
+                <a href="https://vimeo.com/channels/staffpicks/93951774" class="play-button popup-vimeo"><span class="icon-play"></span></a>
               </figure>
             </div>
           </div>
           <div class="col-md-1"></div>
           <div class="col-md-5">
-    
-    
             <div class="site-section-heading pt-3 mb-4">
-              <h2 class="text-black">How We Started</h2>
+              <h2 class="text-black">Comment avons-nous commencé?</h2>
             </div>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius repellat, dicta at laboriosam, nemo
-              exercitationem itaque eveniet architecto cumque, deleniti commodi molestias repellendus quos sequi hic fugiat
-              asperiores illum. Atque, in, fuga excepturi corrupti error corporis aliquam unde nostrum quas.</p>
-            <p>Accusantium dolor ratione maiores est deleniti nihil? Dignissimos est, sunt nulla illum autem in, quibusdam
-              cumque recusandae, laudantium minima repellendus.</p>
-    
+            <p>Chez PharmApp, nous avons lancé notre pharmacie en ligne pour rendre les médicaments plus accessibles à tous. Avec une équipe de pharmaciens passionnés, nous nous engageons à offrir des produits et des services de haute qualité, de manière rapide et sûre.</p>
+            <p> Aujourd'hui, nous sommes une pharmacie de confiance, dédiée à améliorer l'accès aux soins de santé.</p>
           </div>
         </div>
       </div>
     </div>
-
-    
 
     <div class="site-section bg-light custom-border-bottom" data-aos="fade">
       <div class="container">
@@ -58,24 +61,16 @@
             <div class="block-16">
               <figure>
                 <img src="{% static 'themes_client/images/hero_1.jpg' %}" alt="Image placeholder" class="img-fluid rounded">
-                <a href="https://vimeo.com/channels/staffpicks/93951774" class="play-button popup-vimeo"><span
-                    class="icon-play"></span></a>
-    
+                <a href="https://vimeo.com/channels/staffpicks/93951774" class="play-button popup-vimeo"><span class="icon-play"></span></a>
               </figure>
             </div>
           </div>
           <div class="col-md-5 mr-auto">
-    
-    
             <div class="site-section-heading pt-3 mb-4">
-              <h2 class="text-black">We Are Trusted Company</h2>
+              <h2 class="text-black">Nous sommes une Pharmacie de confiance</h2>
             </div>
-            <p class="text-black">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius repellat, dicta at laboriosam, nemo
-              exercitationem itaque eveniet architecto cumque, deleniti commodi molestias repellendus quos sequi hic fugiat
-              asperiores illum. Atque, in, fuga excepturi corrupti error corporis aliquam unde nostrum quas.</p>
-            <p class="text-black">Accusantium dolor ratione maiores est deleniti nihil? Dignissimos est, sunt nulla illum autem in, quibusdam
-              cumque recusandae, laudantium minima repellendus.</p>
-    
+            <p class="text-black">Chez PharmApp, nous sommes une entreprise de confiance dédiée à offrir des médicaments de haute qualité et des conseils de santé fiables. Notre équipe de pharmaciens passionnés s'engage à fournir un service rapide, sécurisé et personnalisé, afin de garantir la satisfaction et le bien-être de nos clients.</p>
+            <p class="text-black">Nous innovons constamment pour améliorer l'accès aux soins de santé et maintenir notre réputation d'excellence.</p>
           </div>
         </div>
       </div>
@@ -86,38 +81,35 @@
         <div class="row">
           <div class="col-md-6 col-lg-4 d-lg-flex mb-4 mb-lg-0 pl-4" data-aos="fade-up" data-aos-delay="">
             <div class="icon mr-4 align-self-start">
-              <span class="icon-truck text-primary"></span>
+              <span class="icon-truck custom-color-truck"></span>
             </div>
             <div class="text">
-              <h2>Free Shipping</h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus at iaculis quam. Integer accumsan
-                tincidunt fringilla.</p>
+              <h2>Livraison Fiable et Rapide</h2>
+              <p>Nous sommes une pharmacie de confiance, offrant une livraison fiable et rapide de médicaments de haute qualité.</p>
             </div>
           </div>
           <div class="col-md-6 col-lg-4 d-lg-flex mb-4 mb-lg-0 pl-4" data-aos="fade-up" data-aos-delay="100">
             <div class="icon mr-4 align-self-start">
-              <span class="icon-refresh2 text-primary"></span>
+              <span class="icon-refresh2 custom-color-refresh"></span>
             </div>
             <div class="text">
-              <h2>Free Returns</h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus at iaculis quam. Integer accumsan
-                tincidunt fringilla.</p>
+              <h2>Retours Gratuits</h2>
+              <p>Nous sommes une pharmacie de confiance, offrant des retours gratuits pour garantir votre satisfaction avec nos produits.</p>
             </div>
           </div>
           <div class="col-md-6 col-lg-4 d-lg-flex mb-4 mb-lg-0 pl-4" data-aos="fade-up" data-aos-delay="200">
             <div class="icon mr-4 align-self-start">
-              <span class="icon-help text-primary"></span>
+              <span class="icon-help custom-color-help"></span>
             </div>
             <div class="text">
-              <h2>Customer Support</h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus at iaculis quam. Integer accumsan
-                tincidunt fringilla.</p>
+              <h2>Service Clientèle</h2>
+              <p>
+                Nous sommes une pharmacie de confiance, dédiée à offrir un service à la clientèle exceptionnel pour répondre à tous vos besoins en matière de santé</p>
             </div>
           </div>
         </div>
       </div>
     </div>
-    
 
     <div class="site-section bg-light custom-border-bottom" data-aos="fade">
       <div class="container">
@@ -128,7 +120,6 @@
         </div>
         <div class="row">
           <div class="col-md-6 col-lg-6 mb-5">
-    
             <div class="block-38 text-center">
               <div class="block-38-img">
                 <div class="block-38-header">
@@ -137,8 +128,7 @@
                   <p class="block-38-subheading">CEO/Co-Founder</p>
                 </div>
                 <div class="block-38-body">
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae aut minima nihil sit distinctio
-                    recusandae doloribus ut fugit officia voluptate soluta. </p>
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae aut minima nihil sit distinctio recusandae doloribus ut fugit officia voluptate soluta. </p>
                 </div>
               </div>
             </div>
@@ -152,8 +142,7 @@
                   <p class="block-38-subheading">Co-Founder</p>
                 </div>
                 <div class="block-38-body">
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae aut minima nihil sit distinctio
-                    recusandae doloribus ut fugit officia voluptate soluta. </p>
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae aut minima nihil sit distinctio recusandae doloribus ut fugit officia voluptate soluta. </p>
                 </div>
               </div>
             </div>
@@ -167,8 +156,7 @@
                   <p class="block-38-subheading">Marketing</p>
                 </div>
                 <div class="block-38-body">
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae aut minima nihil sit distinctio
-                    recusandae doloribus ut fugit officia voluptate soluta. </p>
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae aut minima nihil sit distinctio recusandae doloribus ut fugit officia voluptate soluta. </p>
                 </div>
               </div>
             </div>
@@ -182,8 +170,7 @@
                   <p class="block-38-subheading">Sales Manager</p>
                 </div>
                 <div class="block-38-body">
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae aut minima nihil sit distinctio
-                    recusandae doloribus ut fugit officia voluptate soluta. </p>
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae aut minima nihil sit distinctio recusandae doloribus ut fugit officia voluptate soluta. </p>
                 </div>
               </div>
             </div>
