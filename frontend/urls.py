@@ -16,7 +16,6 @@ urlpatterns = [
     path('', views.liste_medicaments_client, name='liste_medicaments_client'),
     path('shop_single/<int:medicament_id>/', views.shop_single, name='shop_single'),
     path('rechercher_medicament', views.rechercher_medicament, name='rechercher_medicament'),
-    path('upload_ordonnance', views.upload_ordonnance, name='upload_ordonnance'),
     path('formulaire_achat/<int:ordonnance_id>/', views.formulaire_achat, name='formulaire_achat'),
     path('client/commande', views.commande_client, name='commande_client'),
     path('client/inscription', views.inscription_client, name='inscription_client'),

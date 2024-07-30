@@ -6,41 +6,31 @@ from gestionUtilisateurs.models import Caissier,Client,Pharmacien,Livreur
 # Create your models here.
 class Ordonnance(models.Model):
     image = models.ImageField(upload_to='ordonnance_images/', verbose_name='Photo', blank=False)
-    ordonnanceClient = models.ForeignKey(
-        Client,
-        on_delete= models.CASCADE
-    )
-    ordonnancePharmacien=models.ForeignKey(
-        Pharmacien,
-        on_delete= models.CASCADE
-    )
+    ordonnance_client = models.ForeignKey(Client, on_delete=models.CASCADE)
 
+class FormulaireCommande(models.Model):
+    ordonnance = models.OneToOneField(Ordonnance, on_delete=models.CASCADE)
+    geolocalisation = models.CharField(max_length=255, blank=True, null=True)
+    date_commande = models.DateTimeField(auto_now_add=True)
+    consentement = models.BooleanField(default=False)
+    mode_paiement = models.CharField(max_length=50, choices=[('tmoney', 'Tmoney'), ('flooz', 'Flooz')])
 
 class CommandeVirtuelle(models.Model):
-    prixTotal= models.IntegerField()
-    dateCommande = models.DateTimeField()
-    etatDeCommande = models.BooleanField(default=False)
-    etatDeLivraison = models.BooleanField(default=False)
+    formulaire_commande = models.OneToOneField(FormulaireCommande, on_delete=models.CASCADE)
+    pharmacien = models.ForeignKey(Pharmacien, on_delete=models.CASCADE)
+    prix_total = models.IntegerField()
+    etat_commande = models.BooleanField(default=False)
 
-    commandeOrdonnance = models.OneToOneField(
-        Ordonnance,
-        on_delete= models.CASCADE
-    )
-    commandeCaissier = models.ForeignKey(
-        Caissier,
-        on_delete = models.CASCADE
-    )
-    commandeMedicament = models.ManyToManyField(
-        Medicament,
-    )
-    commandeLivreur = models.ForeignKey(
-        Livreur,
-        on_delete= models.CASCADE
-    )
-    commandePharmacien = models.ForeignKey(
-        Pharmacien,
-        on_delete = models.CASCADE
-    )
+class PayementCommandeVirtuelle(models.Model):
+    commande = models.OneToOneField(CommandeVirtuelle, on_delete=models.CASCADE)
+    caissier = models.ForeignKey(Caissier, on_delete=models.CASCADE)
+    date_validation = models.DateTimeField(auto_now_add=True)
+    etat_de_livraison = models.BooleanField(default=False)
+
+class Livraison(models.Model):
+    ordonnance = models.OneToOneField(Ordonnance, on_delete=models.CASCADE)
+    livreur = models.ForeignKey(Livreur, on_delete=models.CASCADE)
+    etat_de_livraison = models.BooleanField(default=False)
 
 class SelectionMedicament(models.Model):
     donnees = models.JSONField()

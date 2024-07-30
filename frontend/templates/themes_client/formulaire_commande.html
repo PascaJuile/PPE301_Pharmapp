@@ -2,4 +2,70 @@
 {% block content %}
 {% load static %}
 
+<style>
+    #map { 
+        height: 400px;
+        width: 400px;
+ }
+    .payment-options label {
+        display: inline-block;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+    .payment-options input[type="radio"] {
+        display: none;
+    }
+    .payment-options img {
+        border: 2px solid transparent;
+        width: 100px; 
+        height: auto; 
+    }
+    .payment-options input[type="radio"]:checked + img {
+        border-color: blue; 
+    }
+</style>
+
+<h1>Passer une Commande</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div>
+        {{ form.image.label_tag }} {{ form.image }}
+    </div>
+    <div>
+        <label for="map">Géolocalisation :</label>
+        <div id="map"></div>
+        <input type="hidden" id="id_geolocalisation" name="geolocalisation">
+        <script>
+            var map = L.map('map').setView([51.505, -0.09], 13);
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
+            var marker = L.marker([51.505, -0.09]).addTo(map);
+            map.on('click', function(e) {
+                marker.setLatLng(e.latlng);
+                document.getElementById('id_geolocalisation').value = e.latlng.lat + ',' + e.latlng.lng;
+            });
+        </script>
+    </div>
+    <div>
+        {{ form.consentement }} {{ form.consentement.label_tag }}
+    </div>
+    <div>
+        <label>Mode de paiement :</label>
+        <div class="payment-options">
+            <label>
+                <input type="radio" name="mode_paiement" value="tmoney">
+                <img src="{% static 'images/tmoney.png' %}" alt="Tmoney">
+            </label>
+            <label>
+                <input type="radio" name="mode_paiement" value="flooz">
+                <img src="{% static 'images/flooz.png' %}" alt="Flooz">
+            </label>
+        </div>
+    </div>
+    <button type="submit">Envoyer</button>
+</form>
+
 {% endblock content %}

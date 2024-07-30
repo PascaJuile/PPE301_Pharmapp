@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from gestionStocks.models import *
 from gestionUtilisateurs.models import *
-from gestionVentes.forms import OrdonnanceForm
+from gestionVentes.forms import FormulaireCommandeForm
 from gestionVentes.models import CommandePresentielle, Ordonnance, SelectionMedicament
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -45,8 +45,40 @@ def shop(request):
 def thankyou(request):
     return render(request, 'themes_client/thankyou.html')
 
+
 def commande_client(request):
-    return render(request, 'themes_client/formulaire_commande.html')
+    user_email = request.session.get('user_email')
+    
+    if user_email:
+        try:
+            client = Client.objects.get(emailUtilisateur=user_email)
+        except Client.DoesNotExist:
+            messages.error(request, 'Client non trouvé.')
+            return redirect('inscription')
+    else:
+        messages.error(request, 'Utilisateur non authentifié.')
+        return redirect('page_connexion')
+    
+    if request.method == 'POST':
+        form = FormulaireCommandeForm(request.POST, request.FILES)
+        if form.is_valid():
+            # Créez une nouvelle ordonnance d'abord
+            ordonnance = Ordonnance(
+                image=form.cleaned_data['image'],
+                ordonnance_client=client  # Associez l'ordonnance au client connecté
+            )
+            ordonnance.save()
+            
+            # Créez le formulaire de commande
+            formulaire_commande = form.save(commit=False)
+            formulaire_commande.ordonnance = ordonnance
+            formulaire_commande.save()
+            
+            return redirect('thankyou')  # Redirige vers une page de confirmation ou autre
+    else:
+        form = FormulaireCommandeForm()
+
+    return render(request, 'themes_client/formulaire_commande.html', {'form': form})
 
 def inscription_client(request):
     if request.method == 'POST':
@@ -427,23 +459,6 @@ def rechercher_medicament(request):
     query = request.GET.get('q', '')
     medicaments = Medicament.objects.filter(nomMedicament__icontains=query) | Medicament.objects.filter(medicamentCategorie__nomCat__icontains=query)
     return render(request, 'themes_client/index.html', {'medicaments': medicaments, 'query': query})
-
-
-def upload_ordonnance(request):
-    if request.method == 'POST':
-        form = OrdonnanceForm(request.POST, request.FILES)
-        if form.is_valid():
-            ordonnance = form.save(commit=False)
-            # Associer l'ordonnance au client connecté
-            if isinstance(request.user, Client):
-                ordonnance.ordonnanceClient = request.user
-                ordonnance.save()
-                return redirect('formulaire_achat', ordonnance_id=ordonnance.id)  # Remplacez 'success_page' par la page où vous voulez rediriger après le succès
-            else:
-                form.add_error(None, "Vous devez être connecté en tant que client pour télécharger une ordonnance.")
-    else:
-        form = OrdonnanceForm()
-    return render(request, 'themes_client/shop-single.html', {'form': form})
 
 def formulaire_achat(request,ordonnance_id):
     ordonnance = get_object_or_404(Ordonnance, id=ordonnance_id)
