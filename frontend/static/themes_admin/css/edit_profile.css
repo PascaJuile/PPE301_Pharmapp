@@ -26,6 +26,22 @@
     font-weight: 600;
     color: #444;
 }
+.form-group label {
+    font-size: 1.5em; /* Augmente la taille de la police des labels */
+}
+
+.btn-list {
+    font-size: 1.2em; /* Augmente la taille de la police du bouton */
+    padding: 0.75rem 1.5rem; /* Augmente le padding du bouton */
+    border-radius: 0.5rem; /* Augmente le rayon des coins pour un bouton plus arrondi */
+    color: #fff; /* Couleur du texte du bouton */
+    background-color: var(--color-main); /* Couleur d'arrière-plan du bouton */
+    border: none; /* Enlève les bordures par défaut */
+}
+
+.btn-list:hover {
+    background-color: #54ee52; /* Couleur d'arrière-plan lors du survol */
+}
 
 .edit-profile input {
     height: 50px;

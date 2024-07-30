@@ -3,119 +3,49 @@
 {% load static %}
 
 <body>
-
   <div class="site-wrap">
-
     <div class="bg-light py-3">
       <div class="container">
         <div class="row">
-          <div class="col-md-12 mb-0"><a href="{% url 'liste_medicaments_client' %}">Home</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Store</strong></div>
+          <div class="col-md-12 mb-0"><a href="{% url 'liste_medicaments_client' %}">Acceuil</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Store</strong></div>
         </div>
       </div>
     </div>
 
     <div class="site-section">
       <div class="container">
-        
-        <div class="row">
+        <div class="row mb-4">
           <div class="col-lg-6">
-            <h3 class="mb-3 h6 text-uppercase text-black d-block">Filter by Price</h3>
-            <div id="slider-range" class="border-primary"></div>
-            <input type="text" name="text" id="amount" class="form-control border-0 pl-0 bg-white" disabled="" />
-          </div>
-          <div class="col-lg-6">
-            <h3 class="mb-3 h6 text-uppercase text-black d-block">Filter by Reference</h3>
-            <button type="button" class="btn btn-secondary btn-md dropdown-toggle px-4" id="dropdownMenuReference"
-              data-toggle="dropdown">Reference</button>
+            <h3 class="mb-3 h6 text-uppercase text-black d-block">Filtrer par Référence</h3>
+            <button type="button" class="btn btn-secondary btn-md dropdown-toggle px-4" id="dropdownMenuReference" data-toggle="dropdown">Reference</button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuReference">
-              <a class="dropdown-item" href="#">Relevance</a>
-              <a class="dropdown-item" href="#">Name, A to Z</a>
-              <a class="dropdown-item" href="#">Name, Z to A</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Price, low to high</a>
-              <a class="dropdown-item" href="#">Price, high to low</a>
+              <a class="dropdown-item" href="#" data-sort="default">Sélectionner</a>
+              <a class="dropdown-item" href="#" data-sort="name-asc">Nom (A-Z)</a>
+              <a class="dropdown-item" href="#" data-sort="name-desc">Nom (Z-A)</a>
+              <a class="dropdown-item" href="#" data-sort="price-asc">Prix croissant</a>
+              <a class="dropdown-item" href="#" data-sort="price-desc">Prix décroissant</a>
             </div>
           </div>
         </div>
-    
-        <div class="row">
+
+        <div class="medicaments-row">
           {% for medicament in medicaments %}
-          <div class="col-sm-6 col-lg-4 text-center item mb-4">
-            <a href="{% url 'shop_single' %}"> <img src="{{ medicament.image.url }}" alt="{{ medicament.nomMedicament}}"></a>
-            <h3 class="text-dark"><a href="{% url 'shop_single' %}">{{ medicament.nomMedicament }}</a></h3>
-            <p class="price">{{ medicament.prixUnitaire }}</p>
+          <div class="col-sm-6 col-lg-4">
+            <div class="item">
+              <div class="image-container">
+                {% if medicament.image %}
+                <img src="{{ medicament.image.url }}" alt="{{ medicament.nomMedicament }}" class="medicine-img">
+                {% else %}
+                <div class="no-image">No Image</div>
+                {% endif %}
+              </div>
+              <h3 class="text-dark"><a href="{% url 'shop_single' %}">{{ medicament.nomMedicament }}</a></h3>
+              <p class="price">{{ medicament.prixUnitaire }}</p>
+            </div>
           </div>
           {% endfor %}
-          <div class="col-sm-6 col-lg-4 text-center item mb-4">
-            <span class="tag">Sale</span>
-            <a href="{% url 'shop_single' %}"> <img src="{% static 'themes_client/images/product_01.png' %}" alt="Image"></a>
-            <h3 class="text-dark"><a href="{% url 'shop_single' %}">Bioderma</a></h3>
-            <p class="price"><del>95.00</del> &mdash; $55.00</p>
-          </div>
-          <div class="col-sm-6 col-lg-4 text-center item mb-4">
-            <a href="{% url 'shop_single' %}"> <img src="{% static 'themes_client/images/product_02.png' %}" alt="Image"></a>
-            <h3 class="text-dark"><a href="{% url 'shop_single' %}">Chanca Piedra</a></h3>
-            <p class="price">$70.00</p>
-          </div>
-          <div class="col-sm-6 col-lg-4 text-center item mb-4">
-            <a href="{% url 'shop_single' %}"> <img src="{% static 'themes_client/images/product_03.png' %}" alt="Image"></a>
-            <h3 class="text-dark"><a href="{% url 'shop_single' %}">Umcka Cold Care</a></h3>
-            <p class="price">$120.00</p>
-          </div>
-    
-          <div class="col-sm-6 col-lg-4 text-center item mb-4">
-    
-            <a href="{% url 'shop_single' %}"> <img src="{% static 'themes_client/images/product_04.png' %}" alt="Image"></a>
-            <h3 class="text-dark"><a href="{% url 'shop_single' %}">Cetyl Pure</a></h3>
-            <p class="price"><del>45.00</del> &mdash; $20.00</p>
-          </div>
-          <div class="col-sm-6 col-lg-4 text-center item mb-4">
-            <a href="{% url 'shop_single' %}"> <img src="{% static 'themes_client/images/product_05.png' %}" alt="Image"></a>
-            <h3 class="text-dark"><a href="{% url 'shop_single' %}">CLA Core</a></h3>
-            <p class="price">$38.00</p>
-          </div>
-          <div class="col-sm-6 col-lg-4 text-center item mb-4">
-            <span class="tag">Sale</span>
-            <a href="{% url 'shop_single' %}"> <img src="{% static 'themes_client/images/product_06.png' %}" alt="Image"></a>
-            <h3 class="text-dark"><a href="{% url 'shop_single' %}">Poo Pourri</a></h3>
-            <p class="price"><del>$89</del> &mdash; $38.00</p>
-          </div>
-
-          <div class="col-sm-6 col-lg-4 text-center item mb-4">
-            <span class="tag">Sale</span>
-            <a href="{% url 'shop_single' %}"> <img src="{% static 'themes_client/images/product_01.png' %}" alt="Image"></a>
-            <h3 class="text-dark"><a href="{% url 'shop_single' %}">Bioderma</a></h3>
-            <p class="price"><del>95.00</del> &mdash; $55.00</p>
-          </div>
-          <div class="col-sm-6 col-lg-4 text-center item mb-4">
-            <a href="{% url 'shop_single' %}"> <img src="{% static 'themes_client/images/product_02.png' %}" alt="Image"></a>
-            <h3 class="text-dark"><a href="{% url 'shop_single' %}">Chanca Piedra</a></h3>
-            <p class="price">$70.00</p>
-          </div>
-          <div class="col-sm-6 col-lg-4 text-center item mb-4">
-            <a href="{% url 'shop_single' %}"> <img ˀsrc="{% static 'themes_client/images/product_03.png' %}" alt="Image"></a>
-            <h3 class="text-dark"><a href="{% url 'shop_single' %}">Umcka Cold Care</a></h3>
-            <p class="price">$120.00</p>
-          </div>
-          
-          <div class="col-sm-6 col-lg-4 text-center item mb-4">
-          
-            <a href="{% url 'shop_single' %}"> <img src="{% static 'themes_client/images/product_04.png' %}" alt="Image"></a>
-            <h3 class="text-dark"><a href="{% url 'shop_single' %}">Cetyl Pure</a></h3>
-            <p class="price"><del>45.00</del> &mdash; $20.00</p>
-          </div>
-          <div class="col-sm-6 col-lg-4 text-center item mb-4">
-            <a href="{% url 'shop_single' %}"> <img src="{% static 'themes_client/images/product_05.png' %}" alt="Image"></a>
-            <h3 class="text-dark"><a href="{% url 'shop_single' %}">CLA Core</a></h3>
-            <p class="price">$38.00</p>
-          </div>
-          <div class="col-sm-6 col-lg-4 text-center item mb-4">
-            <span class="tag">Sale</span>
-            <a href="{% url 'shop_single' %}"> <img src="{% static 'themes_client/images/product_06.png' %}" alt="Image"></a>
-            <h3 class="text-dark"><a href="{% url 'shop_single' %}">Poo Pourri</a></h3>
-            <p class="price"><del>$89</del> &mdash; $38.00</p>
-          </div>
         </div>
+
         <div class="row mt-5">
           <div class="col-md-12 text-center">
             <div class="site-block-27">
@@ -134,25 +64,22 @@
       </div>
     </div>
 
-    
     <div class="site-section bg-secondary bg-image" style="background-image: url({% static 'themes_client/images/bg_2.jpg' %});">
       <div class="container">
         <div class="row align-items-stretch">
           <div class="col-lg-6 mb-5 mb-lg-0">
             <a href="#" class="banner-1 h-100 d-flex" style="background-image: url({% static 'themes_client/images/bg_1.jpg' %});">
               <div class="banner-1-inner align-self-center">
-                <h2>Pharma Products</h2>
-                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestiae ex ad minus rem odio voluptatem.
-                </p>
+                <h2>Les produits de PharmApp</h2>
+                <p>Les produits de PharmApp garantissent une efficacité maximale. Nous travaillons avec des fabricants réputés pour vous offrir des solutions fiables.</p>
               </div>
             </a>
           </div>
           <div class="col-lg-6 mb-5 mb-lg-0">
             <a href="#" class="banner-1 h-100 d-flex" style="background-image: url({% static 'themes_client/images/bg_2.jpg' %});">
-              <div class="banner-1-inner ml-auto  align-self-center">
-                <h2>Rated by Experts</h2>
-                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestiae ex ad minus rem odio voluptatem.
-                </p>
+              <div class="banner-1-inner ml-auto align-self-center">
+                <h2>Certifiés par des Experts</h2>
+                <p>Les produits de PharmApp garantissent une efficacité maximale. Évalués par des experts, ils vous offrent des solutions fiables et de qualité.</p>
               </div>
             </a>
           </div>
@@ -160,5 +87,109 @@
       </div>
     </div>
   </div>
+
+  <style>
+      .medicaments-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        justify-content: center;
+      }
+
+      .item {
+        display: inline-block;
+        width: 100%;
+        max-width: 500px;
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        padding: 15px;
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .item:hover {
+        transform: scale(1.08);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      .image-container {
+        margin-bottom: 15px;
+      }
+
+      .medicine-img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 4px;
+      }
+
+      .no-image {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 150px;
+        background: #eee;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        color: #777;
+        font-size: 14px;
+      }
+
+      .text-dark {
+        margin: 10px 0;
+        font-size: 18px;
+        color: #333;
+      }
+
+      .price {
+        font-size: 16px;
+        color: #007bff;
+        font-weight: bold;
+      }
+  </style>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <script>
+    // Fonction pour trier les médicaments
+    function sortMedicaments(sortValue) {
+      const container = document.querySelector('.medicaments-row');
+      const items = Array.from(container.children);
+
+      items.sort((a, b) => {
+        const nameA = a.querySelector('.text-dark a').textContent.toUpperCase();
+        const nameB = b.querySelector('.text-dark a').textContent.toUpperCase();
+        const priceA = parseFloat(a.querySelector('.price').textContent.replace('€', '').trim());
+        const priceB = parseFloat(b.querySelector('.price').textContent.replace('€', '').trim());
+
+        switch (sortValue) {
+          case 'price-asc':
+            return priceA - priceB;
+          case 'price-desc':
+            return priceB - priceA;
+          case 'name-asc':
+            return nameA.localeCompare(nameB);
+          case 'name-desc':
+            return nameB.localeCompare(nameA);
+          default:
+            return 0;
+        }
+      });
+
+      items.forEach(item => container.appendChild(item));
+    }
+
+    // Écouteur d'événement pour le menu déroulant
+    document.querySelectorAll('.dropdown-item').forEach(item => {
+      item.addEventListener('click', function(event) {
+        event.preventDefault(); // Empêche le comportement par défaut du lien
+        sortMedicaments(this.getAttribute('data-sort'));
+      });
+    });
+  </script>
 </body>
 {% endblock %}
