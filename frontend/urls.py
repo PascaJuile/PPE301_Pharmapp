@@ -18,6 +18,10 @@ urlpatterns = [
     path('rechercher_medicament', views.rechercher_medicament, name='rechercher_medicament'),
     path('upload_ordonnance', views.upload_ordonnance, name='upload_ordonnance'),
     path('formulaire_achat/<int:ordonnance_id>/', views.formulaire_achat, name='formulaire_achat'),
+    path('client/commande', views.commande_client, name='commande_client'),
+    path('client/inscription', views.inscription_client, name='inscription_client'),
+
+
 
     # Paths pour le template admin
     path('preparateur/homepage', views.homepage_prepa, name='homepage_prepa'),

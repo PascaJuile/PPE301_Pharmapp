@@ -60,24 +60,7 @@
               <ul class="site-menu js-clone-nav d-none d-lg-block">
                 <li class="active"><a href="{% url 'liste_medicaments_client' %}">Acceuil</a></li>
                 <li><a href="{% url 'shop' %}">Boutique</a></li>
-                <li class="has-children">
-                  <a href="#">liste déroulante</a>
-                  <ul class="dropdown">
-                    <li><a href="#">Supplements</a></li>
-                    <li class="has-children">
-                      <a href="#">Vitamins</a>
-                      <ul class="dropdown">
-                        <li><a href="#">Supplements</a></li>
-                        <li><a href="#">Vitamins</a></li>
-                        <li><a href="#">Diet &amp; Nutrition</a></li>
-                        <li><a href="#">Tea &amp; Coffee</a></li>
-                      </ul>
-                    </li>
-                    <li><a href="#">Diet &amp; Nutrition</a></li>
-                    <li><a href="#">Tea &amp; Coffee</a></li>
-                    
-                  </ul>
-                </li>
+                <li><a href="{% url 'inscription_client' %}">Commander</a></li>
                 <li><a href="{% url 'about' %}">A Propos De Nous</a></li>
                 <li><a href="{% url 'contact' %}">Contact</a></li>
               </ul>

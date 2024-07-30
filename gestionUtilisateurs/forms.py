@@ -48,3 +48,24 @@ class EditProfileForm(forms.ModelForm):
         fields = ['first_name', 'last_name', 'email']
         # Enlever les deux-points après les labels
         label_suffix = ''
+
+class ClientInscription(forms.ModelForm):
+    class Meta:
+        model = Client
+        fields = ['nomUtilisateur', 'emailUtilisateur', 'numeroUtilisateur', 'motDePasse', 'role']
+        widgets = {
+            'motDePasse': forms.PasswordInput(),
+            'role': forms.HiddenInput(),  # Masquer le champ role
+        }
+        labels = {
+            'nomUtilisateur': 'Nom du client',
+            'emailUtilisateur': 'Adresse email',
+            'numeroUtilisateur': 'Numéro du client',
+            'motDePasse': 'Mot de passe',
+        }
+        label_suffix = ''  # Enlever les deux-points après les labels
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Définir la valeur par défaut pour le champ role
+        self.fields['role'].initial = 'Client'
