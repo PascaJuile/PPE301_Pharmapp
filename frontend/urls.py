@@ -19,6 +19,8 @@ urlpatterns = [
     path('formulaire_achat/<int:ordonnance_id>/', views.formulaire_achat, name='formulaire_achat'),
     path('client/commande', views.commande_client, name='commande_client'),
     path('client/inscription', views.inscription_client, name='inscription_client'),
+    path('client/redirection', views.redirection_commande, name='redirection_commande'),
+
 
 
 
