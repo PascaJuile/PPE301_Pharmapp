@@ -79,6 +79,7 @@ def commande_client(request):
             # Créez le formulaire de commande
             formulaire_commande = form.save(commit=False)
             formulaire_commande.ordonnance = ordonnance
+            formulaire_commande.geolocalisation = form.cleaned_data['geolocalisation']  # Sauvegarder la géolocalisation
             formulaire_commande.save()
             
             return redirect('thankyou')  # Redirige vers une page de confirmation ou autre
