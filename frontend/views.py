@@ -1,3 +1,4 @@
+
 from datetime import datetime
 import json
 from pyexpat.errors import messages
@@ -46,6 +47,13 @@ def thankyou(request):
     return render(request, 'themes_client/thankyou.html')
 
 
+
+def redirection_commande(request):
+    if request.session.get('user_email'):
+        return redirect('commande_client')
+    else:
+        return redirect('inscription_client')
+
 def commande_client(request):
     user_email = request.session.get('user_email')
     
@@ -72,6 +80,7 @@ def commande_client(request):
             # Créez le formulaire de commande
             formulaire_commande = form.save(commit=False)
             formulaire_commande.ordonnance = ordonnance
+            formulaire_commande.geolocalisation = form.cleaned_data['geolocalisation']  # Sauvegarder la géolocalisation
             formulaire_commande.save()
             
             return redirect('thankyou')  # Redirige vers une page de confirmation ou autre
@@ -278,7 +287,7 @@ def page_connexion(request):
                         request.session['user_role'] = user.role
                         
                         if isinstance(user, Client):
-                            return redirect('commande_client')
+                            return redirect('liste_medicaments_client')
                         elif isinstance(user, Pharmacien):
                             return redirect('homepage_phar')
                         elif isinstance(user, Caissier):
@@ -589,4 +598,4 @@ def pharmacien_show_details(request, id):
 
 def deconnexion(request):
     logout(request)
-    return redirect('page_connexion')
+    return redirect('liste_medicaments_client')

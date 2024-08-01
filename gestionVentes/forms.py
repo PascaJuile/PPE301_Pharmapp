@@ -20,6 +20,13 @@ class FormulaireCommandeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Modifier les labels des champs pour enlever les deux-points
+        self.fields['image'].label = "Ajouter l'ordonnance"
+        self.fields['geolocalisation'].label = 'Géolocalisation'
+        self.fields['consentement'].label = 'J\'accepte les conditions de validation'
+        self.fields['mode_paiement'].label = 'Mode de paiement'
+
+        # Définir les choix pour le champ 'mode_paiement'
         self.fields['mode_paiement'].choices = [
             ('tmoney', 'Tmoney'),
             ('flooz', 'Flooz')

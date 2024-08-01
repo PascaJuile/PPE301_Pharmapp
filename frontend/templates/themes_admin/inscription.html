@@ -12,7 +12,38 @@
     <link rel="stylesheet" href="{% static 'themes_admin/css/master.css' %}">
     <link rel="stylesheet" href="{% static 'themes_admin/css/login.css' %}">
     <title>PharmApp</title>
-    <link rel="icon" href="{% static 'themes_admin/img/logo.png' %}" sizes="16x16 32x32" type="image/png">
+  <link rel="icon" href="{% static 'themes_client/images/logo.jpg' %}" sizes="64x64 128x128" type="image/jpg">
+
+    <style>
+        /* Center body-page */
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 150px;
+        }
+        .body-page {
+            width: 80%; /* Adjust this percentage as needed */
+        }
+
+        /* Hover effect for the form */
+        .body-page {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .body-page:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .mb-3{
+            font-weight: bold;
+            font-size: 30px;
+        }
+        .login col-lg-6{
+            margin-top:15px;
+        }
+    </style>
 </head>
 <body>
     <!-- Start Body -->
@@ -25,6 +56,7 @@
                             <img src="{% static 'themes_admin/img/login.jpg' %}" class="img-thumbnail" style="margin-top: 150px;">
                         </div>                        
                         <div class="col-lg-6">
+                            <h1 class="mb-3">Inscription</h1>
                             <form method="post" action="{% url 'inscription' %}">
                                 {% csrf_token %}
                                 <div class="form-group">
@@ -67,4 +99,6 @@
     <!-- End Body -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi" crossorigin="anonymous"></script>
+</body>
+</html>

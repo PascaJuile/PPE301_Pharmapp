@@ -2,6 +2,165 @@
 {% block content %}
 {% load static %}
 
+<style>
+    /* Style général du corps */
+    body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Conteneur principal */
+    .site-wrap {
+        width: 100%;
+        overflow: hidden;
+    }
+    
+
+    /* Style pour la section d'en-tête */
+    .bg-light {
+        background-color: #f8f9fa;
+        padding: 1rem 0;
+    }
+
+    .bg-light a {
+        color: #03BB00;
+        text-decoration: none;
+    }
+
+    .bg-light a:hover {
+        text-decoration: underline;
+    }
+
+    .text-black {
+        color: #343a40;
+    }
+
+    .text-danger {
+        color: #dc3545;
+    }
+
+    /* Section principale du formulaire */
+    .site-section {
+        padding: 2rem 0;
+    }
+
+    h2.h3 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #03BB00;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-control {
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        padding: 0.75rem 1.25rem;
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    .form-control:focus {
+        border-color: #03BB00;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
+    }
+
+    .btn-primary {
+        background-color: #03BB00;
+        border-color: #03BB00;
+    }
+
+    .btn-primary:hover {
+        background-color: #03BB00;
+    }
+
+    .btn-lg {
+        padding: 1rem 1.5rem;
+        font-size: 1.25rem;
+        line-height: 1.5;
+    }
+
+    .btn-block {
+        display: block;
+        width: 30%;
+    }
+
+    /* Style pour la section des bureaux */
+    .site-section.bg-primary {
+        background-color: #0085B2 !important;
+        color: #fff;
+        padding: 2rem 0;
+    }
+
+    .site-section.bg-primary .text-white {
+        color: #fff;
+    }
+
+    .site-section .p-4 {
+        padding: 1.5rem;
+    }
+
+    .site-section .bg-white {
+        background-color: #fff;
+        color: #343a40;
+    }
+
+    .site-section .rounded {
+        border-radius: 0.25rem;
+    }
+
+    .site-section .text-uppercase {
+        text-transform: uppercase;
+    }
+
+    .site-section .h6 {
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+
+    /* Custom button size */
+    .btn-custom {
+        padding: 0.5rem 1rem; /* Adjust the padding as needed */
+        font-size: 1rem;      /* Adjust the font size as needed */
+        line-height: 1.25;    /* Adjust the line height as needed */
+        width: auto;          /* Adjust the width as needed */
+        display: inline-block; /* Ensure the button is inline-block */
+    }
+    
+    /* Center the button */
+    .text-center {
+        text-align: center;
+    }
+    
+
+
+    .mb-0 {
+        margin-bottom: 0;
+        color: #000 !important;
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem;
+    }
+
+    .mb-5 {
+        margin-bottom: 3rem;
+    }
+
+    .p-3 {
+        padding: 1rem;
+    }
+
+    .p-lg-5 {
+        padding: 3rem;
+    }
+</style>
+
 <body>
 
   <div class="site-wrap">
@@ -58,9 +217,9 @@
                   </div>
                 </div>
                 <div class="form-group row">
-                  <div class="col-lg-12">
-                    <input type="submit" class="btn btn-primary btn-lg btn-block" value="Envoyer">
-                  </div>
+                  <div class="col-lg-12 text-center">
+                    <input type="submit" class="btn btn-primary btn-custom" value="Envoyer">
+                  </div>                
                 </div>
               </div>
             </form>
@@ -70,8 +229,6 @@
       </div>
     </div>
 
-
-
     <div class="site-section bg-primary">
       <div class="container">
         <div class="row">
@@ -80,26 +237,25 @@
           </div>
           <div class="col-lg-4">
             <div class="p-4 bg-white mb-3 rounded">
-              <span class="d-block text-black h6 text-uppercase">New York</span>
-              <p class="mb-0">203 Fake St. Mountain View, San Francisco, California, USA</p>
+              <span class="d-block text-black h6 text-uppercase">Lomé</span>
+              <p class="mb-0">Rue Bodjona Agbalepedo lossossimé, Lomé-TOGO</p>
             </div>
           </div>
           <div class="col-lg-4">
             <div class="p-4 bg-white mb-3 rounded">
-              <span class="d-block text-black h6 text-uppercase">London</span>
-              <p class="mb-0">203 Fake St. Mountain View, San Francisco, California, USA</p>
+              <span class="d-block text-black h6 text-uppercase">Atakpamé</span>
+              <p class="mb-0">Rue Est-Mono Atakpamé-Gnibge, Atakpamé-TOGO</p>
             </div>
           </div>
           <div class="col-lg-4">
             <div class="p-4 bg-white mb-3 rounded">
-              <span class="d-block text-black h6 text-uppercase">Canada</span>
-              <p class="mb-0">203 Fake St. Mountain View, San Francisco, California, USA</p>
+              <span class="d-block text-black h6 text-uppercase">Kara</span>
+              <p class="mb-0">Rue Etienne Collège Chaminade, Kara-TOGO</p>
             </div>
           </div>
         </div>
       </div>
-      
     </div>
   </div>
-</body>
+
 {% endblock %}

@@ -1,7 +1,7 @@
 /* Base */
 body {
   line-height: 1.7;
-  color: #8c92a0;
+  color: #8e95a3;
   font-weight: 300;
   font-size: 16px;
 }
@@ -77,7 +77,7 @@ a:hover {
 
 .btn.btn-primary:hover {
   background: transparent;
-  color: #51eaea;
+  color: #03BB00;
 }
 
 .btn.btn-black {
@@ -88,7 +88,7 @@ a:hover {
 .btn.btn-black:hover,
 .btn.btn-black:active,
 .btn.btn-black:focus {
-  background-color: #51eaea;
+  background-color: #03BB00;
   color: #000;
 }
 
@@ -98,7 +98,7 @@ a:hover {
 
 .form-control:active,
 .form-control:focus {
-  border-color: #51eaea;
+  border-color: #03BB00;
 }
 
 .form-control:hover,
@@ -136,7 +136,7 @@ a:hover {
   position: absolute;
   width: 40px;
   height: 2px;
-  background: #51eaea;
+  background: #03BB00;
 }
 
 .site-section-heading.text-center:before {
@@ -150,7 +150,7 @@ a:hover {
   position: absolute;
   width: 40px;
   height: 2px;
-  background: #51eaea;
+  background: #0085B2;
 }
 
 .border-top {
@@ -170,7 +170,7 @@ a:hover {
 }
 
 .site-footer ul li a:hover {
-  color: #51eaea;
+  color:  #03BB00;
 }
 
 .site-footer .footer-heading {
@@ -189,7 +189,7 @@ a:hover {
   text-transform: uppercase;
   letter-spacing: .2em;
   font-size: 25px; /* Taille de police de base */
-  color: #fff !important; /* Couleur du texte en blanc */
+  color: #03BB00 !important; /* Couleur du texte en blanc */
   font-weight: 900;
   transform: scale(2.5); /* Ajustez cette valeur selon la taille désirée */
   transform-origin: 0 0; /* Assurez-vous que le texte reste aligné au coin supérieur gauche */
@@ -223,6 +223,111 @@ a:hover {
   line-height: 40px;
 }
 
+/* Styles utilisateur client debut */
+.user {
+  position: relative;
+}
+
+.user a {
+  display: flex;
+  align-items: center;
+  color: #03BB00; /* Couleur personnalisée */
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.user a:hover {
+  background-color: #e6f7e6;
+  color: #028002;
+}
+
+.user-profile {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  min-width: 220px;
+  z-index: 1000;
+}
+
+.user-profile::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  right: 10px;
+  border-width: 0 10px 10px;
+  border-style: solid;
+  border-color: transparent transparent #ffffff;
+}
+
+.user-profile .user-heading {
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
+
+.user-profile .user-name2 {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.user-profile .user-email2 {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.user-wrapper {
+  padding: 10px;
+}
+
+.user-wrapper .divider {
+  height: 1px;
+  background-color: #e9ecef;
+  margin: 10px 0;
+}
+
+.user-wrapper .content {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  color: #333;
+  text-decoration: none;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.user-wrapper .content:hover {
+  background-color: #f0f0f0;
+  color: #028002;
+}
+
+.user-wrapper .icon {
+  margin-right: 10px;
+  font-size: 1.2rem;
+  color: #03BB00;
+}
+
+.user-wrapper .p-user {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Ajout de transitions pour une interaction plus fluide */
+.user-wrapper .content, .user a {
+  transition: background-color 0.3s, color 0.3s;
+}
+/* Styles utilisateur client fin */
+
 @media (max-width: 991.98px) {
   .icons-btn span {
     width: 24px;
@@ -238,6 +343,10 @@ a:hover {
   line-height: 40px;
 }
 
+.main-nav .site-menu li a:hover {
+  color: #03BB00 !important; /* Change la couleur du texte au survol */
+}
+
 .site-menu-toggle>span {
   top: 5px;
   position: relative;
@@ -249,7 +358,7 @@ a:hover {
   position: relative;
   top: 0;
   width: 100%;
-  background-color: #03BB00;
+  background-color: #ffffff;
 }
 
 .site-navbar.position-relative {
@@ -1664,7 +1773,7 @@ a:hover {
   display: block;
 }
 .banner-wrap.bg-warning {
-  background: #00ff00; /* Changer la couleur de fond en vert, par exemple */
+  background: #03BB00; /* Changer la couleur de fond en vert, par exemple */
 }
 
 

@@ -1,5 +1,7 @@
 {% extends "themes_admin/themes_pharmacien/medicine_list.html" %}
 {% block content %}
+{% load static %}
+
 <style>
     body {
         font-family: 'Arial', sans-serif;
@@ -96,61 +98,73 @@
         color: #fff;
         background-color: #03BB00;
         border-color: #fff;
+        border-radius: 5px;
     }
     .btn-primary:hover {
         color: #fff;
-        background-color: #0056b3;
-        border-color: #004085;
+        background-color: #098a07;
     }
     .btn-secondary {
         color: #fff;
         background-color: #6c757d;
         border-color: #6c757d;
+        border-radius: 5px;
     }
     .btn-secondary:hover {
         color: #fff;
-        background-color: #545b62;
+        background-color: #098a07;
         border-color: #4e555b;
     }
 </style>
 
-<div class="container">
-    <h2>Journal des Commandes</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Date de Création</th>
-                <th>Données des Médicaments</th>
-                <th>État de Validation</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for selection in selections %}
-            <tr>
-                <td>{{ selection.dateCreation }}</td>
-                <td>
-                    <ul>
-                        {% for med in selection.donnees %}
-                        <li>{{ med.nom }} - {{ med.prix }}  - Quantité: {{ med.quantite }}</li>
-                        {% endfor %}
-                    </ul>
-                </td>
-                <td class="table-validation {% if selection.etatDeValidation %}table-validation-valid{% endif %}">
-                    {{ selection.etatDeValidation|yesno:"Validé,Non Validé" }}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <div class="text-center">
-        <button id="addOrderBtn" class="btn btn-primary">Ajouter une Commande</button>
-        <button class="btn btn-secondary">Annuler</button>
+
+<body>
+    <!-- Start Body -->
+     
+    <div class="container">
+        <h2>Journal des Commandes</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Date de Création</th>
+                    <th>Données des Médicaments</th>
+                    <th>État de Validation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for selection in selections %}
+                <tr>
+                    <td>{{ selection.dateCreation }}</td>
+                    <td>
+                        <ul>
+                            {% for med in selection.donnees %}
+                            <li>{{ med.nom }} - {{ med.prix }}  - Quantité: {{ med.quantite }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td class="table-validation {% if selection.etatDeValidation %}table-validation-valid{% endif %}">
+                        {{ selection.etatDeValidation|yesno:"Validé,Non Validé" }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <br>
+        <div class="text-center">
+            <button id="addOrderBtn" class="btn btn-primary">Ajouter une Commande</button>
+            <button class="btn btn-secondary">Annuler</button>
+        </div>
     </div>
-</div>
+
+    <!-- End Body -->
+
+</body>
 
 <script>
     document.getElementById('addOrderBtn').addEventListener('click', function() {
         window.location.href = "{% url 'pharamacien_listeMedicament' %}";
     });
 </script>
+
 {% endblock content %}

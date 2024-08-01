@@ -23,7 +23,7 @@ body{
 }
 .purpule{
     --color-main: #03BB00;
-    --color-second:  #c2dcc066;
+    --color-second:  #ffffff66;
 }
 
 ::selection {
@@ -156,12 +156,13 @@ body{
 }
 
 .sidebar ul a {
-    color: #808080 !important
+    color: #000000 !important
 }
 
 
 .sidebar ul a:hover {
     color: var(--color-main) !important;
+    font-weight: bolder;
 }
 
 .sidebar .card > a:after {

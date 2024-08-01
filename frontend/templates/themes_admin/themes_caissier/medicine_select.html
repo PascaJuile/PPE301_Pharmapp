@@ -2,110 +2,156 @@
 {% block content %}
 {% load static %}
 
-{% block sidebar %}
-        <!-- Start Sidebar -->
-
-        <div class="wrapper">
-
-            <nav id="sidebar" class="sidebar">
-    
-                <div class="sidebar-logo" id="sidebar-logo">
-                    <a href="#">
-                        <div class="row">
-                            <i class="fas fa-laptop-medical"></i>
-                            <h3>PharmApp</h3>
-                        </div>
-                    </a>
-                </div>
-    
-    
-                <div class="user-info">
-                    <div class="row">
-                        <div class="user-img">
-                            <img src="{% static 'themes_admin/img/user3.jpg' %}">
-                        </div>
-                        <div>
-                            <p class="user-name">{{ request.session.user_name }}</p>
-                            <p class="user-email">{{ request.session.user_email }}</p>
-                        </div>
-                    </div>
-                </div>
-    
-                <div class="accordion" id="accordionExample">
-    
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>
-                                <button class="btn btn-link btn-block text-left" type="button">
-                                    <a href="{% url 'homepage_phar' %}" class="icon-home"><i class="fa fa-fw fa-home"></i><span
-                                            style="margin-left: 2px;">Acceuil</span></a>
-                                </button>
-                            </h2>
-                        </div>
-                    </div>
-                    
-    
-                    <div class="card">
-                        <div class="card-header" id="headingThree">
-                            <h2>
-                                <button class="btn btn-link btn-block text-left collapsed" type="button"
-                                    data-toggle="collapse" data-target="#collapseThree" aria-expanded="false"
-                                    aria-controls="collapseThree">
-                                    <a class="option-name"><i class="fas fa-capsules"></i><span
-                                            style="margin-left:4px;">Medicaments</span></a>
-                                </button>
-                            </h2>
-                        </div>
-                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
-                            data-parent="#accordionExample">
-                            <div class="card-body">
-                                <ul>
-                                    <li><a href="{% url 'pharamacien_listeMedicament' %}">Ventes de Médicaments</a></li>
-                                    <li><a href="{% url 'pharmacien_affichage_med' %}">Liste des médicaments</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-    
-                      
-                    <div class="card">
-                        <div class="card-header" id="headingSixteen">
-                            <h2>
-                                <button class="btn btn-link btn-block text-left collapsed" type="button"
-                                    data-toggle="collapse" data-target="#collapseFSixteen" aria-expanded="false"
-                                    aria-controls="collapseFSixteen">
-                                    <a class="option-name"><i class="fa fa-cog" aria-hidden="true"
-                                            style="margin-left: 3px;"></i><span style="margin-left: 2px;">Paramètres</span></a>
-                                </button>
-                            </h2>
-                        </div>
-                        <div id="collapseFSixteen" class="collapse" aria-labelledby="headingSixteen"
-                            data-parent="#accordionExample">
-                            <div class="card-body">
-                                <ul>
-                                    <li><a href="#">Langage</a></li>
-                                    <li><a href="{% url 'themes' %}">Thèmes</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-        </div>
-    
-        <!-- End Sidebar -->
-    
-{% endblock sidebar %}
-
 <style>
-    /* le style de la page sans contenu */
+    /* Styles spécifiques pour la page de sélection des médicaments */
+    .med-container {
+        margin-top: 20px;
+        max-width: 1000px; /* Limite la largeur totale du conteneur */
+        margin-left: auto;
+        margin-right: auto;
+        padding: 10px; /* Ajoute un peu de padding autour du conteneur */
+    }
+
+    .med-title {
+        font-size: 2em; /* Réduit la taille du titre principal */
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .section-title {
+        font-size: 1.8em; /* Réduit la taille des titres de section */
+        margin-top: 15px;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 8px;
+    }
+
+    .med-table {
+        margin-top: 15px;
+        border-collapse: collapse;
+        width: 90%; /* Réduit la largeur du tableau */
+        margin-left: auto;
+        margin-right: auto;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Ombre du tableau plus discrète */
+    }
+
+    .med-table th, .med-table td {
+        padding: 8px; /* Réduit la taille des cellules */
+        text-align: left;
+        border: 1px solid #dee2e6;
+    }
+
+    .med-table th {
+        background-color: #007bff;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .med-table tbody tr:nth-child(even) {
+        background-color: #f9f9f9; /* Couleur de fond des lignes paires */
+    }
+
+    .med-table tbody tr:hover {
+        background-color: #e9ecef; /* Couleur de fond au survol */
+    }
+
+    .btn-main, .btn-validate, .btn-print {
+        margin-top: 15px; /* Réduit l'espace au-dessus des boutons */
+        font-size: 1em; /* Réduit la taille du texte des boutons */
+        padding: 8px 15px; /* Réduit la taille du padding des boutons */
+    }
+
+    .form-container {
+        margin-top: 15px; /* Réduit l'espace au-dessus du formulaire */
+    }
+
+    .receipt-box {
+        padding: 15px; /* Réduit le padding du box du reçu */
+        border: 1px solid #dee2e6;
+        background-color: #f8f9fa;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .receipt-box h2 {
+        font-size: 1.6em; /* Réduit la taille du titre du reçu */
+        margin-bottom: 8px;
+    }
+
+    .receipt-box p {
+        font-size: 1.1em; /* Réduit la taille du texte du reçu */
+        margin: 4px 0;
+    }
+
+    .receipt-box table {
+        width: 100%;
+        margin-top: 15px;
+        border-collapse: collapse;
+    }
+
+    .receipt-box th, .receipt-box td {
+        padding: 8px; /* Réduit la taille du padding des cellules du reçu */
+        border: 1px solid #dee2e6;
+        text-align: left;
+    }
+
+    .receipt-box th {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .receipt-box tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    /* Styles pour les boutons */
+    .btn-main, .btn-validate, .btn-print {
+        display: inline-block;
+        font-size: 1em;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        text-align: center;
+        text-decoration: none;
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .btn-main {
+        background-color: #007bff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-main:hover {
+        background-color: #0056b3;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-validate {
+        background-color: #28a745;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-validate:hover {
+        background-color: #218838;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-print {
+        background-color: #ffc107;
+        color: #212529;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-print:hover {
+        background-color: #e0a800;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
 </style>
 
-<div class="container">
-    <h1 class="mt-5">Aucune commande n'a été ajoutée</h1>
+<div class="med-container">
     {% for selection in non_validated_medicines %}
-    <h2>Selection ID: {{ selection.id }}</h2>
-    <table class="table table-bordered mt-3" id="table-{{ selection.id }}">
+    <h2 class="section-title"> Commande No {{ selection.id }}</h2>
+    <table class="med-table" id="table-{{ selection.id }}">
         <thead>
             <tr>
                 <th>Nom</th>
@@ -123,8 +169,8 @@
             {% endfor %}
         </tbody>
     </table>
-    <button class="btn btn-primary" onclick="validerCommande('{{ selection.id }}')">Valider la commande</button>
-    <div id="details-{{ selection.id }}" style="display: none; margin-top: 20px;">
+    <button class="btn btn-main" onclick="toggleDetails('{{ selection.id }}')">Valider la commande</button>
+    <div id="details-{{ selection.id }}" class="form-container" style="display: none;">
         <p>Total: <span id="totalPrice-{{ selection.id }}">0.00</span></p>
         <div class="form-group">
             <label for="amountReceived-{{ selection.id }}">Montant Reçu:</label>
@@ -135,12 +181,13 @@
             {% csrf_token %}
             <input type="hidden" name="selection_id" value="{{ selection.id }}">
             <input type="hidden" name="total_price" id="hiddenTotalPrice-{{ selection.id }}" value="">
-            <button class="btn btn-success" type="submit">Confirmer</button>
+            <button class="btn btn-validate" type="submit">Confirmer</button>
         </form>
-        <button class="btn btn-info" onclick="printReceipt('{{ selection.id }}')">Imprimer le Reçu</button>
+        <button class="btn btn-print" onclick="printReceipt('{{ selection.id }}')">Imprimer le Reçu</button>
     </div>
     {% endfor %}
 </div>
+
 
 <div id="printableReceipt" style="display:none;">
     <div class="receipt">
@@ -166,60 +213,42 @@
 </div>
 
 <script>
-    function validerCommande(selectionId) {
-        var totalPrice = 0;
-        var rows = document.querySelectorAll(`#table-${selectionId} tbody tr`);
-        rows.forEach(function(row) {
-            var price = parseFloat(row.cells[1].innerText);
-            var quantity = parseInt(row.cells[2].innerText);
-            totalPrice += price * quantity;
-        });
-        document.getElementById('totalPrice-' + selectionId).innerText = totalPrice.toFixed(2);
-        document.getElementById('hiddenTotalPrice-' + selectionId).value = totalPrice.toFixed(2);
-        document.getElementById('details-' + selectionId).style.display = 'block';
+    function toggleDetails(id) {
+        const details = document.getElementById(`details-${id}`);
+        const isVisible = details.style.display === 'block';
+        details.style.display = isVisible ? 'none' : 'block';
+        if (!isVisible) {
+            calculateTotal(id);
+        }
     }
 
-    function calculateChange(selectionId) {
-        var amountReceived = parseFloat(document.getElementById('amountReceived-' + selectionId).value);
-        var totalPrice = parseFloat(document.getElementById('totalPrice-' + selectionId).innerText);
-        var changeDue = amountReceived - totalPrice;
-        document.getElementById('changeDue-' + selectionId).innerText = changeDue.toFixed(2);
+    function calculateTotal(id) {
+        const table = document.getElementById(`table-${id}`);
+        let total = 0;
+        table.querySelectorAll('tbody tr').forEach(row => {
+            const price = parseFloat(row.cells[1].textContent);
+            const quantity = parseInt(row.cells[2].textContent, 10);
+            total += price * quantity;
+        });
+        document.getElementById(`totalPrice-${id}`).textContent = total.toFixed(2);
+        document.getElementById(`hiddenTotalPrice-${id}`).value = total.toFixed(2);
+        document.getElementById(`changeDue-${id}`).textContent = '0.00'; // Reset change due
     }
 
-    function printReceipt(selectionId) {
-        var rows = document.querySelectorAll(`#table-${selectionId} tbody tr`);
-        var receiptItems = document.getElementById('receiptItems');
-        receiptItems.innerHTML = ''; 
+    function calculateChange(id) {
+        const amountReceived = parseFloat(document.getElementById(`amountReceived-${id}`).value) || 0;
+        const totalPrice = parseFloat(document.getElementById(`totalPrice-${id}`).textContent);
+        const changeDue = amountReceived - totalPrice;
+        document.getElementById(`changeDue-${id}`).textContent = changeDue.toFixed(2);
+    }
 
-        rows.forEach(function(row) {
-            var name = row.cells[0].innerText;
-            var price = row.cells[1].innerText;
-            var quantity = row.cells[2].innerText;
-
-            var newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td>${name}</td>
-                <td>${price}</td>
-                <td>${quantity}</td>
-            `;
-            receiptItems.appendChild(newRow);
-        });
-
-        var totalPrice = document.getElementById('totalPrice-' + selectionId).innerText;
-        var amountReceived = document.getElementById('amountReceived-' + selectionId).value;
-        var changeDue = document.getElementById('changeDue-' + selectionId).innerText;
-
-        document.getElementById('printTotalPrice').innerText = totalPrice;
-        document.getElementById('printAmountReceived').innerText = parseFloat(amountReceived).toFixed(2);
-        document.getElementById('printChangeDue').innerText = changeDue;
-
-        var printContents = document.getElementById('printableReceipt').innerHTML;
-        var originalContents = document.body.innerHTML;
-
-        document.body.innerHTML = printContents;
+    function printReceipt(id) {
+        const receipt = document.getElementById('printableReceipt').innerHTML;
+        const originalContents = document.body.innerHTML;
+        document.body.innerHTML = receipt;
         window.print();
         document.body.innerHTML = originalContents;
-        window.location.reload();
     }
 </script>
-{% endblock %}
+
+{% endblock content %}

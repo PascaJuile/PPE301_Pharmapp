@@ -21,7 +21,7 @@
     
 
     <title>PharmApp</title>
-    <link rel="icon" href="{% static 'themes_admin/img/logo.png' %}" sizes="16x16 32x32" type="image/png">
+    <link rel="icon" href="{% static 'themes_admin/img/logo.jpg' %}" sizes="64x64 128x128" type="image/jpg">
 
     <style>
         /* Agrandir les boîtes d'alerte de SweetAlert2 */
@@ -476,12 +476,46 @@
     }
 
     function editMedicine(id, nom, quantite) {
-        const newQuantite = prompt(`Modifier la quantité pour ${nom}:`, quantite);
-        if (newQuantite !== null && newQuantite !== "") {
-            document.querySelector(`input[name="quantite_${id}"]`).value = newQuantite;
-            showSelectedMedicines();
-        }
+        Swal.fire({
+            title: `Modifier la quantité pour ${nom}`,
+            input: 'number',
+            inputLabel: 'Quantité',
+            inputValue: quantite,
+            inputAttributes: {
+                min: 1,
+                step: 1
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Valider',
+            cancelButtonText: 'Annuler',
+            customClass: {
+                popup: 'large-swal-popup',  /* Utiliser la classe personnalisée pour agrandir la boîte */
+                title: 'swal2-title',
+                input: 'swal2-input',
+                confirmButton: 'swal2-confirm-button',
+                cancelButton: 'swal2-cancel-button'
+            },
+            preConfirm: (newQuantite) => {
+                if (!newQuantite || newQuantite < 1) {
+                    Swal.showValidationMessage('Veuillez entrer une quantité valide.');
+                } else {
+                    document.querySelector(`input[name="quantite_${id}"]`).value = newQuantite;
+                    return newQuantite;
+                }
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'Quantité Modifiée',
+                    `La quantité pour ${nom} a été modifiée à ${result.value}.`,
+                    'success'
+                ).then(() => {
+                    showSelectedMedicines(); // Réafficher la liste des médicaments sélectionnés
+                });
+            }
+        });
     }
+    
 
     function removeMedicine(id) {
         document.querySelector(`input[name="selection_${id}"]`).checked = false;

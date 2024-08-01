@@ -13,8 +13,85 @@
     <script src="{% static 'themes_admin/js/popper.min.js'%}"></script>
     <link rel="stylesheet" href="{% static 'themes_admin/css/master.css' %}">
     <link rel="stylesheet" href="{% static 'themes_admin/css/login.css' %}">
-    <title>Pharmacy</title>
-    <link rel="icon" href="{% static 'themes_admin/img/logo.png' %}" sizes="16x16 32x32" type="image/png">
+    <title>PharmApp</title>
+    <link rel="icon" href="{% static 'themes_admin/img/logo.jpg' %}" sizes="64x64 128x128" type="image/jpg">
+
+    <style>
+        /* CSS intégré pour le formulaire de connexion */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #f8f9fa; /* Couleur de fond de la page (si nécessaire) */
+        }
+
+        .login {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 500px; /* Limiter la largeur de la carte pour une meilleure apparence */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control {
+            border-radius: 0.25rem;
+            box-shadow: none;
+            border-color: #ced4da; /* Couleur de bordure */
+            padding: 0.75rem 1rem;
+        }
+
+        .form-control:focus {
+            border-color: #80bdff; /* Couleur de bordure au focus */
+            box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25); /* Ombre au focus */
+        }
+
+        .form-control-label {
+            margin-bottom: 0.5rem;
+            font-weight: 600; /* Poids de la police */
+            font-size: 1rem; /* Taille de la police */
+        }
+
+        .btn-info {
+            border-radius: 0.25rem;
+            font-size: 0.875rem; /* Taille de la police réduite */
+            padding: 0.5rem 1rem; /* Padding réduit */
+            text-transform: uppercase;
+            margin-left: 35px; /* Déplacer le bouton légèrement vers la gauche */
+        }
+
+        .img-thumbnail {
+            border-radius: 10px;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .mb-3 {
+            font-weight: bold;
+        }
+
+        /* Effet de survol pour le formulaire */
+        .card:hover {
+            transform: scale(1.05); /* Agrandir légèrement la carte */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Augmenter l'ombre */
+        }
+    </style>
 </head>
 
 <body>
@@ -28,9 +105,18 @@
                             <img src="{% static 'themes_admin/img/login.jpg' %}" class="img-thumbnail">
                         </div>
                         <div class="col-lg-6">
+                            <h1 class="mb-3">Veuillez-vous connecter</h1>
                             <form method="post" action="{% url 'page_connexion' %}">
                                 {% csrf_token %}
-                                {{ form.as_p }}
+                                <!-- Suppression des deux-points des labels -->
+                                <div class="form-group">
+                                    <label for="{{ form.email.id_for_label }}" class="form-control-label">Adresse Email</label>
+                                    {{ form.email }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.motDePasse.id_for_label }}" class="form-control-label">Mot de Passe</label>
+                                    {{ form.motDePasse }}
+                                </div>
                                 <button type="submit" class="btn btn-info">Se connecter</button>
                             </form>
                         </div>

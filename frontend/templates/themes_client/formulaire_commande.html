@@ -3,69 +3,175 @@
 {% load static %}
 
 <style>
+    /* Conteneur pour centrer le formulaire */
+    .form-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column; /* Aligne les éléments du formulaire verticalement */
+        min-height: 100vh; /* Remplit la hauteur de la fenêtre pour le centrage vertical */
+        padding: 20px;
+    }
+
+    /* Styles pour le conteneur de la carte */
+    .map-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%; /* Prend la largeur complète disponible */
+        max-width: 400px; /* Largeur maximale de la carte */
+        margin-bottom: 15px;
+    }
+
     #map { 
         height: 400px;
-        width: 400px;
- }
+        width: 100%; /* Ajuste la largeur pour qu'elle soit responsive */
+        border: 1px solid #ddd;
+        border-radius: 30px;
+        margin-right: -160px;
+    }
+
+    /* Styles pour les options de paiement */
     .payment-options label {
         display: inline-block;
         cursor: pointer;
         margin-right: 10px;
+        position: relative;
     }
+
     .payment-options input[type="radio"] {
         display: none;
     }
+
     .payment-options img {
         border: 2px solid transparent;
-        width: 100px; 
-        height: auto; 
+        width: 100px;
+        height: auto;
+        transition: border-color 0.3s ease, transform 0.3s ease;
     }
+
     .payment-options input[type="radio"]:checked + img {
-        border-color: blue; 
+        border-color: #03BB00;
+    }
+
+    .payment-options img:hover {
+        transform: scale(1.05); /* Zoom léger au survol */
+    }
+
+    /* Styles pour le formulaire */
+    form {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        transition: box-shadow 0.3s ease;
+    }
+
+    form:hover {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.9); /* Ombre plus forte au survol */
+    }
+
+    h1 {
+        text-align: center;
+        color: #03BB00;
+        margin-bottom: 20px;
+        transition: color 0.3s ease;
+    }
+
+    h1:hover {
+        color: #098a07; /* Changement de couleur au survol */
+    }
+
+    div {
+        margin-bottom: 15px;
+        text-align: center; /* Centre le contenu à l'intérieur de chaque div */
+    }
+
+    label {
+        color: #000;
+        font-size: 20px;
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    button {
+        background-color: #03BB00;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    button:hover {
+        background-color: #098a07;
+    }
+
+    /* Styles pour l'input caché */
+    .hidden-input-container {
+        display: flex;
+        justify-content: center;
+        margin: 0 auto; /* Pour s'assurer qu'il est centré dans le formulaire */
     }
 </style>
 
-<h1>Passer une Commande</h1>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.non_field_errors }}
-    <div>
-        {{ form.image.label_tag }} {{ form.image }}
-    </div>
-    <div>
-        <label for="map">Géolocalisation :</label>
-        <div id="map"></div>
-        <input type="hidden" id="id_geolocalisation" name="geolocalisation">
-        <script>
-            var map = L.map('map').setView([51.505, -0.09], 13);
-            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(map);
-            var marker = L.marker([51.505, -0.09]).addTo(map);
-            map.on('click', function(e) {
-                marker.setLatLng(e.latlng);
-                document.getElementById('id_geolocalisation').value = e.latlng.lat + ',' + e.latlng.lng;
-            });
-        </script>
-    </div>
-    <div>
-        {{ form.consentement }} {{ form.consentement.label_tag }}
-    </div>
-    <div>
-        <label>Mode de paiement :</label>
-        <div class="payment-options">
-            <label>
-                <input type="radio" name="mode_paiement" value="tmoney">
-                <img src="{% static 'images/tmoney.png' %}" alt="Tmoney">
-            </label>
-            <label>
-                <input type="radio" name="mode_paiement" value="flooz">
-                <img src="{% static 'images/flooz.png' %}" alt="Flooz">
-            </label>
+<div class="form-container">
+    <h1>Scanner votre ordonnance</h1>
+    <br>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div>
+            {{ form.image.label_tag }} {{ form.image }}
         </div>
-    </div>
-    <button type="submit">Envoyer</button>
-</form>
+        <div>
+            <label for="map">Sélectionner votre localisation</label>
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+            <div class="hidden-input-container">
+                <input type="hidden" id="id_geolocalisation" name="geolocalisation">
+            </div>
+            <script>
+                var map = L.map('map').setView([51.505, -0.09], 13);
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }).addTo(map);
+                var marker = L.marker([51.505, -0.09]).addTo(map);
+                map.on('click', function(e) {
+                    marker.setLatLng(e.latlng);
+                    document.getElementById('id_geolocalisation').value = e.latlng.lat + ',' + e.latlng.lng;
+                });
+            </script>
+        </div>
+        <div>
+            {{ form.consentement }} {{ form.consentement.label_tag }}
+        </div>
+        <div>
+            <label>Mode de paiement</label>
+            <div class="payment-options">
+                <label>
+                    <input type="radio" name="mode_paiement" value="tmoney">
+                    <img src="{% static 'themes_client/images/tmoney.png' %}" alt="Tmoney">
+                </label>
+                <label>
+                    <input type="radio" name="mode_paiement" value="flooz">
+                    <img src="{% static 'themes_client/images/flooz.jpg' %}" alt="Flooz">
+                </label>
+            </div>
+        </div>
+        <button type="submit">Envoyer</button>
+    </form>
+</div>
 
 {% endblock content %}
