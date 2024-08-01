@@ -27,6 +27,7 @@ urlpatterns = [
     # Paths pour le template admin
     path('preparateur/homepage', views.homepage_prepa, name='homepage_prepa'),
     path('pharmacien/homepage', views.homepage_phar, name='homepage_phar'),
+    path('caissier/homepage', views.homepage_car, name='homepage_car'),
     path('themes', views.themes, name='themes'),
     path('edit_profile', views.edit_profile, name='edit_profile'),
     path('edit_user', views.edit_user, name='edit_user'),
@@ -56,10 +57,13 @@ urlpatterns = [
     path('pharmacien/show_details/<int:id>/', views.pharmacien_show_details, name='pharmacien_show_details'),
     path('pharmacien/listeCommande', views.journal_medicaments_selectionnes, name='journal_medicaments_selectionnes'),
     path('pharmacien/medicaments_selectionnés', views.medicaments_selectionnés, name='medicaments_selectionnés'),
-
-
+    path('pharmacien/supprimer_commande/<int:pk>', views.delete_order, name='delete_order'),  
+    path('pharmacien/commandeVirtuelle/<int:commande_id>/', views.pharmacien_commandeVirtuelle, name='pharmacien_commandeVirtuelle'),
+    path('pharmacien/commandeVirtuelle', views.liste_commandes_virtuelles, name='liste_commandes_virtuelles'),
+    
     # Paths pour le caissier
     path('afficher-medicaments-selectionnes', views.afficher_medicaments_selectionnes, name='afficher_medicaments_selectionnes'),
+    path('caissier/liste_commande', views.caissier_commandes_validees, name='caissier_commandes_validees'),
 
     # Path profil utilisateur
     path('profil_utilisateur', views.profil_utilisateur, name='profil_utilisateur'),

@@ -1,0 +1,18 @@
+{% extends "themes_admin/themes_pharmacien/medicine_list.html" %}
+{% block content %}
+
+<div class="container mt-5">
+    
+    <h1>Liste des Commandes Virtuelles</h1>
+    <ul>
+    {% for commande in commandes %}
+        {% if commande.id %}
+            <li><a href="{% url 'pharmacien_commandeVirtuelle' commande.id %}">Commande N°{{ commande.id }} Du {{commande.date_commande}}</a></li>
+        {% else %}
+            <li>ID de la commande manquant</li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+
+</div>
+{% endblock content %}

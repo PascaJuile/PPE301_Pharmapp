@@ -1,11 +1,11 @@
 from django import forms
-from .models import Ordonnance, FormulaireCommande
+from .models import Ordonnance, CommandeVirtuelle
 
-class FormulaireCommandeForm(forms.ModelForm):
+class CommandeVirtuelleForm(forms.ModelForm):
     image = forms.ImageField(label="Ajouter l'ordonnance", required=True)
 
     class Meta:
-        model = FormulaireCommande
+        model = CommandeVirtuelle
         fields = ['geolocalisation', 'consentement', 'mode_paiement']
         widgets = {
             'geolocalisation': forms.HiddenInput(),

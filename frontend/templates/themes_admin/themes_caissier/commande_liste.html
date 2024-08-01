@@ -1,0 +1,58 @@
+{% extends "themes_admin/themes_caissier/homepage_car.html" %}
+{% block content %}
+{% load static %}
+<div class="container">
+    <h2>Commandes Validées</h2>
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Date de Création</th>
+                <th>Prix Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for selection in selections %}
+            <tr>
+                <td>{{ selection.id }}</td>
+                <td>{{ selection.dateCreation }}</td>
+                <td>{{ selection.recuperer_prix_total }}</td>
+                <td>
+                    <button class="btn btn-info" data-toggle="modal" data-target="#detailsModal-{{ selection.id }}">Détails</button>
+                </td>
+            </tr>
+
+            <!-- Modal -->
+            <div class="modal fade" id="detailsModal-{{ selection.id }}" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel-{{ selection.id }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="detailsModalLabel-{{ selection.id }}">Détails de la Commande</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <ul>
+                                {% for med in selection.donnees %}
+                                <li>{{ med.nom }} - {{ med.prix }} - Quantité: {{ med.quantite }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Inclure les scripts JavaScript nécessaires pour les fonctionnalités Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock content %}

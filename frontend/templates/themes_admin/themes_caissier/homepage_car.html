@@ -1,0 +1,296 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <script src="https://kit.fontawesome.com/18695b64bb.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="{% static 'themes_admin/css/bootstrap.min.css' %}">
+    <script src="{% static 'themes_admin/js/popper.min.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static 'themes_admin/css/master.css' %}">
+    <link rel="stylesheet" href="{% static 'themes_admin/css/add_category.css' %}">
+    
+
+    <title>PharmApp</title>
+    <link rel="icon" href="{% static 'themes_admin/img/logo.jpg' %}" sizes="64x64 128x128" type="image/jpg">
+
+</head>
+
+<body>
+
+    <button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+
+    <!-- Start Sidebar -->
+
+    <div class="wrapper">
+
+        <nav id="sidebar" class="sidebar">
+
+            <div class="sidebar-logo" id="sidebar-logo">
+                <a href="#">
+                    <div class="row">
+                        <i class="fas fa-laptop-medical"></i>
+                        <h3>PharmApp</h3>
+                    </div>
+                </a>
+            </div>
+
+
+            <div class="user-info">
+                <div class="row">
+                    <div class="user-img">
+                        <img src="{% static 'themes_admin/img/user3.jpg' %}">
+                    </div>
+                    <div>
+                        <p class="user-name">{{ request.session.user_name }}</p>
+                        <p class="user-email">{{ request.session.user_email }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion" id="accordionExample">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>
+                            <button class="btn btn-link btn-block text-left" type="button">
+                                <a href="{% url 'homepage_phar' %}" class="icon-home"><i class="fa fa-fw fa-home"></i><span
+                                        style="margin-left: 2px;">Acceuil</span></a>
+                            </button>
+                        </h2>
+                    </div>
+                </div>
+                
+
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h2>
+                            <button class="btn btn-link btn-block text-left collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapseThree" aria-expanded="false"
+                                aria-controls="collapseThree">
+                                <a class="option-name"><i class="fas fa-capsules"></i><span
+                                        style="margin-left:4px;">Liste des commandes</span></a>
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
+                        data-parent="#accordionExample">
+                        <div class="card-body">
+                            <ul>
+                                <li><a href="{% url 'afficher_medicaments_selectionnes' %}">Commandes en cours</a></li>
+                                <li><a href="{% url 'caissier_commandes_validees' %}">Commandes validées</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                    
+                <div class="card">
+                    <div class="card-header" id="headingSixteen">
+                        <h2>
+                            <button class="btn btn-link btn-block text-left collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapseFSixteen" aria-expanded="false"
+                                aria-controls="collapseFSixteen">
+                                <a class="option-name"><i class="fa fa-cog" aria-hidden="true"
+                                        style="margin-left: 3px;"></i><span style="margin-left: 2px;">Paramètres</span></a>
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapseFSixteen" class="collapse" aria-labelledby="headingSixteen"
+                        data-parent="#accordionExample">
+                        <div class="card-body">
+                            <ul>
+                                <li><a href="#">Langage</a></li>
+                                <li><a href="{% url 'themes' %}">Thèmes</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- End Sidebar -->
+    
+
+
+    <!-- Start Navbar -->
+
+    <div id="navbar">
+        <nav class="navbar navbar-expand navbar-light ">
+            <div class="collapse navbar-collapse">
+                <div class="navbar-nav mr-auto">
+                    <a href="#" class="btn btn-lg " id="sidebarCollapse">
+                        <span class="glyphicon glyphicon-align-left"></span>
+                    </a>
+
+                </div>
+                <div class="row">
+
+
+                    <div class="dropdown d-flex notification" style="margin-left: auto;" id="notification">
+                        <a role="button" data-toggle="dropdown" data-target="#" href="">
+                            <i class="fas fa-bell"></i>
+                            <span class="badge">0</span>
+                        </a>
+
+                        <ul class="dropdown-menu notifications" role="menu" aria-labelledby="dLabel">
+
+                            <div class="notification-heading">
+                                <h4 class="menu-title">NOTIFICATIONS</h4>
+                                <h4 class="menu-title pull-right">Tout voir<i
+                                        class="glyphicon glyphicon-circle-arrow-right"></i>
+                                </h4>
+                            </div>
+                            <li class="divider"></li>
+                            <div class="notifications-wrapper">
+                                <a class="content" href="{% url 'notification_date_expired' %}">
+
+                                    <div class="notification-item">
+                                        <div class="row">
+                                            <div class="clock">
+                                                <i class="fas fa-hourglass-end"></i>
+                                            </div>
+                                            <div>
+                                                <h4 class="item-title">Date de péremption du médicament</h4>
+                                                <p class="item-info">Marketing 101, Video Assignment</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+
+                                <li class="divider"></li>
+
+                                <a class="content" href="{% url 'notification_out_of_stock' %}">
+                                    <div class="notification-item">
+                                        <div class="row">
+                                            <div class="battery">
+                                                <i class="fas fa-battery-quarter"></i>
+                                            </div>
+                                            <div>
+                                                <h4 class="item-title">Out of Stock Medicine</h4>
+                                                <p class="item-info">Marketing 101, Video Assignment</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+
+                            </div>
+                            <li class="divider"></li>
+                            <div class="notification-footer">
+                                <h4 class="menu-title">View all<i class="glyphicon glyphicon-circle-arrow-right"></i>
+                                </h4>
+                            </div>
+                        </ul>
+
+                    </div>
+
+
+                    <div class="user dropdown d-flex" id="user">
+                        <a role="button" data-toggle="dropdown" data-target="#" href="">
+                            <i class="fas fa-user"></i>
+                        </a>
+
+                        <ul class="dropdown-menu user-profile" role="menu" aria-labelledby="dLabel">
+
+                            <div class="user-heading">
+                                <div><img src="{% static 'themes_admin/img/user3.jpg' %}" class="user-img2"></div>
+                                <div class="user-name2">{{ request.session.user_name }}</div>
+                                <div class="user-email2">{{ request.session.user_email }}</div>
+                                </h4>
+                            </div>
+                            <div class="user-wrapper">
+
+                                <a class="content a-user dropdown-item" href="{% url 'profil_utilisateur' %}" id="a-user">
+
+                                    <div class="drop-item">
+                                        <div class="row row-user" style="margin-bottom: -2px;">
+                                            <div>
+                                                <i class="	fa fa-user-o" id="fa-user" style="margin-top: 1px"></i>
+                                            </div>
+                                            <div class="p-user">
+                                                <p>Mon Profil</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </a>
+                                <li class="divider"></li>
+
+                                <a class="content a-edit dropdown-item" href="{% url 'edit_profile' %}" id="a-user">
+                                    <div class="drop-item">
+                                        <div class="row row-user" style="margin-top: 5px">
+                                            <div class="">
+                                                <i class="fas fa-edit" id="fa-edit"></i>
+                                            </div>
+                                            <div class="p-user">
+                                                <p>Edit Profile</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <li class="divider"></li>
+
+                                <a class="content a-sign dropdown-item" href="{% url 'deconnexion' %}" id="a-user">
+                                    <div class="drop-item">
+                                        <div class="row row-user" style="margin-top: 5px">
+                                            <div class="">
+                                                <i class="fa fa-sign-out" id="fa-sign"></i>
+                                            </div>
+                                            <div class="p-user">
+                                                <p>Sign Out</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </nav>
+    </div>
+
+
+    <!-- End Navbar -->
+
+    <!-- Start Body -->
+    {% block content %}
+
+   {% endblock content %}
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+        
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.7/js/responsive.bootstrap4.min.js"></script>
+
+
+
+    <script src="{% static 'themes_admin/js/main.js' %}"></script>
+    <script src="{% static 'themes_admin/js/themes.js' %}"></script>
+</body>
+
+</html>
