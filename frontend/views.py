@@ -611,8 +611,6 @@ def pharmacien_show_details(request, id):
 def deconnexion(request):
     logout(request)
     return redirect('liste_medicaments_client')
-<<<<<<< HEAD
-=======
 
 
 
@@ -645,4 +643,3 @@ def caissier_commandes_validees(request):
         'selections': selections,
     }
     return render(request, 'themes_admin/themes_caissier/commande_liste.html', context)
->>>>>>> af2a9925081d6bdf96a3b662c6a0271a4fa4e850
