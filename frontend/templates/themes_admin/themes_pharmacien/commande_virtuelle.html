@@ -1,0 +1,34 @@
+{% extends "themes_admin/themes_pharmacien/medicine_list.html" %}
+{% block content %}
+
+<div class="container mt-5">
+    <h1>Détails de la Commande Virtuelle</h1>
+    <div class="card">
+        <div class="card-header">
+            <h2>Ordonnance</h2>
+        </div>
+        <div class="card-body">
+            <img src="{{ commande.ordonnance.image.url }}" alt="Ordonnance" class="img-fluid">
+        </div>
+    </div>
+    <div class="card mt-3">
+        <div class="card-header">
+            <h2>Informations du Client</h2>
+        </div>
+        <div class="card-body">
+            <p><strong>Nom:</strong> {{ commande.ordonnance.ordonnance_client.nomUtilisateur }}</p>
+            <p><strong>Email:</strong> {{ commande.ordonnance.ordonnance_client.emailUtilisateur }}</p>
+            <p><strong>Contact:</strong> {{ commande.ordonnance.ordonnance_client.numeroUtilisateur }}</p>
+        </div>
+        <div class="card-header">
+            <h2>Détails de la Commande</h2>
+        </div>
+        <div class="card-body">
+            <p><strong>Géolocalisation:</strong> {{ commande.geolocalisation }}</p>
+            <p><strong>Mode de paiement:</strong> {{ commande.recuperer_mode_payement }}</p>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

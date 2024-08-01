@@ -12,8 +12,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from gestionStocks.models import *
 from gestionUtilisateurs.models import *
-from gestionVentes.forms import FormulaireCommandeForm
-from gestionVentes.models import CommandePresentielle, Ordonnance, SelectionMedicament
+from gestionVentes.forms import CommandeVirtuelleForm
+from gestionVentes.models import CommandePresentielle, CommandeVirtuelle, Ordonnance, SelectionMedicament
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib import messages
@@ -68,7 +68,7 @@ def commande_client(request):
         return redirect('page_connexion')
     
     if request.method == 'POST':
-        form = FormulaireCommandeForm(request.POST, request.FILES)
+        form = CommandeVirtuelleForm(request.POST, request.FILES)
         if form.is_valid():
             # Créez une nouvelle ordonnance d'abord
             ordonnance = Ordonnance(
@@ -85,7 +85,7 @@ def commande_client(request):
             
             return redirect('thankyou')  # Redirige vers une page de confirmation ou autre
     else:
-        form = FormulaireCommandeForm()
+        form = CommandeVirtuelleForm()
 
     return render(request, 'themes_client/formulaire_commande.html', {'form': form})
 
@@ -111,6 +111,9 @@ def homepage_prepa(request):
 
 def homepage_phar(request):
     return render(request, 'themes_admin/themes_pharmacien/homepage_phar.html')
+
+def homepage_car(request):
+    return render(request, 'themes_admin/themes_caissier/homepage_car.html')
 
 
 def themes(request):
@@ -501,22 +504,23 @@ def medicaments_selectionnés(request):
     if request.method == 'POST':
         selected_medicines_data = request.POST.get('selectedMedicinesData')
         selected_medicines = json.loads(selected_medicines_data)
+        selected_statut = request.POST.get('selectedMedicinesStatut')
 
         try:
             SelectionMedicament.objects.create(
                 donnees=selected_medicines,
+                statut=selected_statut,
                 pharmacien=pharmacien
             )
-            messages.success(request, 'Données envoyées avec succès.')
+            messages.success(request, 'Médicaments sélectionnés enregistrés avec succès.')
         except Exception as e:
             messages.error(request, f'Erreur lors de l\'enregistrement des données : {e}')
+            return redirect('journal_medicaments_selectionnes')
 
-            return redirect('afficher_medicaments_selectionnes')
-        
-        return render(request, 'themes_admin/themes_pharmacien/medicine_list.html', {'message': 'Données envoyées avec succès.'})
+        return redirect('journal_medicaments_selectionnes')
     else:
         return render(request, 'themes_admin/themes_pharmacien/medicine_list.html', {'message': 'Invalid request method.'})
-    
+            
 def journal_medicaments_selectionnes(request):   
     user_email = request.session.get('user_email')
     
@@ -578,7 +582,15 @@ def afficher_medicaments_selectionnes(request):
         'non_validated_medicines': non_validated_medicines,
     }
     return render(request, 'themes_admin/themes_caissier/medicine_select.html', context)
-        
+
+def pharmacien_commandeVirtuelle(request, commande_id):
+    commande = get_object_or_404(CommandeVirtuelle, id=commande_id)
+    return render(request, 'themes_admin/themes_pharmacien/commande_virtuelle.html', {'commande': commande})
+
+def liste_commandes_virtuelles(request):
+    commandes = CommandeVirtuelle.objects.all()
+    return render(request, 'themes_admin/themes_pharmacien/liste_commandes_virtuelles.html', {'commandes': commandes})
+
 def pharmacien_affichage_med(request):
     # Récupérer tous les médicaments avec leurs catégories associées
     medicaments = Medicament.objects.all()
@@ -599,3 +611,38 @@ def pharmacien_show_details(request, id):
 def deconnexion(request):
     logout(request)
     return redirect('liste_medicaments_client')
+<<<<<<< HEAD
+=======
+
+
+
+def delete_order(request, pk):
+    selection = get_object_or_404(SelectionMedicament, pk=pk)
+    
+    if not selection.etatDeValidation:
+        selection.delete()
+        messages.success(request, 'Commande supprimée avec succès.')
+    else:
+        messages.error(request, 'Impossible de supprimer une commande validée.')
+    
+    return redirect('journal_medicaments_selectionnes')
+
+def caissier_commandes_validees(request):
+    user_email = request.session.get('user_email')
+    
+    if user_email:
+        try:
+            caissier = Caissier.objects.get(emailUtilisateur=user_email)
+        except Caissier.DoesNotExist:
+            messages.error(request, 'Caissier non trouvé.')
+            return redirect('inscription')
+    else:
+        messages.error(request, 'Utilisateur non authentifié.')
+        return redirect('page_connexion')
+    
+    selections = SelectionMedicament.objects.filter(etatDeValidation=True)
+    context = {
+        'selections': selections,
+    }
+    return render(request, 'themes_admin/themes_caissier/commande_liste.html', context)
+>>>>>>> af2a9925081d6bdf96a3b662c6a0271a4fa4e850

@@ -124,54 +124,74 @@
     }
 </style>
 
-<div class="form-container">
-    <h1>Scanner votre ordonnance</h1>
-    <br>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        <div>
-            {{ form.image.label_tag }} {{ form.image }}
-        </div>
-        <div>
-            <label for="map">Sélectionner votre localisation</label>
-            <div class="map-container">
-                <div id="map"></div>
-            </div>
-            <div class="hidden-input-container">
-                <input type="hidden" id="id_geolocalisation" name="geolocalisation">
-            </div>
-            <script>
-                var map = L.map('map').setView([51.505, -0.09], 13);
+<h1>Passer une Commande</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div>
+        {{ form.image.label_tag }} {{ form.image }}
+    </div>
+    <div>
+        <label for="map">Géolocalisation :</label>
+        <div id="map"></div>
+        <input type="hidden" id="id_geolocalisation" name="geolocalisation">
+        <script>
+            // Fonction pour initialiser la carte
+            function initializeMap(lat, lng) {
+                var map = L.map('map').setView([lat, lng], 13);
                 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 19,
                     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                 }).addTo(map);
-                var marker = L.marker([51.505, -0.09]).addTo(map);
+                var marker = L.marker([lat, lng]).addTo(map);
                 map.on('click', function(e) {
                     marker.setLatLng(e.latlng);
                     document.getElementById('id_geolocalisation').value = e.latlng.lat + ',' + e.latlng.lng;
                 });
-            </script>
+            }
+        
+            // Fonction pour obtenir la position actuelle
+            function getCurrentPosition() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        var lat = position.coords.latitude;
+                        var lng = position.coords.longitude;
+                        initializeMap(lat, lng);
+                        document.getElementById('id_geolocalisation').value = lat + ',' + lng;
+                    }, function() {
+                        // En cas d'erreur de géolocalisation
+                        alert("Impossible de récupérer votre position. La carte sera centrée sur une position par défaut.");
+                        initializeMap(6.229350438061403, 1.2016786235635935); // Position par défaut si géolocalisation échoue
+                    });
+                } else {
+                    // La géolocalisation n'est pas supportée par le navigateur
+                    alert("Votre navigateur ne supporte pas la géolocalisation. La carte sera centrée sur une position par défaut.");
+                    initializeMap(6.229350438061403, 1.2016786235635935); // Position par défaut
+                }
+            }
+        
+            // Appel de la fonction pour obtenir la position actuelle
+            getCurrentPosition();
+        </script>
+        
+    </div>
+    <div>
+        {{ form.consentement }} {{ form.consentement.label_tag }}
+    </div>
+    <div>
+        <label>Mode de paiement :</label>
+        <div class="payment-options">
+            <label>
+                <input type="radio" name="mode_paiement" value="tmoney">
+                <img src="{% static 'themes_client/images/tmoney.png' %}" alt="Tmoney">
+            </label>
+            <label>
+                <input type="radio" name="mode_paiement" value="flooz">
+                <img src="{% static 'themes_client/images/flooz.png' %}" alt="Flooz">
+            </label>
         </div>
-        <div>
-            {{ form.consentement }} {{ form.consentement.label_tag }}
-        </div>
-        <div>
-            <label>Mode de paiement</label>
-            <div class="payment-options">
-                <label>
-                    <input type="radio" name="mode_paiement" value="tmoney">
-                    <img src="{% static 'themes_client/images/tmoney.png' %}" alt="Tmoney">
-                </label>
-                <label>
-                    <input type="radio" name="mode_paiement" value="flooz">
-                    <img src="{% static 'themes_client/images/flooz.jpg' %}" alt="Flooz">
-                </label>
-            </div>
-        </div>
-        <button type="submit">Envoyer</button>
-    </form>
-</div>
+    </div>
+    <button type="submit">Envoyer</button>
+</form>
 
 {% endblock content %}

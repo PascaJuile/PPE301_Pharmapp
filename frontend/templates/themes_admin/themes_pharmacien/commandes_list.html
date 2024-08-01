@@ -1,7 +1,6 @@
 {% extends "themes_admin/themes_pharmacien/medicine_list.html" %}
 {% block content %}
-{% load static %}
-
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <style>
     body {
         font-family: 'Arial', sans-serif;
@@ -117,54 +116,97 @@
     }
 </style>
 
+<div class="container">
+    <h2>Journal des Commandes</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Date de Création</th>
+                <th>État de Validation</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for selection in selections %}
+            <tr>
+                <td>{{ selection.dateCreation }}</td>
+                <td class="table-validation {% if selection.etatDeValidation %}table-validation-valid{% endif %}">
+                    {{ selection.etatDeValidation|yesno:"Validé,Non Validé" }}
+                </td>
+                <td>
+                    <button class="btn btn-info" data-toggle="modal" data-target="#detailsModal-{{ selection.id }}">Détails</button>
+                    {% if not selection.etatDeValidation %}
+                    <button class="btn btn-danger" onclick="window.location.href='{% url 'delete_order' selection.id %}'">Supprimer</button>
+                    {% endif %}
+                </td>
+            </tr>
 
-<body>
-    <!-- Start Body -->
-     
-    <div class="container">
-        <h2>Journal des Commandes</h2>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Date de Création</th>
-                    <th>Données des Médicaments</th>
-                    <th>État de Validation</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for selection in selections %}
-                <tr>
-                    <td>{{ selection.dateCreation }}</td>
-                    <td>
-                        <ul>
-                            {% for med in selection.donnees %}
-                            <li>{{ med.nom }} - {{ med.prix }}  - Quantité: {{ med.quantite }}</li>
-                            {% endfor %}
-                        </ul>
-                    </td>
-                    <td class="table-validation {% if selection.etatDeValidation %}table-validation-valid{% endif %}">
-                        {{ selection.etatDeValidation|yesno:"Validé,Non Validé" }}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <br>
-        <br>
-        <div class="text-center">
-            <button id="addOrderBtn" class="btn btn-primary">Ajouter une Commande</button>
-            <button class="btn btn-secondary">Annuler</button>
-        </div>
+            <!-- Modal -->
+            <div class="modal fade" id="detailsModal-{{ selection.id }}" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel-{{ selection.id }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="detailsModalLabel-{{ selection.id }}">Détails de la Commande</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <ul>
+                                {% for med in selection.donnees %}
+                                <li data-med-id="{{ med.id }}">{{ med.nom }} - {{ med.prix }} - Quantité: <span class="med-quantite">{{ med.quantite }}</span>
+                                    {% if not selection.etatDeValidation %}
+                                    <button class="btn btn-primary btn-sm" onclick="editMedicine('{{ med.id }}', '{{ med.nom }}', '{{ med.quantite }}')">Modifier</button>
+                                    <button class="btn btn-danger btn-sm" onclick="removeMedicine('{{ med.id }}')">Supprimer</button>
+                                    {% endif %}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="text-center">
+        <button id="addOrderBtn" class="btn btn-primary">Ajouter une Commande</button>
+        <button class="btn btn-secondary">Annuler</button>
     </div>
 
     <!-- End Body -->
 
 </body>
 
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
     document.getElementById('addOrderBtn').addEventListener('click', function() {
         window.location.href = "{% url 'pharamacien_listeMedicament' %}";
     });
+
+    function editMedicine(id, nom, quantite) {
+        const newQuantite = prompt(`Modifier la quantité pour ${nom}:`, quantite);
+        if (newQuantite !== null && newQuantite !== "") {
+            // Mettez à jour la quantité dans le HTML
+            const liElement = document.querySelector(`li[data-med-id="${id}"]`);
+            liElement.querySelector('.med-quantite').innerText = newQuantite;
+
+            // Optionnellement, envoyez une requête AJAX pour mettre à jour la quantité dans le backend
+        }
+    }
+
+    function removeMedicine(id) {
+        // Mettez l'élément li correspondant comme caché
+        const liElement = document.querySelector(`li[data-med-id="${id}"]`);
+        liElement.style.display = 'none';
+
+        // Optionnellement, envoyez une requête AJAX pour supprimer l'élément dans le backend
+    }
 </script>
 
 {% endblock content %}

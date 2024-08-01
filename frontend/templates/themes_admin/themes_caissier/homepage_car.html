@@ -22,7 +22,7 @@
     
 
     <title>PharmApp</title>
-    <link rel="icon" href="{% static 'themes_admin/img/logo.png' %}" sizes="16x16 32x32" type="image/png">
+    <link rel="icon" href="{% static 'themes_admin/img/logo.jpg' %}" sizes="64x64 128x128" type="image/jpg">
 
 </head>
 
@@ -52,8 +52,8 @@
                         <img src="{% static 'themes_admin/img/user3.jpg' %}">
                     </div>
                     <div>
-                        <p class="user-name">User Name</p>
-                        <p class="user-email">admin@admin.com</p>
+                        <p class="user-name">{{ request.session.user_name }}</p>
+                        <p class="user-email">{{ request.session.user_email }}</p>
                     </div>
                 </div>
             </div>
@@ -64,8 +64,8 @@
                     <div class="card-header">
                         <h2>
                             <button class="btn btn-link btn-block text-left" type="button">
-                                <a href="#" class="icon-home"><i class="fa fa-fw fa-home"></i><span
-                                        style="margin-left: 2px;">Home</span></a>
+                                <a href="{% url 'homepage_phar' %}" class="icon-home"><i class="fa fa-fw fa-home"></i><span
+                                        style="margin-left: 2px;">Acceuil</span></a>
                             </button>
                         </h2>
                     </div>
@@ -79,7 +79,7 @@
                                 data-toggle="collapse" data-target="#collapseThree" aria-expanded="false"
                                 aria-controls="collapseThree">
                                 <a class="option-name"><i class="fas fa-capsules"></i><span
-                                        style="margin-left:4px;">Medicine</span></a>
+                                        style="margin-left:4px;">Liste des commandes</span></a>
                             </button>
                         </h2>
                     </div>
@@ -87,17 +87,14 @@
                         data-parent="#accordionExample">
                         <div class="card-body">
                             <ul>
-                                <li><a href="{% url 'creation_categorie' %}">Add Category</a></li>
-                                <li><a href="{% url 'liste_category' %}">Category List</a></li>
-                                <li><a href="{% url 'creation_medicament' %}">Add Medicine</a></li>
-                                <li><a href="{% url 'liste_medicaments' %}">Medicine List</a></li>
-
+                                <li><a href="{% url 'afficher_medicaments_selectionnes' %}">Commandes en cours</a></li>
+                                <li><a href="{% url 'caissier_commandes_validees' %}">Commandes validées</a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
-            
+                    
                 <div class="card">
                     <div class="card-header" id="headingSixteen">
                         <h2>
@@ -105,8 +102,7 @@
                                 data-toggle="collapse" data-target="#collapseFSixteen" aria-expanded="false"
                                 aria-controls="collapseFSixteen">
                                 <a class="option-name"><i class="fa fa-cog" aria-hidden="true"
-                                        style="margin-left: 3px;"></i><span style="margin-left: 2px;">Application
-                                        Setting</span></a>
+                                        style="margin-left: 3px;"></i><span style="margin-left: 2px;">Paramètres</span></a>
                             </button>
                         </h2>
                     </div>
@@ -114,8 +110,8 @@
                         data-parent="#accordionExample">
                         <div class="card-body">
                             <ul>
-                                <li><a href="#">Language</a></li>
-                                <li><a href="{% url 'themes' %}">Themes</a></li>
+                                <li><a href="#">Langage</a></li>
+                                <li><a href="{% url 'themes' %}">Thèmes</a></li>
                             </ul>
                         </div>
                     </div>
@@ -125,6 +121,7 @@
     </div>
 
     <!-- End Sidebar -->
+    
 
 
     <!-- Start Navbar -->
@@ -151,7 +148,7 @@
 
                             <div class="notification-heading">
                                 <h4 class="menu-title">NOTIFICATIONS</h4>
-                                <h4 class="menu-title pull-right">View all<i
+                                <h4 class="menu-title pull-right">Tout voir<i
                                         class="glyphicon glyphicon-circle-arrow-right"></i>
                                 </h4>
                             </div>
@@ -165,7 +162,7 @@
                                                 <i class="fas fa-hourglass-end"></i>
                                             </div>
                                             <div>
-                                                <h4 class="item-title">Date Expired Medicine</h4>
+                                                <h4 class="item-title">Date de péremption du médicament</h4>
                                                 <p class="item-info">Marketing 101, Video Assignment</p>
                                             </div>
                                         </div>
@@ -208,8 +205,8 @@
 
                             <div class="user-heading">
                                 <div><img src="{% static 'themes_admin/img/user3.jpg' %}" class="user-img2"></div>
-                                <div class="user-name2">Tasneem Anas</div>
-                                <div class="user-email2">tasneem@admin.com</div>
+                                <div class="user-name2">{{ request.session.user_name }}</div>
+                                <div class="user-email2">{{ request.session.user_email }}</div>
                                 </h4>
                             </div>
                             <div class="user-wrapper">
@@ -222,7 +219,7 @@
                                                 <i class="	fa fa-user-o" id="fa-user" style="margin-top: 1px"></i>
                                             </div>
                                             <div class="p-user">
-                                                <p>My Profile</p>
+                                                <p>Mon Profil</p>
                                             </div>
                                         </div>
                                     </div>
@@ -244,7 +241,7 @@
                                 </a>
                                 <li class="divider"></li>
 
-                                <a class="content a-sign dropdown-item" href="#" id="a-user">
+                                <a class="content a-sign dropdown-item" href="{% url 'deconnexion' %}" id="a-user">
                                     <div class="drop-item">
                                         <div class="row row-user" style="margin-top: 5px">
                                             <div class="">
@@ -265,89 +262,11 @@
         </nav>
     </div>
 
+
     <!-- End Navbar -->
 
     <!-- Start Body -->
     {% block content %}
-
-    <div class="body-page" id="body-page">
-        <div class="add-category">
-            <div class="card">
-                <div class="card-header">
-                    <div class="d-flex justify-content-between align-items-center">
-                        Ajouter une catégorie
-                        <a href="{% url 'liste_category' %}"><button type="button" class="btn btn-list">
-                            <i class="fa fa-align-justify"></i>&nbsp; Liste des catégories</button>
-                        </a>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <form action="{% url 'vmodifier_categorie' categorie.id %}" method="post" class="needs-validation" enctype="multipart/form-data">
-                                {% csrf_token %}
-                                <div class="col">
-                                    <input type="text" class="form-control input" value="{{ categorie.nomCat }}" name="nomCat" required>
-                                    <span class="focus-input" data-placeholder="Nom de la catégorie"></span>
-                                    <div class="invalid-feedback">
-                                        Ce champ est obligatoire.
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <input type="text" class="form-control input" value="{{ categorie.description }}" name="description" required>
-                                    <span class="focus-input" data-placeholder="Description"></span>
-                                    <div class="invalid-feedback">
-                                        Ce champ est obligatoire.
-                                    </div>
-                                </div>
-                                
-                                <button type="submit" class="btn float-right btn-list">Modifier</button>
-                            </form>
-                            
-
-                            
-
-                        </div>
-                        <div class="col-lg-6 d-none d-xl-block d-lg-block">
-                            <img src="{% static 'themes_admin/img/add_category2.jpg' %}" class="img-thumbnail">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-    <!-- End Body -->
-
-    <script>
-        (function () {
-            'use strict'
-
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            var forms = document.querySelectorAll('.needs-validation')
-
-            // Loop over them and prevent submission
-            Array.prototype.slice.call(forms)
-                .forEach(function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (!form.checkValidity()) {
-                            event.preventDefault()
-                            event.stopPropagation()
-                        }
-
-                        form.classList.add('was-validated')
-                    }, false)
-                })
-        })()
-        
-        // $(document).ready(function () {
-        //     $('.form-control').on('focus',function(){
-        //         $('.needs-validation').removeClass('was-validated');
-        //     })
-        // });
-
-    </script>
-
 
    {% endblock content %}
 
