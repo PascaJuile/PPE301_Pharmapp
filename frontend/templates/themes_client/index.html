@@ -125,46 +125,6 @@
                 </a>
             {% endif %}
         </div>
-
-          <div class="user dropdown d-flex" id="user">
-            {% if request.session.user_name and request.session.user_email %}
-                <!-- User is logged in -->
-                <a role="button" data-toggle="dropdown" data-target="#" href="">
-                    <i class="bi bi-person-fill"></i>
-                    <span>Déconnexion</span>
-                </a>
-
-                <ul class="dropdown-menu user-profile" role="menu" aria-labelledby="dLabel">
-                    <div class="user-heading">
-                        <div class="user-name2">{{ request.session.user_name }}</div>
-                        <div class="user-email2">{{ request.session.user_email }}</div>
-                    </div>
-                    <div class="user-wrapper">
-                        <li class="divider"></li>
-                        <a class="content a-sign dropdown-item" href="{% url 'deconnexion' %}" id="a-user">
-                            <div class="drop-item">
-                                <div class="row row-user" style="margin-top: 5px">
-                                    <div class="">
-                                        <i class="fa fa-sign-out" id="fa-sign"></i>
-                                    </div>
-                                    <div class="p-user">
-                                        <p>Déconnexion</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </ul>
-            {% else %}
-                <!-- User is not logged in -->
-                <a href="{% url 'page_connexion' %}">
-                    <i class="bi bi-person-fill"></i>
-                    <span>Connexion</span>
-                </a>
-            {% endif %}
-        </div>
-
-        </div>
       </div>
     </div>
 
