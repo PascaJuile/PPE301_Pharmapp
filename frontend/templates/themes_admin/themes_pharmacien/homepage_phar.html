@@ -32,16 +32,16 @@
 
     <button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
 {% block sidebar %}
-    <!-- Start Sidebar -->
+     <!-- Start Sidebar -->
 
-    <div class="wrapper">
+     <div class="wrapper">
 
         <nav id="sidebar" class="sidebar">
 
             <div class="sidebar-logo" id="sidebar-logo">
                 <a href="#">
                     <div class="row">
-                        <i class="fas fa-laptop-medical"></i>
+                        <img src="{% static 'themes_admin/img/logo.png' %}" width="90" height="90">
                         <h3>PharmApp</h3>
                     </div>
                 </a>
@@ -111,7 +111,11 @@
                         data-parent="#accordionExample">
                         <div class="card-body">
                             <ul>
-                                <li><a href="{% url 'journal_medicaments_selectionnes' %}">Liste des commandes</a></li>                            </ul>
+                                <li><a href="{% url 'journal_medicaments_selectionnes' %}">Commandes en présentielles</a></li>
+                                
+                                <li><a href="{% url 'liste_commandes_virtuelles' %}">Commandes virtuelles</a></li>
+                                                         
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -142,6 +146,7 @@
     </div>
 
     <!-- End Sidebar -->
+  
 {% endblock sidebar %}
 
     <!-- Start Navbar -->

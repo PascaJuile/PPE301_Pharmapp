@@ -14,12 +14,15 @@ href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstr
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
 
+
+<link rel="stylesheet" href="{% static 'themes_admin/css/master.css' %}">
+<link rel="stylesheet" href="{% static 'themes_admin/css/add_category.css' %}">
 <link rel="stylesheet" href="{% static 'themes_admin/css/add_medicine.css' %}">
 
 <body>
 
     <!-- Start Body -->
-<div class="body-page" id="body-page">
+    <div class="body-page" id="body-page">
         <div class="add-medicine">
             <div class="card">
                 <div class="card-header d-flex justify-content-between bd-highlight mb-3">
@@ -82,23 +85,6 @@ href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstr
                         </div>
                         <button type="submit" class="btn btn-list float-right">Ajouter</button>
                     </form>
-                    
-                    
-
-
-                    <!-- <input class="radio-prescription" type="radio" name="prescription" id="required"
-                                value="required">
-                            <label class="radio-option" for="required" >
-                                Required
-                            </label>
-                            <input class="radio-prescription" type="radio" name="prescription" id="not_required"
-                                value="not_required">
-                            <label class="radio-option" for="not_required">
-                                Not required
-                            </label> -->
-
-
-
                 </div>
 
             </div>

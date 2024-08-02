@@ -1,18 +1,88 @@
 {% extends "themes_admin/themes_pharmacien/medicine_list.html" %}
 {% block content %}
 
-<div class="container mt-5">
-    
-    <h1>Liste des Commandes Virtuelles</h1>
-    <ul>
-    {% for commande in commandes %}
-        {% if commande.id %}
-            <li><a href="{% url 'pharmacien_commandeVirtuelle' commande.id %}">Commande N°{{ commande.id }} Du {{commande.date_commande}}</a></li>
-        {% else %}
-            <li>ID de la commande manquant</li>
-        {% endif %}
-    {% endfor %}
+<div class="container mt-5 custom-container">
+    <h1 class="custom-heading">Liste des Commandes Virtuelles</h1>
+    <ul class="custom-list">
+        {% for commande in commandes %}
+            {% if commande.id %}
+                <li class="custom-list-item">
+                    <a href="{% url 'pharmacien_commandeVirtuelle' commande.id %}" class="custom-link">Commande N°{{ commande.id }} Du {{ commande.date_commande }}</a>
+                </li>
+            {% else %}
+                <li class="custom-list-item">ID de la commande manquant</li>
+            {% endif %}
+        {% endfor %}
     </ul>
-
 </div>
+
+<!-- Add custom styles specifically for commande_virtuelle.html -->
+<style>
+    .custom-container {
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        margin: 0 auto;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .custom-container:hover {
+        transform: scale(1.02); /* Slight zoom effect */
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .custom-heading {
+        font-size: 2.5em;
+        margin-bottom: 30px;
+        color: #03BB00;
+        text-align: center;
+        font-weight: 600;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        transition: color 0.3s, text-shadow 0.3s;
+    }
+
+    .custom-heading:hover {
+        color: #028a00; /* Darker green */
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .custom-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        text-align: center;
+    }
+
+    .custom-list-item {
+        margin: 0 auto 15px;
+        padding: 10px;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        max-width: 90%;
+        transition: background-color 0.3s, box-shadow 0.3s;
+        display: inline-block;
+    }
+
+    .custom-list-item:hover {
+        background-color: #e9ecef;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transform: scale(1.02); /* Slight zoom effect */
+    }
+
+    .custom-link {
+        text-decoration: none;
+        color: #007bff;
+        font-size: 1.25em;
+        font-weight: 500;
+        transition: color 0.3s;
+    }
+
+    .custom-link:hover {
+        text-decoration: underline;
+        color: #0056b3;
+    }
+</style>
+
 {% endblock content %}

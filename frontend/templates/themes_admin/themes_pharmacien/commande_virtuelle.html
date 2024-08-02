@@ -1,34 +1,114 @@
 {% extends "themes_admin/themes_pharmacien/medicine_list.html" %}
 {% block content %}
 
-<div class="container mt-5">
-    <h1>Détails de la Commande Virtuelle</h1>
-    <div class="card">
-        <div class="card-header">
-            <h2>Ordonnance</h2>
+<div class="container mt-5 custom-container">
+    <h1 class="custom-heading">Détails de la Commande Virtuelle</h1>
+    
+    <div class="card custom-card">
+        <div class="card-header custom-card-header">
+            <h2 class="custom-card-title">Ordonnance</h2>
         </div>
-        <div class="card-body">
-            <img src="{{ commande.ordonnance.image.url }}" alt="Ordonnance" class="img-fluid">
+        <div class="card-body custom-card-body">
+            <div class="custom-image-container">
+                <img src="{{ commande.ordonnance.image.url }}" alt="Ordonnance" class="img-fluid custom-image">
+            </div>
         </div>
     </div>
-    <div class="card mt-3">
-        <div class="card-header">
-            <h2>Informations du Client</h2>
+    
+    <div class="card mt-3 custom-card">
+        <div class="card-header custom-card-header">
+            <h2 class="custom-card-title">Informations du Client</h2>
         </div>
-        <div class="card-body">
+        <div class="card-body custom-card-body">
             <p><strong>Nom:</strong> {{ commande.ordonnance.ordonnance_client.nomUtilisateur }}</p>
             <p><strong>Email:</strong> {{ commande.ordonnance.ordonnance_client.emailUtilisateur }}</p>
             <p><strong>Contact:</strong> {{ commande.ordonnance.ordonnance_client.numeroUtilisateur }}</p>
         </div>
-        <div class="card-header">
-            <h2>Détails de la Commande</h2>
+    </div>
+
+    <div class="card mt-3 custom-card">
+        <div class="card-header custom-card-header">
+            <h2 class="custom-card-title">Détails de la Commande</h2>
         </div>
-        <div class="card-body">
+        <div class="card-body custom-card-body">
             <p><strong>Géolocalisation:</strong> {{ commande.geolocalisation }}</p>
             <p><strong>Mode de paiement:</strong> {{ commande.recuperer_mode_payement }}</p>
         </div>
     </div>
 </div>
 
+<!-- Add custom styles specifically for details_commande_virtuelle.html -->
+<style>
+    .custom-container {
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        max-width: 900px; /* Center container and limit width */
+        margin: 0 auto; /* Center container horizontally */
+    }
+
+    .custom-heading {
+        font-size: 2.5em;
+        margin-bottom: 30px;
+        color: #03BB00;
+        text-align: center;
+        font-weight: 600;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .custom-card {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s; /* Smooth hover effect */
+    }
+
+    .custom-card:hover {
+        transform: scale(1.02); /* Slight zoom effect */
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .custom-card-header {
+        background-color: #f1f3f5;
+        border-bottom: 1px solid #dee2e6;
+        padding: 15px;
+    }
+
+    .custom-card-title {
+        font-size: 1.75em;
+        color: #495057;
+        margin: 0;
+    }
+
+    .custom-card-body {
+        padding: 20px;
+    }
+
+    .custom-image-container {
+        text-align: center; /* Center the image container */
+    }
+
+    .custom-image {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+        transition: transform 0.3s; /* Smooth hover effect */
+    }
+
+    .custom-image:hover {
+        transform: scale(1.05); /* Slight zoom effect */
+    }
+
+    .custom-card-body p {
+        margin-bottom: 15px;
+        font-size: 1.1em;
+        color: #495057;
+    }
+</style>
 
 {% endblock content %}

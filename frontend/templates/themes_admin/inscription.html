@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{% static 'themes_admin/css/master.css' %}">
     <link rel="stylesheet" href="{% static 'themes_admin/css/login.css' %}">
     <title>PharmApp</title>
-  <link rel="icon" href="{% static 'themes_client/images/logo.jpg' %}" sizes="64x64 128x128" type="image/jpg">
+    <link rel="icon" href="{% static 'themes_client/images/logo.jpg' %}" sizes="64x64 128x128" type="image/jpg">
 
     <style>
         /* Center body-page */
@@ -25,7 +25,7 @@
             margin-top: 150px;
         }
         .body-page {
-            width: 80%; /* Adjust this percentage as needed */
+            width: 75%; /* Adjust this percentage as needed */
         }
 
         /* Hover effect for the form */
@@ -36,12 +36,30 @@
             transform: scale(1.02);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-        .mb-3{
+        .mb-3 {
             font-weight: bold;
             font-size: 30px;
         }
-        .login col-lg-6{
-            margin-top:15px;
+        .login .col-lg-6 {
+            margin-top: 15px;
+        }
+        /* Custom CSS for aligning the button and paragraph to the left */
+        .align-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .align-left .btn {
+            margin-bottom: 10px;
+            margin-left: 35px;
+        }
+        .align-left p {
+            margin-left: 0;
+        }
+        .btn-info{
+            font-size: 15px !important;
+            background-color: #03BB00;
+            background-size: 6px !important;
         }
     </style>
 </head>
@@ -87,8 +105,10 @@
                                     <label for="id_role">Rôle</label>
                                     {{ form.role }}
                                 </div>
-                                <button type="submit" class="btn btn-info">S'inscrire</button>
-                                <p class="text-center">Vous avez déjà un compte ? <a href="{% url 'page_connexion' %}">Connectez-vous ici</a></p>
+                                <div class="align-left">
+                                    <button type="submit" class="btn btn-info">S'inscrire</button>
+                                    <p class="text-center">Vous avez déjà un compte ? <a href="{% url 'page_connexion' %}">Connectez-vous ici</a></p>
+                                </div>
                             </form>
                         </div>
                     </div>

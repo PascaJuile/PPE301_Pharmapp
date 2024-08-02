@@ -33,10 +33,12 @@
 
 
 button[type="submit"].btn.btn-info {
-    width: 60%; /* Prendre toute la largeur */
+    width: 40%; /* Prendre toute la largeur */
     padding: 15px; /* Espacement interne */
-    font-size: 18px; /* Taille de la police */
+    font-size: 10px; /* Taille de la police */
     border-radius: 4px; /* Bords arrondis */
+    margin-left: 60px;
+    background-color: #03BB00;
 }
 
 .login p {
@@ -53,7 +55,3 @@ button[type="submit"].btn.btn-info {
 .login p a:hover {
     text-decoration: underline; /* Soulignement au survol */
 }
-
-
-
-
