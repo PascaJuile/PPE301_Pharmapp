@@ -14,12 +14,17 @@ class CommandeVirtuelle(models.Model):
     date_commande = models.DateTimeField(auto_now_add=True)
     consentement = models.BooleanField(default=False)
     mode_paiement = models.CharField(max_length=50, choices=[('tmoney', 'Tmoney'), ('flooz', 'Flooz')])
+    etat_payement = models.BooleanField(default=False)
     etat_validation = models.BooleanField(default=False)
     motif = models.CharField(max_length=255, default="Ordonnance correcte" )
 
     def recuperer_mode_payement(self):
         choix = dict(self._meta.get_field('mode_paiement').choices)
-        return choix.get(self.mode_paiement, 'Unknown')
+        return choix.get(self.mode_paiement, 'Inconnu')
+    
+    def accepter_commande(self):
+        self.etat_validation = True
+        self.save()
 
 class SelectionMedicament(models.Model):
     statut = models.CharField(max_length=50, choices=[('virtuelle', 'Virtuelle'), ('presentiel', 'Presentiel')])
@@ -29,6 +34,13 @@ class SelectionMedicament(models.Model):
     pharmacien = models.ForeignKey(
         Pharmacien,
         on_delete=models.CASCADE
+    )
+    ordonnance = models.ForeignKey(
+        Ordonnance,
+        on_delete=models.CASCADE,
+        related_name='selections',
+        null=True,
+        blank=True  
     )
 
     def recuperer_prix_total(self):
