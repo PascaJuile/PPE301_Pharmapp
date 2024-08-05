@@ -539,11 +539,52 @@
     }
     
     function editMedicine(id, nom, quantite) {
-        const newQuantite = prompt(`Modifier la quantité pour ${nom}:`, quantite);
-        if (newQuantite !== null && newQuantite !== "") {
-            document.querySelector(`input[name="quantite_${id}"]`).value = newQuantite;
-            showSelectedMedicines();
-        }
+        Swal.fire({
+            title: `Modifier la quantité pour ${nom}:`,
+            input: 'text',
+            inputLabel: 'Nouvelle quantité',
+            inputValue: quantite,
+            showCancelButton: true,
+            cancelButtonText: 'Annuler',
+            confirmButtonText: 'Modifier',
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'La quantité ne peut pas être vide!';
+                }
+                if (isNaN(value) || value <= 0) {
+                    return 'Veuillez entrer un nombre valide!';
+                }
+                return null;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const newQuantite = result.value;
+                document.querySelector(`input[name="quantite_${id}"]`).value = newQuantite;
+                showSelectedMedicines();
+            }
+        });
+    }        
+
+    function removeMedicine(id) {
+        document.querySelector(`input[name="selection_${id}"]`).checked = false;
+        showSelectedMedicines();
+    }
+
+    function confirmSubmit() {
+        Swal.fire({
+            title: 'Êtes-vous sûr ?',
+            text: "Voulez-vous envoyer les médicaments sélectionnés ?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Oui, envoyer',
+            cancelButtonText: 'Annuler'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('selectedMedicinesForm').submit();
+            }
+        });
     }
 
     function removeMedicine(id) {
@@ -573,3 +614,5 @@
         $(".resizable").resizable();
     });
 </script>
+
+    
