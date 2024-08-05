@@ -10,7 +10,7 @@
         display: flex-box !important;
     }
     .container {
-        max-width: 1200px;
+        max-width: 900px;
         margin: 20px auto;
         padding: 20px;
         background-color: #fff;
@@ -114,6 +114,46 @@
         background-color: #098a07;
         border-color: #4e555b;
     }
+
+    /* Center the modal vertically */
+    .modal-dialog {
+        display: flex;
+        align-items: center;
+        min-height: calc(100% - 1.75rem);
+    }
+    .modal-content {
+        border-radius: 10px;
+        border: 1px solid #dee2e6;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .modal-header {
+        background-color: #03BB00;
+        color: #fff;
+        border-bottom: none;
+        border-radius: 10px 10px 0 0;
+        text-align: center;
+    }
+    .modal-title {
+        text-align: center;
+        font-size: 1.8em;
+        font-weight: bold;
+    }
+    .modal-footer {
+        border-top: none;
+        border-radius: 0 0 10px 10px;
+    }
+    .close {
+        color: #fff;
+    }
+    .modal-body ul {
+        list-style: none;
+        padding: 0;
+    }
+    .modal-body li {
+        border-bottom: 1px solid #dee2e6;
+        padding: 15px 0; /* Augmente l'espacement des éléments */
+        font-size: 1.6em; /* Augmente la taille de la police des informations des médicaments */
+    }
 </style>
 
 <div class="container">
@@ -141,46 +181,43 @@
                 </td>
             </tr>
 
-            <!-- Modal -->
-            <div class="modal fade" id="detailsModal-{{ selection.id }}" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel-{{ selection.id }}" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="detailsModalLabel-{{ selection.id }}">Détails de la Commande</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <ul>
-                                {% for med in selection.donnees %}
-                                <li data-med-id="{{ med.id }}">{{ med.nom }} - {{ med.prix }} - Quantité: <span class="med-quantite">{{ med.quantite }}</span>
-                                    {% if not selection.etatDeValidation %}
-                                    <button class="btn btn-primary btn-sm" onclick="editMedicine('{{ med.id }}', '{{ med.nom }}', '{{ med.quantite }}')">Modifier</button>
-                                    <button class="btn btn-danger btn-sm" onclick="removeMedicine('{{ med.id }}')">Supprimer</button>
-                                    {% endif %}
-                                </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                        </div>
+           <!-- Modal -->
+           <div class="modal fade" id="detailsModal-{{ selection.id }}" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel-{{ selection.id }}" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="detailsModalLabel-{{ selection.id }}">Détails de la Commande</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <ul>
+                            {% for med in selection.donnees %}
+                            <li data-med-id="{{ med.id }}">
+                                {{ med.nom }} - {{ med.prix }} - Quantité: <span class="med-quantite">{{ med.quantite }}</span>
+                                {% if not selection.etatDeValidation %}
+                                <button class="btn btn-primary btn-sm" onclick="editMedicine('{{ med.id }}', '{{ med.nom }}', '{{ med.quantite }}')">Modifier</button>
+                                <button class="btn btn-danger btn-sm" onclick="removeMedicine('{{ med.id }}')">Supprimer</button>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                     </div>
                 </div>
             </div>
-            {% endfor %}
+        </div>
+        {% endfor %}
         </tbody>
     </table>
     <div class="text-center">
         <button id="addOrderBtn" class="btn btn-primary">Ajouter une Commande</button>
         <button class="btn btn-secondary">Annuler</button>
     </div>
-
-    <!-- End Body -->
-
-</body>
-
+</div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
