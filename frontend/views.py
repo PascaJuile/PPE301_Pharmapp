@@ -585,7 +585,7 @@ def medicaments_selectionnés(request):
             messages.error(request, f'Erreur lors de l\'enregistrement des données : {e}')
             return redirect('journal_medicaments_selectionnes')
 
-        return redirect('journal_medicaments_selectionnes')
+        return redirect('cart')
     else:
         return render(request, 'themes_admin/themes_pharmacien/medicine_list.html', {'message': 'Invalid request method.'})    
 
