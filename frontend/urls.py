@@ -21,6 +21,8 @@ urlpatterns = [
     path('client/commande', views.commande_client, name='commande_client'),
     path('client/inscription', views.inscription_client, name='inscription_client'),
     path('client/redirection', views.redirection_commande, name='redirection_commande'),
+    path('client/payement_commande', views.payement_commande, name='payement_commande'),
+
 
 
 
@@ -61,9 +63,11 @@ urlpatterns = [
     path('pharmacien/supprimer_commande/<int:pk>', views.delete_order, name='delete_order'),  
     path('pharmacien/commandeVirtuelle/<int:commande_id>/', views.pharmacien_commandeVirtuelle, name='pharmacien_commandeVirtuelle'),
     path('pharmacien/commandeVirtuelle', views.liste_commandes_virtuelles, name='liste_commandes_virtuelles'),
+    path('pharmacien/commandeVirtuelle/<int:commande_id>/accepter/', views.accepter_commande, name='accepter_commandeV'),
+    path('pharmacien/commandeVirtuelle/<int:commande_id>/refuser/', views.refuser_commande, name='refuser_commandeV'),
     
     # Paths pour le caissier
-    path('afficher-medicaments-selectionnes', views.afficher_medicaments_selectionnes, name='afficher_medicaments_selectionnes'),
+    path('caissier/commande_non_validee', views.afficher_medicaments_selectionnes, name='afficher_medicaments_selectionnes'),
     path('caissier/liste_commande', views.caissier_commandes_validees, name='caissier_commandes_validees'),
 
     # Path profil utilisateur

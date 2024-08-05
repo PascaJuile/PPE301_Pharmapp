@@ -11,7 +11,12 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- jQuery UI -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'themes_admin/css/bootstrap.min.css' %}">
     <script src="{% static 'themes_admin/js/popper.min.js' %}"></script>
@@ -72,6 +77,31 @@
         /* Agrandir les cases à cocher */
         .form-check-input {
             transform: scale(1.5); /* Agrandir les cases à cocher */
+        }
+
+        .ordonnance-details {
+            position: fixed; /* Utiliser 'fixed' pour éviter les problèmes de déplacement */
+            bottom: 20px;
+            right: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px; /* Largeur initiale pour la redimensionner */
+            cursor: move; /* Indicateur de déplacement */
+        }
+        
+        .image-container {
+            overflow: hidden; /* Masquer les parties de l'image qui débordent */
+        }
+        
+        .zoomable {
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .zoomable:hover {
+            transform: scale(1.5); /* Agrandir l'image au survol */
         }
     </style>
 
@@ -337,183 +367,210 @@
 
     <!-- End Navbar -->
 
-    <!-- Start Body -->
-    {% block content %}
-    <div class="body-page" id="body-page">
-        <div class="add-category">
-            <div class="card">
-                <div class="card-header">
-                    <div class="d-flex justify-content-between align-items-center">
-                        Liste des médicaments
-                        <a href="#"><button type="button" class="btn btn-list" data-toggle="modal" data-target="#selectedMedicinesModal" onclick="showSelectedMedicines()"><i class="fa fa-align-justify"></i>&nbsp;Afficher sélection</button></a>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            {% for categorie in categories %}
-                            <h3>{{ categorie.nomCat }}</h3>
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Image</th>
-                                            <th>Nom</th>
-                                            <th>Prix Unitaire</th>
-                                            <th>Quantité</th>
-                                            <th>Sélectionner</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for medicament in categorie.medicaments.all %}
-                                        <tr>
-                                            <td>
-                                                {% if medicament.image and medicament.image.url %}
-                                                <img src="{{ medicament.image.url }}" alt="{{ medicament.nomMedicament }}" class="img-thumbnail" width="50" height="50">
-                                                {% else %}
-                                                Image non disponible
-                                                {% endif %}
-                                            </td>
-                                            <td>{{ medicament.nomMedicament }}</td>
-                                            <td>{{ medicament.prixUnitaire }} FCFA</td>
-                                            <td><input type="number" name="quantite_{{ medicament.id }}" class="form-control" min="1" value="1"></td>
-                                            <td><input type="checkbox" name="selection_{{ medicament.id }}"></td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
+<!-- Start Body -->
+{% block content %}
+<div class="body-page" id="body-page">
+    <div class="add-category">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    Liste des médicaments
+                    <a href="#"><button type="button" class="btn btn-list" data-toggle="modal" data-target="#selectedMedicinesModal" onclick="showSelectedMedicines()"><i class="fa fa-align-justify"></i>&nbsp;Afficher sélection</button></a>
                 </div>
             </div>
-            
-            <div class="card-footer">
-                <button type="button" class="btn btn-primary" onclick="showSelectedMedicines()">Afficher Sélection</button>
+            <div class="card-body">
+                {% if ordonnance_details %}
+                    <div class="ordonnance-details draggable resizable">
+                        <h5>Ordonnance</h5>
+                        <div class="image-container">
+                            <img src="{{ ordonnance_details.image_url }}" alt="Ordonnance" class="img-fluid zoomable">
+                        </div>
+                        <p><strong>Nom:</strong> {{ ordonnance_details.nom }}</p>
+                        <p><strong>Contact:</strong> {{ ordonnance_details.contact }}</p>
+                    </div>
+                    <input type="hidden" id="ordonnance_id" name="ordonnance_id" value="{{ ordonnance_details.id }}">
+                {% endif %}
+                
+                <div class="row">
+                    <div class="col-lg-12">
+                        {% for categorie in categories %}
+                        <h3>{{ categorie.nomCat }}</h3>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Nom</th>
+                                        <th>Prix Unitaire</th>
+                                        <th>Quantité</th>
+                                        <th>Sélectionner</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for medicament in categorie.medicaments.all %}
+                                    <tr>
+                                        <td>
+                                            {% if medicament.image and medicament.image.url %}
+                                            <img src="{{ medicament.image.url }}" alt="{{ medicament.nomMedicament }}" class="img-thumbnail" width="50" height="50">
+                                            {% else %}
+                                            Image non disponible
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ medicament.nomMedicament }}</td>
+                                        <td>{{ medicament.prixUnitaire }} FCFA</td>
+                                        <td><input type="number" name="quantite_{{ medicament.id }}" class="form-control" min="1" value="1"></td>
+                                        <td><input type="checkbox" name="selection_{{ medicament.id }}"></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    </div>
-    <form id="selectedMedicinesForm" method="POST" action="{% url 'medicaments_selectionnés' %}" style="display:none;">
-        {% csrf_token %}
-        <input type="hidden" id="selectedMedicinesData" name="selectedMedicinesData">
-        <input type="hidden" id="selectedMedicinesStatut" name="selectedMedicinesStatut">
-    </form>
-    {% endblock content %}
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7HUiX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.2.7/js/responsive.bootstrap4.min.js"></script>
-    <script src="{% static 'themes_admin/js/main.js' %}"></script>
-    <script src="{% static 'themes_admin/js/themes.js' %}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script>
-        function showSelectedMedicines() {
-            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-            let selectedMedicines = [];
-            checkboxes.forEach(checkbox => {
-                const row = checkbox.closest('tr');
-                const id = checkbox.name.split('_')[1];
-                const nom = row.querySelector('td:nth-child(2)').textContent;
-                const prix = row.querySelector('td:nth-child(3)').textContent;
-                const quantite = row.querySelector('input[type="number"]').value;
         
-                selectedMedicines.push({
-                    id: id,
-                    nom: nom,
-                    prix: prix,
-                    quantite: quantite
-                });
+        <div class="card-footer">
+            <button type="button" class="btn btn-primary" onclick="showSelectedMedicines()">Afficher Sélection</button>
+        </div>
+    </div>
+</div>
+</div>
+<form id="selectedMedicinesForm" method="POST" action="{% url 'medicaments_selectionnés' %}" style="display:none;">
+    {% csrf_token %}
+    <input type="hidden" id="selectedMedicinesData" name="selectedMedicinesData">
+    <input type="hidden" id="selectedMedicinesStatut" name="selectedMedicinesStatut">
+    <input type="hidden" id="selectedMedicinesTotal" name="selectedMedicinesTotal">
+    <input type="hidden" id="ordonnance_id" name="ordonnance_id" value="{{ ordonnance_details.id }}">
+</form>
+{% endblock content %}
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7HUiX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.7/js/responsive.bootstrap4.min.js"></script>
+<script src="{% static 'themes_admin/js/main.js' %}"></script>
+<script src="{% static 'themes_admin/js/themes.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+    function showSelectedMedicines() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+        let selectedMedicines = [];
+        let totalPrice = 0;
+    
+        checkboxes.forEach(checkbox => {
+            const row = checkbox.closest('tr');
+            const id = checkbox.name.split('_')[1];
+            const nom = row.querySelector('td:nth-child(2)').textContent;
+            const prix = parseFloat(row.querySelector('td:nth-child(3)').textContent);
+            const quantite = parseInt(row.querySelector('input[type="number"]').value);
+    
+            selectedMedicines.push({
+                id: id,
+                nom: nom,
+                prix: prix,
+                quantite: quantite,
+                total: prix * quantite
             });
-        
-            if (selectedMedicines.length > 0) {
-                let medicinesHtml = selectedMedicines.map(med => `
-                    <li class="list-group-item">
-                        ${med.nom} - ${med.prix} - Quantité: ${med.quantite}
-                        <div class="float-right">
-                            <button type="button" class="btn btn-sm btn-warning" onclick="editMedicine('${med.id}', '${med.nom}', '${med.quantite}')">Modifier</button>
-                            <button type="button" class="btn btn-sm btn-danger" onclick="removeMedicine('${med.id}')">Supprimer</button>
-                        </div>
-                    </li>
-                `).join('');
-        
-                Swal.fire({
-                    title: 'Médicaments Sélectionnés',
-                    html: `
-                        <div>
-                            <label>
-                                <input type="radio" name="commandeType" value="presentiel" checked> Commande en présentielle
-                            </label>
-                            <label>
-                                <input type="radio" name="commandeType" value="virtuelle"> Commande en ligne
-                            </label>
-                        </div>
-                        <ul class="list-group">${medicinesHtml}</ul>
-                    `,
-                    showCancelButton: true,
-                    confirmButtonText: 'Envoyer',
-                    cancelButtonText: 'Fermer',
-                    customClass: {
-                        popup: 'large-swal-popup',  /* Utiliser la classe personnalisée pour agrandir la boîte */
-                        title: 'swal2-title',
-                        htmlContainer: 'swal2-html-container'
-                    },
-                    preConfirm: () => {
-                        const selectedType = document.querySelector('input[name="commandeType"]:checked').value;
-                        document.getElementById('selectedMedicinesData').value = JSON.stringify(selectedMedicines);
-                        document.getElementById('selectedMedicinesStatut').value = selectedType;
-                        return new Promise((resolve) => {
-                            resolve();
-                        });
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        document.getElementById('selectedMedicinesForm').submit();
-                    }
-                });
-            } else {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Aucun médicament sélectionné',
-                    text: 'Veuillez sélectionner des médicaments pour afficher la liste.'
-                });
-            }
-        }
+            
+            totalPrice += prix * quantite;
+        });
     
-        function editMedicine(id, nom, quantite) {
-            const newQuantite = prompt(`Modifier la quantité pour ${nom}:`, quantite);
-            if (newQuantite !== null && newQuantite !== "") {
-                document.querySelector(`input[name="quantite_${id}"]`).value = newQuantite;
-                showSelectedMedicines();
-            }
-        }
+        if (selectedMedicines.length > 0) {
+            let medicinesHtml = selectedMedicines.map(med => `
+                <li class="list-group-item">
+                    ${med.nom} - ${med.prix} FCFA - Quantité: ${med.quantite} - Total: ${med.total} FCFA
+                    <div class="float-right">
+                        <button type="button" class="btn btn-sm btn-warning" onclick="editMedicine('${med.id}', '${med.nom}', '${med.quantite}')">Modifier</button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="removeMedicine('${med.id}')">Supprimer</button>
+                    </div>
+                </li>
+            `).join('');
     
-        function removeMedicine(id) {
-            document.querySelector(`input[name="selection_${id}"]`).checked = false;
-            showSelectedMedicines();
-        }
-    
-        function confirmSubmit() {
             Swal.fire({
-                title: 'Êtes-vous sûr ?',
-                text: "Voulez-vous envoyer les médicaments sélectionnés ?",
-                icon: 'warning',
+                title: 'Médicaments Sélectionnés',
+                html: `
+                    <div>
+                        <label>
+                            <input type="radio" name="commandeType" value="presentiel" checked> Commande en présentielle
+                        </label>
+                        <label>
+                            <input type="radio" name="commandeType" value="virtuelle"> Commande en ligne
+                        </label>
+                    </div>
+                    <ul class="list-group">${medicinesHtml}</ul>
+                    <p><strong>Prix Total:</strong> ${totalPrice} FCFA</p>
+                `,
                 showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Oui, envoyer',
-                cancelButtonText: 'Annuler'
+                confirmButtonText: 'Envoyer',
+                cancelButtonText: 'Fermer',
+                customClass: {
+                    popup: 'large-swal-popup',
+                    title: 'swal2-title',
+                    htmlContainer: 'swal2-html-container'
+                },
+                preConfirm: () => {
+                    const selectedType = document.querySelector('input[name="commandeType"]:checked').value;
+                    document.getElementById('selectedMedicinesData').value = JSON.stringify(selectedMedicines);
+                    document.getElementById('selectedMedicinesStatut').value = selectedType;
+                    document.getElementById('selectedMedicinesTotal').value = totalPrice; 
+                    document.getElementById('ordonnance_id').value = document.getElementById('ordonnance_id').value;  // Set ordonnance_id
+                    return new Promise((resolve) => {
+                        resolve();
+                    });
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     document.getElementById('selectedMedicinesForm').submit();
                 }
             });
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Aucun médicament sélectionné',
+                text: 'Veuillez sélectionner des médicaments pour afficher la liste.'
+            });
         }
-    </script>
+    }
     
+    function editMedicine(id, nom, quantite) {
+        const newQuantite = prompt(`Modifier la quantité pour ${nom}:`, quantite);
+        if (newQuantite !== null && newQuantite !== "") {
+            document.querySelector(`input[name="quantite_${id}"]`).value = newQuantite;
+            showSelectedMedicines();
+        }
+    }
+
+    function removeMedicine(id) {
+        document.querySelector(`input[name="selection_${id}"]`).checked = false;
+        showSelectedMedicines();
+    }
+
+    function confirmSubmit() {
+        Swal.fire({
+            title: 'Êtes-vous sûr ?',
+            text: "Voulez-vous envoyer les médicaments sélectionnés ?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Oui, envoyer',
+            cancelButtonText: 'Annuler'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('selectedMedicinesForm').submit();
+            }
+        });
+    }
+
+    $(function() {
+        $(".draggable").draggable();
+        $(".resizable").resizable();
+    });
+</script>

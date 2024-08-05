@@ -32,12 +32,57 @@
         </div>
         <div class="card-body custom-card-body">
             <p><strong>Géolocalisation:</strong> {{ commande.geolocalisation }}</p>
-            <p><strong>Mode de paiement:</strong> {{ commande.recuperer_mode_payement }}</p>
+            <p><strong>Mode de paiement:</strong> {{ commande.get_mode_paiement_display }}</p>
         </div>
     </div>
+
+    <div class="mt-4 d-flex justify-content-between">
+        <form action="{% url 'accepter_commandeV' commande.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-lg" onclick="handleAccepter()">Accepter l'ordonnance</button>
+        </form>
+        <form id="refuserForm" action="{% url 'refuser_commandeV' commande.id %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="motif" id="motifInput">
+            <button type="button" class="btn btn-danger btn-lg" onclick="handleRefuser()">Refuser l'ordonnance</button>
+        </form>
+            </div>
 </div>
 
-<!-- Add custom styles specifically for details_commande_virtuelle.html -->
+<div class="modal fade" id="refusModal" tabindex="-1" aria-labelledby="refusModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="refusModalLabel">Motif du Refus</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="refusForm">
+            <div class="mb-3">
+              <label for="motifRefus" class="form-label">Motif</label>
+              <input type="text" class="form-control" id="motifRefus" required>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="submitRefusForm()">Soumettre</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+<script>
+    function handleRefuser() {
+        var refusModal = new bootstrap.Modal(document.getElementById('refusModal'));
+        refusModal.show();
+    }
+    
+    function submitRefusForm() {
+        var motif = document.getElementById('motifRefus').value;
+        document.getElementById('motifInput').value = motif;
+        document.getElementById('refuserForm').submit();
+    }
+</script>
+
 <style>
     .custom-container {
         padding: 30px;
@@ -108,6 +153,15 @@
         margin-bottom: 15px;
         font-size: 1.1em;
         color: #495057;
+    }
+
+    .mt-4.d-flex.justify-content-between {
+        margin-top: 20px;
+    }
+
+    .btn-lg {
+        font-size: 1.25em;
+        padding: 10px 20px;
     }
 </style>
 

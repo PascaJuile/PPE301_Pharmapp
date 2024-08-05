@@ -26,7 +26,60 @@ def about(request):
     return render(request, 'themes_client/about.html')
 
 def cart(request):
-    return render(request, 'themes_client/cart.html')
+    user_email = request.session.get('user_email')
+    
+    if user_email:
+        try:
+            client = Client.objects.get(emailUtilisateur=user_email)
+        except Client.DoesNotExist:
+            messages.error(request, 'Client non trouvé.')
+            return redirect('inscription_client')
+    else:
+        messages.error(request, 'Utilisateur non authentifié.')
+        return redirect('page_connexion')
+
+    # Récupérer les données de la session
+    selected_medicines = request.session.get('selected_medicines')
+    selected_total = request.session.get('selected_total')
+    refus_motif = request.session.get('refus_motif')
+    ordonnance_id = request.session.get('ordonnance_id')  # Récupérer l'ID de l'ordonnance
+
+    # Si ordonnance_id n'est pas dans la session, récupérez-le depuis le modèle Ordonnance
+    if not ordonnance_id:
+        try:
+            # Filtrer les ordonnances associées au client et prendre la première
+            ordonnance = Ordonnance.objects.filter(ordonnance_client=client).last()
+            if ordonnance:
+                ordonnance_id = ordonnance.id
+                # Ajouter ordonnance_id à la session pour un accès ultérieur
+                request.session['ordonnance_id'] = ordonnance_id
+            else:
+                ordonnance_id = None
+                messages.error(request, 'Aucune ordonnance associée au client.')
+        except Ordonnance.DoesNotExist:
+            ordonnance_id = None
+            messages.error(request, 'Aucune ordonnance associée au client.')
+
+    # Déterminer l'état de la commande (acceptée ou refusée)
+    if selected_medicines and selected_total:
+        context = {
+            'commande_acceptee': True,
+            'selected_medicines': selected_medicines,
+            'selected_total': selected_total,
+            'ordonnance_id': ordonnance_id,  # Ajouter l'ID de l'ordonnance au contexte
+        }
+    elif refus_motif:
+        context = {
+            'commande_refusee': True,
+            'refus_motif': refus_motif,
+        }
+    else:
+        context = {
+            'commande_acceptee': False,
+            'commande_refusee': False,
+        }
+    
+    return render(request, 'themes_client/cart.html', context)
 
 def checkout(request):
     return render(request, 'themes_client/checkout.html')
@@ -62,7 +115,7 @@ def commande_client(request):
             client = Client.objects.get(emailUtilisateur=user_email)
         except Client.DoesNotExist:
             messages.error(request, 'Client non trouvé.')
-            return redirect('inscription')
+            return redirect('inscription_client')
     else:
         messages.error(request, 'Utilisateur non authentifié.')
         return redirect('page_connexion')
@@ -484,13 +537,15 @@ def pharamacien_listeMedicament(request):
     user_name = request.session.get('user_name', 'Utilisateur')
     user_email = request.session.get('user_email', 'email@example.com')
 
+    ordonnance_details = request.session.pop('ordonnance_details', None)
+
     return render(request, 'themes_admin/themes_pharmacien/medicine_list.html', {'categories': categories, 'user_name': user_name,
-        'user_email': user_email,})
+        'user_email': user_email, 'ordonnance_details': ordonnance_details})
 
   
 def medicaments_selectionnés(request):
     user_email = request.session.get('user_email')
-    
+
     if user_email:
         try:
             pharmacien = Pharmacien.objects.get(emailUtilisateur=user_email)
@@ -505,13 +560,26 @@ def medicaments_selectionnés(request):
         selected_medicines_data = request.POST.get('selectedMedicinesData')
         selected_medicines = json.loads(selected_medicines_data)
         selected_statut = request.POST.get('selectedMedicinesStatut')
+        selected_total = request.POST.get('selectedMedicinesTotal')
+        ordonnance_id = request.POST.get('ordonnance_id', None)
+
+        ordonnance = None
+        if ordonnance_id:   
+            ordonnance = get_object_or_404(Ordonnance, id=ordonnance_id)
 
         try:
             SelectionMedicament.objects.create(
                 donnees=selected_medicines,
                 statut=selected_statut,
-                pharmacien=pharmacien
+                pharmacien=pharmacien,
+                ordonnance=ordonnance  # Assigner l'ordonnance récupérée
             )
+
+            
+            request.session['selected_medicines'] = selected_medicines
+            request.session['selected_total'] = sum(int(med['prix']) * int(med['quantite']) for med in selected_medicines)
+            request.session['ordonnance_id'] = request.POST.get('ordonnance_id')
+
             messages.success(request, 'Médicaments sélectionnés enregistrés avec succès.')
         except Exception as e:
             messages.error(request, f'Erreur lors de l\'enregistrement des données : {e}')
@@ -519,8 +587,47 @@ def medicaments_selectionnés(request):
 
         return redirect('journal_medicaments_selectionnes')
     else:
-        return render(request, 'themes_admin/themes_pharmacien/medicine_list.html', {'message': 'Invalid request method.'})
-            
+        return render(request, 'themes_admin/themes_pharmacien/medicine_list.html', {'message': 'Invalid request method.'})    
+
+def payement_commande(request):
+    if request.method == "POST":
+        mode_paiement = request.POST.get('mode_paiement')
+        password = request.POST.get('password')
+        ordonnance_id = request.POST.get('ordonnance_id')  # Récupérer l'ID de l'ordonnance à partir du formulaire POST
+
+        # Debugging: Check received POST data
+        print(f"Mode de paiement: {mode_paiement}")
+        print(f"Mot de passe: {password}")
+        print(f"Ordonnance ID: {ordonnance_id}")
+
+        if ordonnance_id:
+            try:
+                commande = get_object_or_404(CommandeVirtuelle, ordonnance_id=ordonnance_id)
+                print(f"Commande trouvée: {commande}")
+                
+                # Update the payment status
+                commande.etat_payement = True
+                commande.mode_paiement = mode_paiement
+                commande.save()
+                print(f"Commande mise à jour: {commande.etat_payement}, {commande.mode_paiement}")
+                
+                # Effacer les données de la session
+                request.session.pop('selected_medicines', None)
+                request.session.pop('selected_total', None)
+                request.session.pop('ordonnance_id', None)
+                
+                # Ajouter un message de succès
+                messages.success(request, 'Votre paiement a été traité avec succès. Merci pour votre commande!')
+            except Exception as e:
+                # Log any exceptions
+                print(f"Erreur lors de la mise à jour de la commande: {e}")
+                messages.error(request, 'Une erreur est survenue lors du traitement de votre paiement.')
+
+            # Rediriger vers la page du panier (ou une autre page appropriée)
+            return redirect('cart')
+        
+    return render(request, "themes_client/cart.html")
+                
 def journal_medicaments_selectionnes(request):   
     user_email = request.session.get('user_email')
     
@@ -576,8 +683,12 @@ def afficher_medicaments_selectionnes(request):
 
         messages.success(request, 'Commande validée avec succès.')
 
-    non_validated_medicines = SelectionMedicament.objects.filter(etatDeValidation=False).order_by('-id')
-    
+    non_validated_medicines = SelectionMedicament.objects.filter(
+            etatDeValidation=False
+        ).exclude(
+            statut='virtuelle', 
+            ordonnance__commandevirtuelle__etat_payement=False
+        ).order_by('-id')    
     context = {
         'non_validated_medicines': non_validated_medicines,
     }
@@ -608,10 +719,54 @@ def pharmacien_show_details(request, id):
     medicament = get_object_or_404(Medicament, id=id)
     return render(request, 'themes_admin/themes_pharmacien/show_details.html', {'medicament': medicament})
 
+def accepter_commande(request, commande_id):
+    commande = get_object_or_404(CommandeVirtuelle, id=commande_id)
+    commande.accepter_commande()
+    messages.success(request, 'L\'ordonnance a été acceptée.')
+
+    # Redirect with ordonnance details
+    ordonnance_details = {
+        'id': commande.ordonnance.id,
+        'image_url': commande.ordonnance.image.url,
+        'nom': commande.ordonnance.ordonnance_client.nomUtilisateur,
+        'contact': commande.ordonnance.ordonnance_client.numeroUtilisateur,
+    }
+
+    request.session['ordonnance_details'] = ordonnance_details
+
+    return redirect('pharamacien_listeMedicament')
+
+def affichage_commande_acceptee(request, commande_id):
+    try:
+        commande = CommandePresentielle.objects.get(id=commande_id)
+        request.session['commande_status'] = 'accepted'
+        request.session['selected_medicines'] = commande.selected_medicines
+        request.session['selected_total'] = commande.total_price
+        messages.success(request, 'Commande acceptée avec succès.')
+    except CommandePresentielle.DoesNotExist:
+        messages.error(request, 'Commande non trouvée.')
+    
+    return redirect('cart')
+
+def refuser_commande(request, commande_id):
+    if request.method == 'POST':
+        commande = CommandeVirtuelle.objects.get(id=commande_id)
+        motif = request.POST.get('motif')
+        commande.motif = motif
+        commande.save()
+        
+        request.session['refus_motif'] = motif
+        request.session['commande_image'] = commande.ordonnance.image.url 
+
+        return redirect('cart')
+
+    return HttpResponse(status=405)
+
+
+  
 def deconnexion(request):
     logout(request)
     return redirect('liste_medicaments_client')
-
 
 
 def delete_order(request, pk):
