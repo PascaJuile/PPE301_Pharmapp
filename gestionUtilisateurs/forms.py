@@ -7,7 +7,6 @@ ROLE_CHOICES = [
     ('GestionnairePharmacie', 'Gestionnaire de Pharmacie'),
     ('PreparateurEnPharmacie', 'Préparateur en Pharmacie'),
     ('Caissier', 'Caissier'),
-    ('Client', 'Client'),
     ('Pharmacien', 'Pharmacien'),
     ('Livreur', 'Livreur'),
 ]

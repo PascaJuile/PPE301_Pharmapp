@@ -77,11 +77,16 @@ href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstr
                                     <input type="file" class="form-control2" id="image" name="image" accept="image/*" hidden>
                                     <label for="image" class="choose-image label-input">Choisir un fichier</label>
                                     <span id="file-chosen">Aucun fichier disponible</span>
+                                    
                                 </div>
                             </div>
-                            <div class="col-lg-5 d-none d-xl-block d-lg-block">
-                                <img src="{% static 'themes_admin/img/add-med.jpg'%}" height="200px" class="float-right">
-                            </div>
+                            
+                            <label for="stock" class="col-lg-2 label-input">Quantité du Stock:</label>
+                            <input type="number" class="form-control2 col-lg-3" id="stock" name="stock" placeholder="Quantité du Stock">
+                        </div>
+                        <div class="col-lg-1"></div><div class="col-lg-1"></div><div class="col-lg-1"></div><div class="col-lg-1"></div><div class="col-lg-1"></div><div class="col-lg-1"></div><div class="col-lg-1"></div>
+                        <div class="col-lg-5 d-none d-xl-block d-lg-block">
+                            <img src="{% static 'themes_admin/img/add-med.jpg'%}" height="200px" class="float-right">
                         </div>
                         <button type="submit" class="btn btn-list float-right">Ajouter</button>
                     </form>

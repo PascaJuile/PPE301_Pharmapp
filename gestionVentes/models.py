@@ -50,6 +50,9 @@ class SelectionMedicament(models.Model):
         if commande:
             total = commande.prixTotal
         return total
+    
+    def livraison_assignee(self):
+        return Livraison.objects.filter(ordonnance=self.ordonnance).exists()
 
 class CommandePresentielle(models.Model):
     prixTotal= models.IntegerField()
@@ -64,6 +67,7 @@ class CommandePresentielle(models.Model):
         super().save(*args, **kwargs)
 
 class Livraison(models.Model):
+    date_validation = models.DateTimeField(auto_now_add=True)
     ordonnance = models.OneToOneField(Ordonnance, on_delete=models.CASCADE)
     livreur = models.ForeignKey(Livreur, on_delete=models.CASCADE)
     etat_de_livraison = models.BooleanField(default=False)

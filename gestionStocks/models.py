@@ -1,4 +1,6 @@
+from datetime import timedelta
 from django.db import models
+from django.utils import timezone
 from gestionUtilisateurs.models import PreparateurEnPharmacie
 
 class Categorie(models.Model):
@@ -12,6 +14,7 @@ class Medicament(models.Model):
     prixUnitaire = models.IntegerField()
     dateExpiration = models.DateTimeField()
     image = models.ImageField(upload_to='medicament_images/', null=True, blank=True)
+    stock = models.PositiveIntegerField(default=0)
 
     medicamentPreparateur = models.ForeignKey(
         PreparateurEnPharmacie,
@@ -25,3 +28,14 @@ class Medicament(models.Model):
 
     def calculer_prix_total(self, quantite):
         return self.prixUnitaire * quantite
+    
+    def verifier_reapprovisionnement(self, seuil=5):
+        if self.stock <= seuil:
+            return True  
+        return False
+    
+    @classmethod
+    def medicaments_expiration_proche(cls):
+        actuel = timezone.now()
+        une_semaine_avant = actuel + timedelta(weeks=1)
+        return cls.objects.filter(dateExpiration__lte=une_semaine_avant, dateExpiration__gte=actuel)
