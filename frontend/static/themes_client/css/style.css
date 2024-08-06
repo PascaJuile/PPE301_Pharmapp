@@ -1473,25 +1473,23 @@ a:hover {
   right: -5px;
 }
 
+/* Style pour le conteneur de recherche */
 .search-wrap {
   position: absolute;
-  height: 100%;
   top: 0;
-  left: 0;
   right: 0;
-  bottom: 0;
+  width: 300px; /* Limite la largeur de la barre de recherche */
+  height: auto; /* Ajuste la hauteur en fonction du contenu */
   background: #fff;
   z-index: 999;
   opacity: 0;
   visibility: hidden;
-  -webkit-transition: .5s all ease;
-  -o-transition: .5s all ease;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: .5s all ease;
-}
-
-.search-wrap .container {
-  position: relative;
-  height: 100%;
+  margin-right: 406px;
+  margin-top: 55px;
 }
 
 .search-wrap.active {
@@ -1499,36 +1497,39 @@ a:hover {
   visibility: visible;
 }
 
+/* Style pour le champ de recherche */
 .search-wrap .form-control {
-  position: absolute;
-  top: 50%;
   width: 100%;
-  -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
   border: none;
-  z-index: 3;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+/* Style pour le bouton de fermeture */
+.search-wrap .search-close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
   font-size: 20px;
+  cursor: pointer;
+}
+
+/* Effet de transition pour le conteneur de recherche */
+.search-wrap .container {
+  position: relative;
+  padding: 20px;
 }
 
 @media (max-width: 991.98px) {
-  .search-wrap .form-control {
-    font-size: 20px;
+  .search-wrap {
+    width: 90%; /* Ajuste la largeur pour les petits écrans */
   }
-}
 
-.search-wrap .search-close {
-  z-index: 4;
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-}
-
-.search-wrap .search-close span {
-  font-size: 30px;
+  .search-wrap .form-control {
+    font-size: 16px;
+  }
 }
 
 .title-section h2 {

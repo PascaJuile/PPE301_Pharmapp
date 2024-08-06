@@ -32,8 +32,58 @@
   <link rel="stylesheet" href="{% static 'themes_client/css/owl.theme.default.min.css' %}">
   <link rel="stylesheet" href="{% static 'themes_client/css/aos.css' %}">
   <link rel="stylesheet" href="{% static 'themes_client/css/style.css' %}"> <!-- Assurez-vous que ce fichier est le dernier -->
-
-    
+<style>
+  /* Style pour le lien principal du dropdown */
+  .dropdown-toggle {
+      color: #ffffff; /* Couleur du texte */
+      padding: 10px 15px; /* Padding pour le lien */
+      border-radius: 5px; /* Bordure arrondie */
+      transition: background-color 0.3s, color 0.3s;
+  }
+  
+  /* Effet de survol pour le lien principal */
+  .dropdown-toggle:hover, .navbar .dropdown-toggle:focus {
+      color: #ffffff;
+  }
+  
+  /* Style pour le menu déroulant */
+  .dropdown-menu {
+      background-color: #f8f9fa; /* Couleur de fond */
+      border: 1px solid #dee2e6; /* Bordure */
+      border-radius: 5px; /* Bordure arrondie */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre */
+      margin-top: 5px; /* Espace au-dessus du menu */
+      padding: 15px 0; /* Padding vertical */
+      width: 250px; /* Largeur agrandie du menu */
+  }
+  
+  /* Style pour les éléments du menu */
+  .dropdown-menu li a {
+      color: #343a40; /* Couleur du texte */
+      padding: 15px 20px; /* Padding pour les liens */
+      text-decoration: none; /* Suppression de la décoration de texte */
+      display: block; /* Affichage en bloc */
+      transition: background-color 0.3s, color 0.3s;
+      font-size: 14px;
+  }
+  
+  /* Effet de survol pour les éléments du menu */
+  .dropdown-menu li a:hover, .navbar .dropdown-menu li a:focus {
+      color: #ffffff;
+  }
+  
+  /* Style pour les icônes caret (petite flèche) */
+  .dropdown-toggle .caret {
+      margin-left: 5px; /* Espace à gauche de la flèche */
+      border-top: 4px solid #ffffff; /* Couleur de la flèche */
+  }
+  
+  /* Effet de survol pour la flèche */
+  .dropdown-toggle:hover .caret, .navbar .dropdown-toggle:focus .caret {
+      border-top: 4px solid #ffffff;
+  }
+  
+ </style>   
 
 </head>
 
@@ -84,7 +134,7 @@
                         <li><a href="{% url 'details_livraison_client' %}">Suivi de Livraison</a></li>
                         <li><a href="{% url 'historique_commandes' %}">Historique des Commandes</a></li>
                 </ul>
-            </li>
+                </li>
               </ul>
             </nav>
           </div>
