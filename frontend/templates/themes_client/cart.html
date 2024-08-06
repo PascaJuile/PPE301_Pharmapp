@@ -42,44 +42,44 @@
     <h2>Confirmation de Commande</h2>
     
     {% if commande_acceptee %}
-    <div class="card">
-        <div class="card-header">
-            <h5>Ordonnance Acceptée</h5>
-        </div>
-        <div class="card-body">
-            <h6>Liste des Médicaments Sélectionnés</h6>
-            <ul class="list-group">
-                {% for med in selected_medicines %}
-                <li class="list-group-item">
-                    {{ med.nom }} - {{ med.prix }} FCFA - Quantité: {{ med.quantite }} - Total: {{ med.total }} FCFA
-                </li>
-                {% endfor %}
-            </ul>
-            <p><strong>Prix Total:</strong> {{ selected_total }} FCFA</p>
-        </div>
-        <div class="card-footer">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#paymentModal">Payer la commande</button>
-        </div>
+<div class="card">
+    <div class="card-header">
+        <h5>Ordonnance Acceptée</h5>
     </div>
-    {% elif commande_refusee %}
-    <div class="card" id="refusedOrdonnance">
-        <div class="card-header">
-            <h5>Ordonnance Refusée</h5>
-        </div>
-        <div class="card-body">
-            <p><strong>Motif du Refus:</strong> {{ refus_motif }}</p>
-            <div>
-                <strong>Image de la Commande:</strong>
-                <img src="{{ request.session.commande_image }}" alt="Image de la commande" style="max-width: 100%; height: auto;">
-            </div>
-            <button type="button" class="btn btn-secondary mt-3" onclick="dismissRefusedOrdonnance()">OK, j'ai compris</button>
-        </div>
+    <div class="card-body">
+        <h6>Liste des Médicaments Sélectionnés</h6>
+        <ul class="list-group">
+            {% for med in selected_medicines %}
+            <li class="list-group-item">
+                {{ med.nom }} - {{ med.prix }} FCFA - Quantité: {{ med.quantite }} - Total: {{ med.total }} FCFA
+            </li>
+            {% endfor %}
+        </ul>
+        <p><strong>Prix Total:</strong> {{ selected_total }} FCFA</p>
     </div>
-    {% endif %}
-    <div class="alert alert-warning" role="alert" id="noOrderMessage" style="display: {% if commande_refusee %}none{% else %}block{% endif %};">
-        Aucune commande en cours.
+    <div class="card-footer">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#paymentModal">Payer la commande</button>
     </div>
 </div>
+{% elif commande_refusee %}
+<div class="card" id="refusedOrdonnance">
+    <div class="card-header">
+        <h5>Ordonnance Refusée</h5>
+    </div>
+    <div class="card-body">
+        <p><strong>Motif du Refus:</strong> {{ refus_motif }}</p>
+        <div>
+            <strong>Image de la Commande:</strong>
+            <img src="{{ request.session.commande_image }}" alt="Image de la commande" style="max-width: 100%; height: auto;">
+        </div>
+        <button type="button" class="btn btn-secondary mt-3" onclick="dismissRefusedOrdonnance()">OK, j'ai compris</button>
+    </div>
+</div>
+{% endif %}
+<div class="alert alert-warning" role="alert" id="noOrderMessage" style="display: {% if commande_refusee %}none{% else %}block{% endif %};">
+    Aucune commande en cours.
+</div>
+
 
 <!-- Payment Modal -->
 <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">

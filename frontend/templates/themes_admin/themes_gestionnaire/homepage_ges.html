@@ -64,7 +64,7 @@
                     <div class="card-header">
                         <h2>
                             <button class="btn btn-link btn-block text-left" type="button">
-                                <a href="{% url 'homepage_phar' %}" class="icon-home"><i class="fa fa-fw fa-home"></i><span
+                                <a href="{% url 'homepage_ges' %}" class="icon-home"><i class="fa fa-fw fa-home"></i><span
                                         style="margin-left: 2px;">Acceuil</span></a>
                             </button>
                         </h2>
@@ -87,8 +87,8 @@
                         data-parent="#accordionExample">
                         <div class="card-body">
                             <ul>
-                                <li><a href="#">Création de compte</a></li>
-                                <li><a href="#">Liste Utilisateurs</a></li>
+                                <li><a href="{% url 'inscription' %}">Création de compte</a></li>
+                                <li><a href="{% url 'liste_utilisateur' %}">Liste Utilisateurs</a></li>
                             </ul>
                         </div>
                     </div>
@@ -109,8 +109,7 @@
                         data-parent="#accordionExample">
                         <div class="card-body">
                             <ul>
-                                <li><a href="#">Invoices Report</a></li>
-                                <li><a href="#">Return Invoices Report</a></li>
+                                <li><a href="{% url 'rapport' %}">Statistique</a></li>
                             </ul>
                         </div>
                     </div>

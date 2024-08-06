@@ -25,6 +25,29 @@ from django.contrib import messages
 def about(request):
     return render(request, 'themes_client/about.html')
 
+def rapport(request):
+    return render(request, 'themes_admin/themes_gestionnaire/invoice_report.html')
+
+
+def liste_utilisateur(request):
+    gestionnaires = GestionnairePharmacie.objects.all()
+    preparateurs = PreparateurEnPharmacie.objects.all()
+    caissiers = Caissier.objects.all()
+    clients = Client.objects.all()
+    pharmaciens = Pharmacien.objects.all()
+    livreurs = Livreur.objects.all()
+    
+    context = {
+        'gestionnaires': gestionnaires,
+        'preparateurs': preparateurs,
+        'caissiers': caissiers,
+        'clients': clients,
+        'pharmaciens': pharmaciens,
+        'livreurs': livreurs,
+    }
+    return render(request, 'themes_admin/themes_gestionnaire/user_list.html', context)
+
+
 def cart(request):
     user_email = request.session.get('user_email')
     
@@ -42,9 +65,10 @@ def cart(request):
     selected_medicines = request.session.get('selected_medicines')
     selected_total = request.session.get('selected_total')
     refus_motif = request.session.get('refus_motif')
-    ordonnance_id = request.session.get('ordonnance_id')  
+    ordonnance_id = request.session.get('ordonnance_id')
 
     if not ordonnance_id:
+        
         try:
             ordonnance = Ordonnance.objects.filter(ordonnance_client=client).last()
             if ordonnance:
@@ -57,23 +81,14 @@ def cart(request):
             ordonnance_id = None
             messages.error(request, 'Aucune ordonnance associée au client.')
 
-    if selected_medicines and selected_total:
-        context = {
-            'commande_acceptee': True,
-            'selected_medicines': selected_medicines,
-            'selected_total': selected_total,
-            'ordonnance_id': ordonnance_id,  
-        }
-    elif refus_motif:
-        context = {
-            'commande_refusee': True,
-            'refus_motif': refus_motif,
-        }
-    else:
-        context = {
-            'commande_acceptee': False,
-            'commande_refusee': False,
-        }
+    context = {
+        'selected_medicines': selected_medicines,
+        'selected_total': selected_total,
+        'refus_motif': refus_motif,
+        'ordonnance_id': ordonnance_id,
+        'commande_acceptee': bool(selected_medicines and selected_total),
+        'commande_refusee': bool(refus_motif),
+    }
     
     return render(request, 'themes_client/cart.html', context)
 
@@ -363,8 +378,10 @@ def page_connexion(request):
                             return redirect('afficher_medicaments_selectionnes')
                         elif isinstance(user, Livreur):
                             return redirect('homepage_liv')
-                        else:
+                        elif isinstance(user, PreparateurEnPharmacie):
                             return redirect('homepage_prepa')
+                        else:
+                            return redirect('liste_medicaments_client')
                     else:
                         form.add_error(None, "Email ou mot de passe incorrect.")
                         break
@@ -469,6 +486,7 @@ def modifier_medicament(request, medicament_id):
         if request.method == 'POST':
             nomMedicament = request.POST.get('nomMedicament')
             libelle = request.POST.get('libelle')
+            stock = request.POST.get('stock')
             code = request.POST.get('code')
             prixUnitaire = request.POST.get('prixUnitaire')
             dateExpiration = request.POST.get('dateExpiration')
@@ -479,6 +497,8 @@ def modifier_medicament(request, medicament_id):
                 medicament.nomMedicament = nomMedicament
             if libelle:
                 medicament.libelle = libelle
+            if stock:
+                medicament.stock = stock
             if code:
                 medicament.code = code
             if prixUnitaire:
@@ -600,7 +620,7 @@ def medicaments_selectionnés(request):
             messages.error(request, f'Erreur lors de l\'enregistrement des données : {e}')
             return redirect('journal_medicaments_selectionnes')
 
-        return redirect('cart')
+        return redirect('journal_medicaments_selectionnes')
     else:
         return render(request, 'themes_admin/themes_pharmacien/medicine_list.html', {'message': 'Invalid request method.'})    
 
@@ -865,47 +885,41 @@ def details_livraison_client(request):
 
     user_email = request.session.get('user_email')
 
-    if user_email:
-        try:
-            client = Client.objects.get(emailUtilisateur=user_email)
-        except Client.DoesNotExist:
-            messages.error(request, 'Client non trouvé.')
-            return redirect('inscription_client')
-    else:
+    if not user_email:
         messages.error(request, 'Utilisateur non authentifié.')
         return redirect('page_connexion')
 
-# Récupérer la dernière ordonnance associée à ce client
-    dernier_ordonnance = Ordonnance.objects.filter(ordonnance_client=client).latest('id')
-    
-    # Récupérer les livraisons associées à cette ordonnance
+    try:
+        client = Client.objects.get(emailUtilisateur=user_email)
+    except Client.DoesNotExist:
+        messages.error(request, 'Client non trouvé.')
+        return redirect('inscription_client')
+
+    try:
+        dernier_ordonnance = Ordonnance.objects.filter(ordonnance_client=client).latest('id')
+    except Ordonnance.DoesNotExist:
+        messages.warning(request, 'Aucune ordonnance trouvée pour ce client.')
+        return redirect('page_connexion')
+
     livraisons = Livraison.objects.filter(ordonnance=dernier_ordonnance)
 
     if request.method == 'POST':
-        # Valider la livraison
         livraison_id = request.POST.get('livraison_id')
         livraison = get_object_or_404(Livraison, id=livraison_id)
 
-        if livraison.ordonnance == dernier_ordonnance:  # Vérifier si la livraison appartient à la dernière ordonnance du client
+        if livraison.ordonnance == dernier_ordonnance:
             livraison.etat_de_livraison = True
-            livraison.date_validation = timezone.now()  # Met à jour la date de validation
+            livraison.date_validation = timezone.now()
             livraison.save()
-            # Rediriger après validation
             return redirect('details_livraison_client')
 
-    # Assurer que nous avons des données à afficher
-    if livraisons.exists():
-        livraison = livraisons.first()  # Utilisez le premier si plusieurs sont retournés
+    context = {
+        'livraisons': livraisons,
+        'livraison_validée': any(livraison.etat_de_livraison for livraison in livraisons),
+    }
 
-        context = {
-            'livraison': livraison,
-            'livraison_validée': any(livraison.etat_de_livraison for livraison in livraisons)
-        }
-        return render(request, 'themes_client/details_livraison.html', context)
-    else:
-        messages.warning(request, 'Aucune livraison trouvée pour la dernière ordonnance.')
-        return render(request, 'themes_client/details_livraison.html')
-    
+    return render(request, 'themes_client/details_livraison.html', context)
+
 def historique_commandes_client(request):
     user_email = request.session.get('user_email')
 

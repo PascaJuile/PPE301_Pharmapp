@@ -127,9 +127,13 @@
                 </td>
                 <td>
                     {% if selection.statut == 'virtuelle' %}
-                    <button class="btn {% if selection.livraison_assignee %}btn-success{% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#assignDeliveryModal-{{ selection.id }}">
-                        {% if selection.livraison_assignee %}Livreur Assigné{% else %}Assigner Livreur{% endif %}
-                    </button>
+                        {% if selection.livraison_assignee %}
+                            <button class="btn btn-success" disabled>Livré</button>
+                        {% else %}
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#assignDeliveryModal-{{ selection.id }}">Assigner Livreur</button>
+                        {% endif %}
+                    {% else %}
+                        <button class="btn btn-secondary" disabled>Non Disponible</button>
                     {% endif %}
                 </td>
             </tr>
@@ -158,34 +162,34 @@
                 </div>
             </div>
 
-<!-- Modal d'Assignation de Livreur -->
-<div class="modal fade" id="assignDeliveryModal-{{ selection.id }}" tabindex="-1" role="dialog" aria-labelledby="assignDeliveryModalLabel-{{ selection.id }}" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="assignDeliveryModalLabel-{{ selection.id }}">Assigner Livreur</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="{% url 'assigner_livreur' %}">
-                    {% csrf_token %}
-                    <input type="hidden" name="selection_id" value="{{ selection.id }}">
-                    <div class="form-group">
-                        <label for="livreur">Sélectionner un livreur</label>
-                        <select class="form-control" id="livreur" name="livreur">
-                            {% for livreur in livreurs %}
-                            <option value="{{ livreur.id }}">{{ livreur.nomUtilisateur }}</option>
-                            {% endfor %}
-                        </select>
+            <!-- Modal d'Assignation de Livreur -->
+            <div class="modal fade" id="assignDeliveryModal-{{ selection.id }}" tabindex="-1" role="dialog" aria-labelledby="assignDeliveryModalLabel-{{ selection.id }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="assignDeliveryModalLabel-{{ selection.id }}">Assigner Livreur</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST" action="{% url 'assigner_livreur' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="selection_id" value="{{ selection.id }}">
+                                <div class="form-group">
+                                    <label for="livreur">Sélectionner un livreur</label>
+                                    <select class="form-control" id="livreur" name="livreur">
+                                        {% for livreur in livreurs %}
+                                        <option value="{{ livreur.id }}">{{ livreur.nomUtilisateur }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Assigner</button>
+                            </form>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Assigner</button>
-                </form>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
             {% endfor %}
         </tbody>
     </table>
@@ -194,4 +198,4 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-{% endblock content %}
+{% endblock %}

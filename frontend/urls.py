@@ -34,7 +34,7 @@ urlpatterns = [
     path('pharmacien/homepage', views.homepage_phar, name='homepage_phar'),
     path('caissier/homepage', views.homepage_car, name='homepage_car'),
     path('livreur/homepage', views.homepage_liv, name='homepage_liv'),
-    path('Gestionnaire/homepage', views.homepage_ges, name='homepage_ges'),
+    path('page/admin', views.homepage_ges, name='homepage_ges'),
     path('themes', views.themes, name='themes'),
     path('edit_profile', views.edit_profile, name='edit_profile'),
     path('edit_user', views.edit_user, name='edit_user'),
@@ -47,7 +47,6 @@ urlpatterns = [
     path('preparateur/category_creation', views.creation_categorie, name='creation_categorie'),
     path('preparateur/medicament_creation', views.creation_medicament, name='creation_medicament'),
     path('page_connexion', views.page_connexion, name='page_connexion'),
-    path('inscription', views.inscription, name='inscription'),
     path('deconnexion', views.deconnexion, name='deconnexion'),
     path('preparateur/category_affichage', views.liste_category, name='liste_category'),
     path('preparateur/supprimer_categorie/<int:categorie_id>/', views.supprimer_categorie, name='supprimer_categorie'),
@@ -80,6 +79,14 @@ urlpatterns = [
 
     #Path livreur
     path('livreur/liste_livraison/', views.liste_livraisons_livreur, name='liste_livraisons_livreur'),
+
+    #Path gestionnaire en pharmacie
+    path('gestionnaire/inscription', views.inscription, name='inscription'),
+    path('gestionnaire/liste_utilisateur', views.liste_utilisateur, name='liste_utilisateur'),
+    path('gestionnaire/statistique', views.rapport, name='rapport'),
+
+
+
 ]
 
 # Configuration pour servir les fichiers statiques et médias en développement

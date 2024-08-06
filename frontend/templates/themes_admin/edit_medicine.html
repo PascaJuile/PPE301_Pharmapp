@@ -2,93 +2,104 @@
 {% block content %}
 {% load static %}
 
-<link rel="stylesheet" href="{% static 'themes_admin/css/edit_profile.css' %}">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.min.css">
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+
+<link rel="stylesheet" href="{% static 'themes_admin/css/add_medicine.css' %}">
 <body>
-    <!-- Start Body -->
     <div class="body-page" id="body-page">
-        <div class="edit-profile">
+        <div class="add-medicine">
             <div class="card">
-                <div class="card-header">
-                    <div class="d-flex justify-content-between align-items-center">
-                        Edit Profile
+                <div class="card-header d-flex justify-content-between bd-highlight mb-3">
+                    <div class="p-2 bd-highlight">
+                        Modification de Médicament
+                    </div>
+                    <div class="p-2 bd-highlight">
+                        <a href="{% url 'liste_medicaments' %}"><button type="button" class="btn btn-list"><i
+                                    class="fa fa-align-justify"></i> &nbsp;Liste des Médicaments</button></a>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <form class="needs-validation" novalidate method="POST" action="{% url 'edit_profile' %}">
-                                {% csrf_token %}
-                                <div class="col">
-                                    <input type="text" class="form-control input" name="first_name" value="{{ user.first_name }}" required>
-                                    <span class="focus-input" data-placeholder="Name"></span>
-                                    <div class="invalid-feedback">
-                                        This field is required.
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <input type="email" class="form-control input" name="email" value="{{ user.email }}" required>
-                                    <span class="focus-input" data-placeholder="Email"></span>
-                                    <div class="invalid-feedback">
-                                        This field is required, Please enter a valid email.
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <input type="text" class="form-control input" name="mobile" value="{{ user.profile.mobile }}" minlength="10" onkeypress="return onlyNumberKey(event)" required>
-                                    <span class="focus-input" data-placeholder="Phone"></span>
-                                    <div class="invalid-feedback">
-                                        Please enter a valid phone number.
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <input type="text" class="form-control input" name="address" value="{{ user.profile.address }}" required>
-                                    <span class="focus-input" data-placeholder="Address"></span>
-                                    <div class="invalid-feedback">
-                                        This field is required.
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn float-right btn-list">Edit</button>
-                            </form>
+                    <form action="{% url 'vmodifier_medicament' medicament.id %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-row" style="margin-top: 30px;">
+                            <label for="nomMedicament" class="col-lg-2 label-input">Nom du médicament <i class="text-danger"> * </i>:</label>
+                            <input type="text" class="form-control2 col-lg-3" value="{{ medicament.nomMedicament }}" name="nomMedicament" required>
+    
+                            <div class="col-lg-1"></div>
+    
+                            <label for="code" class="col-lg-2 label-input">Nom Générique <i class="text-danger"> * </i>:</label>
+                            <input type="text" class="form-control2 col-lg-3" value="{{ medicament.code }}" name="code" required>
                         </div>
-                        <div class="col-lg-6 d-none d-xl-block d-lg-block">
-                            <img src="{% static 'themes_admin/img/user3.jpg' %}" class="img-thumbnail">
+    
+                        <div class="form-row">
+                            <label for="categorie" class="col-lg-2 label-input">Categorie:</label>
+                            <select class="selectpicker col-lg-3" data-live-search="true" name="nomCat" required>
+                                <option value="" disabled selected>Choisissez une catégorie</option>
+                                {% for categorie in categories %}
+                                    <option value="{{ categorie.id }}" {% if categorie.id == medicament.categorie.id %}selected{% endif %}>
+                                        {{ categorie.nomCat }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <div class="col-lg-1"></div>
+    
+                            <label for="prixUnitaire" class="col-lg-2 label-input">Prix Unitaire:</label>
+                            <input type="number" class="form-control2 col-lg-3" name="prixUnitaire" value="{{ medicament.prixUnitaire }}">
+                            <div class="col-lg-1"></div>
                         </div>
-                    </div>
+    
+                        <div class="form-row">
+                            <label for="libelle" class="col-lg-2 label-input">Description <i class="text-danger"> * </i>:</label>
+                            <input type="text" class="form-control2 col-lg-3" value="{{ medicament.libelle }}" name="libelle" required>
+    
+                            <div class="col-lg-1"></div>
+    
+                            <label for="dateExpiration" class="col-lg-2 label-input">Date d'Expiration:</label>
+                            <input type="date" class="form-control2 col-lg-3" name="dateExpiration" value="{{ medicament.dateExpiration }}">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="col-lg-12" style="margin-top: 40px; margin-left: 60px;">
+                                    <label for="image" class="col-lg-2 label-input">Image:</label>
+                                    <input type="file" class="form-control2" id="image" name="image" accept="image/*" hidden>
+                                    <label for="image" class="choose-image label-input">Choisir un fichier</label>
+                                    <span id="file-chosen">Sélectionner le nouveau fichier</span>
+                                    {% if medicament.image %}
+                                        <img src="{{ medicament.image.url }}" height="200px" class="float-right" alt="Image actuelle" style="magin-left:-20%">
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <label for="stock" class="col-lg-2 label-input">Quantité du Stock:</label>
+                            <input type="number" class="form-control2 col-lg-3" id="stock" name="stock" value="{{ medicament.stock}}">
+                        </div>
+                        <div class="col-lg-1"></div><div class="col-lg-1"></div><div class="col-lg-1"></div><div class="col-lg-1"></div><div class="col-lg-1"></div><div class="col-lg-1"></div><div class="col-lg-1"></div>
+                        <div class="col-lg-5 d-none d-xl-block d-lg-block">
+                            <img src="{% static 'themes_admin/img/add-med.jpg'%}" height="200px" class="float-right">
+                        </div>
+                        <button type="submit" class="btn btn-list float-right">Modifier</button>
+                    </form>    
                 </div>
             </div>
-        </div>
+        </div>    
     </div>
     <!-- End Body -->
     <script>
-        (function() {
-            'use strict';
-
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            var forms = document.querySelectorAll('.needs-validation');
-
-            // Loop over them and prevent submission
-            Array.prototype.slice.call(forms)
-                .forEach(function(form) {
-                    form.addEventListener('submit', function(event) {
-                        if (!form.checkValidity()) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
-
-                        form.classList.add('was-validated');
-                    }, false);
-                });
-        })();
-
-        // Accept Only Number
-        function onlyNumberKey(evt) {
-            // Only ASCII character in that range allowed
-            var ASCIICode = (evt.which) ? evt.which : evt.keyCode;
-            if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
-                return false;
-            return true;
-        }
+        // start choose image
+        const image = document.getElementById('image');
+        const fileChosen = document.getElementById('file-chosen');
+        image.addEventListener('change', function () {
+            fileChosen.textContent = this.files[0].name
+        });
+        // end choose image
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 </body>
 
 {% endblock content %}
