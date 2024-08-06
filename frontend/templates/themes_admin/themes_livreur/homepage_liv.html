@@ -20,6 +20,12 @@
     <link rel="stylesheet" href="{% static 'themes_admin/css/master.css' %}">
     <link rel="stylesheet" href="{% static 'themes_admin/css/add_category.css' %}">
     
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+       crossorigin="">
+    </script>
+  
 
     <title>PharmApp</title>
     <link rel="icon" href="{% static 'themes_admin/img/logo.jpg' %}" sizes="64x64 128x128" type="image/jpg">
@@ -64,35 +70,13 @@
                     <div class="card-header">
                         <h2>
                             <button class="btn btn-link btn-block text-left" type="button">
-                                <a href="{% url 'homepage_phar' %}" class="icon-home"><i class="fa fa-fw fa-home"></i><span
+                                <a href="{% url 'homepage_liv' %}" class="icon-home"><i class="fa fa-fw fa-home"></i><span
                                         style="margin-left: 2px;">Acceuil</span></a>
                             </button>
                         </h2>
                     </div>
                 </div>
                 
-
-                <div class="card">
-                    <div class="card-header" id="headingThree">
-                        <h2>
-                            <button class="btn btn-link btn-block text-left collapsed" type="button"
-                                data-toggle="collapse" data-target="#collapseThree" aria-expanded="false"
-                                aria-controls="collapseThree">
-                                <a class="option-name"><i class="fas fa-capsules"></i><span
-                                        style="margin-left:4px;">Liste des commandes</span></a>
-                            </button>
-                        </h2>
-                    </div>
-                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
-                        data-parent="#accordionExample">
-                        <div class="card-body">
-                            <ul>
-                                <li><a href="{% url 'afficher_medicaments_selectionnes' %}">Commandes en cours</a></li>
-                                <li><a href="{% url 'caissier_commandes_validees' %}">Commandes validées</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
 
                 <div class="card">
                     <div class="card-header" id="headingFour">
@@ -109,8 +93,7 @@
                         data-parent="#accordionExample">
                         <div class="card-body">
                             <ul>
-                                <li><a href="#">Livreur</a></li>
-                                <li><a href="#">Commandes livrées</a></li>
+                                <li><a href="{% url 'liste_livraisons_livreur' %}">Liste Livraison</a></li>
                             </ul>
                         </div>
                     </div>

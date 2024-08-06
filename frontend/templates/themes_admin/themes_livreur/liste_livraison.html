@@ -1,0 +1,136 @@
+{% extends "themes_admin/themes_livreur/homepage_liv.html" %}
+{% block content %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha384-xodZBNTC5n17Xt0kKtJfjE9e9ug1fjs50LPxjnf8y4r59GjF1tq5D8s61dX98yT1" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha384-ZlbEJiH8jSTiJBISZ4BASRdmfZn+KLytEOn3/4FOPAfJTygJo7XjTp/5s1p8wlvS" crossorigin=""></script>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 900px;
+        margin: 30px auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        transition: box-shadow 0.3s ease;
+    }
+    .container:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+    }
+    h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #03BB00;
+        font-size: 2.5em;
+        font-weight: bold;
+    }
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        background-color: #fff;
+        border-collapse: collapse;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .table th, .table td {
+        padding: 12px 15px;
+        vertical-align: middle;
+        border-top: 1px solid #dee2e6;
+        font-size: 1.2em;
+    }
+    .table thead th {
+        background-color: #03BB00;
+        font-weight: bold;
+        color: #fff;
+        border-bottom: 2px solid #dee2e6;
+        text-align: center;
+    }
+    .table tbody tr:nth-of-type(odd) {
+        background-color: #f9f9f9;
+    }
+    .table tbody tr:hover {
+        background-color: #e9ecef;
+    }
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+    .table-bordered th, .table-bordered td {
+        border: 1px solid #dee2e6;
+    }
+
+    #map {
+        height: 400px;
+        width: 100%;
+        border-radius: 8px;
+        margin-top: 20px;
+    }
+</style>
+<script>
+    function showMap(livraisonId, geolocalisation) {
+        var mapDiv = document.getElementById('map');
+        mapDiv.innerHTML = ''; // Clear the map div
+
+        if (geolocalisation) {
+            var coords = geolocalisation.split(',');
+            var lat = parseFloat(coords[0]);
+            var lng = parseFloat(coords[1]);
+
+            var map = L.map('map').setView([lat, lng], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            L.marker([lat, lng]).addTo(map)
+                .bindPopup('Géolocalisation du client')
+                .openPopup();
+        } else {
+            alert('Géolocalisation non disponible pour cette livraison.');
+        }
+    }
+</script>
+
+
+<div class="container">
+    <h2>Liste des Livraisons</h2>
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Date de Création</th>
+                <th>Contact du Client</th>
+                <th>État de Livraison</th>
+                <th>Ordonnance</th>
+                <th>Géolocalisation</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for livraison in livraisons %}
+            <tr>
+                <td>{{ livraison.id }}</td>
+                <td>{{ livraison.date_validation }}</td>
+                <td>{{ livraison.ordonnance.ordonnance_client.numeroUtilisateur }}</td>
+                <td>{{ livraison.etat_de_livraison|yesno:"Livré,Non livré" }}</td>
+                <td>
+                    <a href="{{ livraison.ordonnance.image.url }}" target="_blank">Voir Ordonnance</a>
+                </td>
+                <td>
+                    <button class="btn btn-primary" onclick="showMap({{ livraison.id }}, '{{ livraison.ordonnance.commandevirtuelle.geolocalisation }}')">Voir sur la carte</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div id="map"></div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+{% endblock content %}

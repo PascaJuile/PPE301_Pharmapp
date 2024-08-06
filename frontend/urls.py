@@ -22,6 +22,8 @@ urlpatterns = [
     path('client/inscription', views.inscription_client, name='inscription_client'),
     path('client/redirection', views.redirection_commande, name='redirection_commande'),
     path('client/payement_commande', views.payement_commande, name='payement_commande'),
+    path('client/details_livraison', views.details_livraison_client, name='details_livraison_client'),
+    path('client/historique_commandes/', views.historique_commandes_client, name='historique_commandes'),
 
 
 
@@ -31,6 +33,8 @@ urlpatterns = [
     path('preparateur/homepage', views.homepage_prepa, name='homepage_prepa'),
     path('pharmacien/homepage', views.homepage_phar, name='homepage_phar'),
     path('caissier/homepage', views.homepage_car, name='homepage_car'),
+    path('livreur/homepage', views.homepage_liv, name='homepage_liv'),
+    path('Gestionnaire/homepage', views.homepage_ges, name='homepage_ges'),
     path('themes', views.themes, name='themes'),
     path('edit_profile', views.edit_profile, name='edit_profile'),
     path('edit_user', views.edit_user, name='edit_user'),
@@ -69,9 +73,13 @@ urlpatterns = [
     # Paths pour le caissier
     path('caissier/commande_non_validee', views.afficher_medicaments_selectionnes, name='afficher_medicaments_selectionnes'),
     path('caissier/liste_commande', views.caissier_commandes_validees, name='caissier_commandes_validees'),
+    path('caissier/assigner_livreur/', views.assigner_livreur, name='assigner_livreur'),
 
     # Path profil utilisateur
     path('profil_utilisateur', views.profil_utilisateur, name='profil_utilisateur'),
+
+    #Path livreur
+    path('livreur/liste_livraison/', views.liste_livraisons_livreur, name='liste_livraisons_livreur'),
 ]
 
 # Configuration pour servir les fichiers statiques et médias en développement

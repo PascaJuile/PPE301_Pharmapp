@@ -71,16 +71,14 @@
             
             
             
-                  <form action="#" method="post" enctype="multipart/form-data" id="uploadForm">
+                  <form action="{% url 'commande_client' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <p>
-                        <button type="button" class="btn btn-sm height-auto px-4 py-3 btn-primary" onclick="document.getElementById('cameraInput').click();">
-                            Scanner un fichier
+                        <button type="submit" class="btn btn-sm height-auto px-4 py-3 btn-primary" >
+                            Scanner une ordonnance
                         </button>
                         <span id="file-name"></span>
                     </p>
-                    <!-- Input de type file avec attribut capture pour déclencher la caméra -->
-                    <input type="file" id="cameraInput" name="image" style="display:none;" accept="image/*" capture onchange="handleFileSelect(event)">
                   </form>
           </div>
         </div>
@@ -112,53 +110,8 @@
       </div>
     </div>
   </div>
-  <!-- Fenêtre modale pour l'aperçu de l'image -->
-  <div id="previewModal" class="modal" style="display:none;">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <img id="previewImage" src="#" alt="Aperçu de l'image" class="img-fluid">
-        <!-- Template HTML -->
-        
-        <button type="button" class="btn btn-primary mt-3" onclick="sendData()">Valider</button>
-
-        
-    </div>
-  </div>
 </body>
 
-<script>
-  function handleFileSelect(event) {
-      const file = event.target.files[0];
-      if (file) {
-          // Afficher le nom du fichier dans le span avec l'ID 'file-name'
-          document.getElementById('file-name').textContent = "Fichier sélectionné : " + file.name;
-
-          // Afficher l'aperçu de l'image dans la fenêtre modale
-          const reader = new FileReader();
-          reader.onload = function(e) {
-              document.getElementById('previewImage').src = e.target.result;
-              openModal();
-          };
-          reader.readAsDataURL(file);
-      }
-  }
-
-  function openModal() {
-      document.getElementById('previewModal').style.display = "block";
-  }
-
-  function closeModal() {
-      document.getElementById('previewModal').style.display = "none";
-  }
-
-  
-function sendData() {
-  document.getElementById('uploadForm').submit();
-  alert("Données envoyées !");
-    // Fermez la fenêtre modale après avoir envoyé les données (si nécessaire)
-    closeModal();
-}
-</script>
 
 
 {% endblock%}

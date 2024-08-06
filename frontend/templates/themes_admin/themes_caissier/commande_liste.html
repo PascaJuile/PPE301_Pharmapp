@@ -110,7 +110,9 @@
                 <th>ID</th>
                 <th>Date de Création</th>
                 <th>Prix Total</th>
+                <th>Statut</th>
                 <th>Actions</th>
+                <th>Assigner Livreur</th> <!-- Nouvelle colonne -->
             </tr>
         </thead>
         <tbody>
@@ -119,12 +121,20 @@
                 <td>{{ selection.id }}</td>
                 <td>{{ selection.dateCreation }}</td>
                 <td>{{ selection.recuperer_prix_total }}</td>
+                <td>{{ selection.statut }}</td>
                 <td>
                     <button class="btn btn-info" data-toggle="modal" data-target="#detailsModal-{{ selection.id }}">Détails</button>
                 </td>
+                <td>
+                    {% if selection.statut == 'virtuelle' %}
+                    <button class="btn {% if selection.livraison_assignee %}btn-success{% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#assignDeliveryModal-{{ selection.id }}">
+                        {% if selection.livraison_assignee %}Livreur Assigné{% else %}Assigner Livreur{% endif %}
+                    </button>
+                    {% endif %}
+                </td>
             </tr>
 
-            <!-- Modal -->
+            <!-- Modal des Détails -->
             <div class="modal fade" id="detailsModal-{{ selection.id }}" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel-{{ selection.id }}" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -147,6 +157,35 @@
                     </div>
                 </div>
             </div>
+
+<!-- Modal d'Assignation de Livreur -->
+<div class="modal fade" id="assignDeliveryModal-{{ selection.id }}" tabindex="-1" role="dialog" aria-labelledby="assignDeliveryModalLabel-{{ selection.id }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="assignDeliveryModalLabel-{{ selection.id }}">Assigner Livreur</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'assigner_livreur' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="selection_id" value="{{ selection.id }}">
+                    <div class="form-group">
+                        <label for="livreur">Sélectionner un livreur</label>
+                        <select class="form-control" id="livreur" name="livreur">
+                            {% for livreur in livreurs %}
+                            <option value="{{ livreur.id }}">{{ livreur.nomUtilisateur }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Assigner</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
             {% endfor %}
         </tbody>
     </table>

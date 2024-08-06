@@ -72,11 +72,19 @@
           <div class="main-nav d-none d-lg-block">
             <nav class="site-navigation text-right text-md-center" role="navigation">
               <ul class="site-menu js-clone-nav d-none d-lg-block">
-                <li class="active"><a href="{% url 'liste_medicaments_client' %}">Acceuil</a></li>
+                <li class="active"><a href="{% url 'liste_medicaments_client' %}">Accueil</a></li>
                 <li><a href="{% url 'shop' %}">Boutique</a></li>
                 <li><a href="{% url 'about' %}">A Propos</a></li>
                 <li><a href="{% url 'contact' %}">Contact</a></li>
-                <li><a href="{% url 'redirection_commande' %}">Commander</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Commander</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url 'redirection_commande' %}">Commander en Ligne</a></li>
+                        <li><a href="{% url 'cart' %}">Suivi de Commande</a></li>
+                        <li><a href="{% url 'details_livraison_client' %}">Suivi de Livraison</a></li>
+                        <li><a href="{% url 'historique_commandes' %}">Historique des Commandes</a></li>
+                </ul>
+            </li>
               </ul>
             </nav>
           </div>
