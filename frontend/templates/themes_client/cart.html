@@ -1,6 +1,7 @@
 {% extends "themes_client/index.html" %}
 
 {% block content %}
+{% load static %}
 <style>
     .container {
         margin-top: 20px;
@@ -152,7 +153,7 @@
 </style>
 <script>
     function openConfirmationModal(mode_paiement) {
-        var total_price = "{{ request.session.selected_total }}";
+        var total_price = "{{ selected_total }}";
         var ordonnance_id = "{{ ordonnance_id }}";
         var confirmationMessage = "Vous avez choisi de payer avec " + mode_paiement + ". Le montant total à payer est de " + total_price + " FCFA.";
         document.getElementById('confirmationMessage').textContent = confirmationMessage;
@@ -175,7 +176,6 @@
     });
 </script>
 
-{% load static %}
 <div class="container">
     <h2 class="mv-5">Confirmation de Commande</h2>
     
@@ -205,7 +205,7 @@
             <h5>Ordonnance Refusée</h5>
         </div>
         <div class="card-body">
-            <p><strong>Motif du Refus</strong> {{ refus_motif }}</p>
+            <p><strong>Motif du Refus</strong> {{ refused_order.motif }}</p>
             <div class="mt-3">
                 <strong>Image de la Commande</strong>
                 <img src="{{ request.session.commande_image }}" alt="Image de la commande" class="img-fluid">
@@ -218,7 +218,6 @@
         Aucune commande en cours.
     </div>
 </div>
-
 <!-- Payment Modal -->
 <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -278,7 +277,3 @@
 </div>
 
 {% endblock %}
-
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

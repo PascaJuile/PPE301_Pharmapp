@@ -27,6 +27,7 @@ class CommandeVirtuelle(models.Model):
         self.save()
 
 class SelectionMedicament(models.Model):
+    etatOrdonnance = models.BooleanField(default=False)
     statut = models.CharField(max_length=50, choices=[('virtuelle', 'Virtuelle'), ('presentiel', 'Presentiel')])
     donnees = models.JSONField()
     dateCreation = models.DateTimeField(auto_now_add=True)

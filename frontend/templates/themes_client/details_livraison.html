@@ -71,7 +71,7 @@
             {% csrf_token %}
             <input type="hidden" name="livraison_id" value="{{ livraisons.last.id }}">
             <div class="alert alert-warning" role="alert">
-                Veuillez ne valider la commande que si vous l'avez reçue et qu'elle correspond à votre commande.
+                Veuillez ne valider la commande que si vous l'avez reçue et qu'elle correspond à votre demande.
             </div>
             <button type="submit" class="btn btn-success btn-validate">Valider la Livraison</button>
         </form>

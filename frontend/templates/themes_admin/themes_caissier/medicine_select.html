@@ -160,67 +160,54 @@
     .receipt-box tbody tr:nth-child(even) {
         background-color: #f9f9f9;
     }
-
-    /* Styles pour les boutons */
-    .btn-main, .btn-validate, .btn-print {
-        display: inline-block;
-        font-size: 1em;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        text-align: center;
-        text-decoration: none;
-        color: #fff;
-        cursor: pointer;
-        transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .btn-main {
-        background-color: #03BB00;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .btn-main:hover {
-        background-color: #0056b3;
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-    }
-
-    .btn-validate {
-        background-color: #28a745;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .btn-validate:hover {
-        background-color: #218838;
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-    }
-
-    .btn-print {
-        background-color: #ffc107;
-        color: #212529;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .btn-print:hover {
-        background-color: #e0a800;
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-    }
-
-    /* Animation des transitions */
-    .form-container, .med-container, .receipt-box {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .form-container:hover, .med-container:hover, .receipt-box:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    }
-
 </style>
 
 <div class="med-container">
     <h1 class="med-title">Commandes Non Validées</h1>
-    {% for selection in non_validated_medicines %}
+
+    <!-- Affichage des commandes virtuelles -->
+    <h2 class="section-title">Commandes Virtuelles</h2>
+    {% for selection in virtual_orders %}
+    <h2 class="section-title">Commande N° {{ selection.id }}</h2>
+    <table class="med-table" id="table-{{ selection.id }}">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prix Unitaire</th>
+                <th>Quantité</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for medicament in selection.donnees %}
+            <tr>
+                <td>{{ medicament.nom }}</td>
+                <td>{{ medicament.prix }}</td>
+                <td>{{ medicament.quantite }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button class="btn btn-main" onclick="toggleDetails('{{ selection.id }}')">Valider la commande</button>
+    <div id="details-{{ selection.id }}" class="form-container" style="display: none;">
+        <p>Total: <span id="totalPrice-{{ selection.id }}">0.00</span> €</p>
+        <div class="form-group">
+            <label for="amountReceived-{{ selection.id }}">Montant Reçu:</label>
+            <input type="number" class="form-control" id="amountReceived-{{ selection.id }}" placeholder="Entrez le montant reçu" oninput="calculateChange('{{ selection.id }}')">
+        </div>
+        <p>Reliquat: <span id="changeDue-{{ selection.id }}">0.00</span> €</p>
+        <form method="post" action="{% url 'afficher_medicaments_selectionnes' %}">
+            {% csrf_token %}
+            <input type="hidden" name="selection_id" value="{{ selection.id }}">
+            <input type="hidden" name="total_price" id="hiddenTotalPrice-{{ selection.id }}" value="">
+            <button class="btn btn-validate" type="submit">Confirmer</button>
+        </form>
+        <button class="btn btn-print" onclick="printReceipt('{{ selection.id }}')">Imprimer le Reçu</button>
+    </div>
+    {% endfor %}
+
+    <!-- Affichage des commandes présentielles -->
+    <h2 class="section-title">Commandes Présentielles</h2>
+    {% for selection in presencial_orders %}
     <h2 class="section-title">Commande N° {{ selection.id }}</h2>
     <table class="med-table" id="table-{{ selection.id }}">
         <thead>
@@ -276,9 +263,9 @@
                 <!-- This will be filled dynamically -->
             </tbody>
         </table>
-        <p>Total: <span id="printTotalPrice">0.00</span> €</p>
-        <p>Montant Reçu: <span id="printAmountReceived">0.00</span> €</p>
-        <p>Reliquat: <span id="printChangeDue">0.00</span> €</p>
+        <p>Total: <span id="printTotalPrice">0.00</span> FCFA</p>
+        <p>Montant Reçu: <span id="printAmountReceived">0.00</span> FCFA</p>
+        <p>Reliquat: <span id="printChangeDue">0.00</span> FCFA</p>
     </div>
 </div>
 
@@ -321,4 +308,4 @@
     }
 </script>
 
-{% endblock content %}
+{% endblock %}
