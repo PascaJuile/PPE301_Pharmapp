@@ -208,7 +208,7 @@
             <p><strong>Motif du Refus</strong> {{ refused_order.motif }}</p>
             <div class="mt-3">
                 <strong>Image de la Commande</strong>
-                <img src="{{ request.session.commande_image }}" alt="Image de la commande" class="img-fluid">
+                <img src="{{ refused_order.ordonnance.image.url }}" alt="Image de la commande" class="img-fluid">
             </div>
             <button type="button" class="btn btn-secondary mt-3" onclick="dismissRefusedOrdonnance()">OK, j'ai compris</button>
         </div>

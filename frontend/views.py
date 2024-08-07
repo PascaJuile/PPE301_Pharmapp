@@ -678,7 +678,7 @@ def payement_commande(request):
                 messages.error(request, 'Une erreur est survenue lors du traitement de votre paiement.')
 
             # Rediriger vers la page du panier (ou une autre page appropriée)
-            return redirect('cart')
+            return redirect('details_livraison_client')
         
     return render(request, "themes_client/cart.html")
                 
@@ -818,10 +818,8 @@ def refuser_commande(request, commande_id):
         commande.motif = motif
         commande.save()
         
-        request.session['refus_motif'] = motif
-        request.session['commande_image'] = commande.ordonnance.image.url 
 
-        return redirect('cart')
+        return redirect('pharmacien_commandeVirtuelle', commande_id=commande.id)
     
     return HttpResponse(status=405)
 
