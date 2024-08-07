@@ -621,6 +621,12 @@ def medicaments_selectionnés(request):
             ordonnance = get_object_or_404(Ordonnance, id=ordonnance_id)
 
         try:
+
+            # Lignes ajoutées pour déduire le stock
+            for med in selected_medicines:
+                medicament = Medicament.objects.get(id=med['id'])
+                medicament.deduire_stock(med['quantite'])
+
             SelectionMedicament.objects.create(
                 donnees=selected_medicines,
                 statut=selected_statut,

@@ -39,3 +39,10 @@ class Medicament(models.Model):
         actuel = timezone.now()
         une_semaine_avant = actuel + timedelta(weeks=1)
         return cls.objects.filter(dateExpiration__lte=une_semaine_avant, dateExpiration__gte=actuel)
+    
+    def deduire_stock(self, quantite):
+        if self.stock >= quantite:
+            self.stock -= quantite
+            self.save()
+        else:
+            raise ValueError("Stock insuffisant")
