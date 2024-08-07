@@ -229,12 +229,12 @@
     </table>
     <button class="btn btn-main" onclick="toggleDetails('{{ selection.id }}')">Valider la commande</button>
     <div id="details-{{ selection.id }}" class="form-container" style="display: none;">
-        <p>Total: <span id="totalPrice-{{ selection.id }}">0.00</span> €</p>
+        <p>Total: <span id="totalPrice-{{ selection.id }}">0.00</span> FCFA</p>
         <div class="form-group">
             <label for="amountReceived-{{ selection.id }}">Montant Reçu:</label>
             <input type="number" class="form-control" id="amountReceived-{{ selection.id }}" placeholder="Entrez le montant reçu" oninput="calculateChange('{{ selection.id }}')">
         </div>
-        <p>Reliquat: <span id="changeDue-{{ selection.id }}">0.00</span> €</p>
+        <p>Reliquat: <span id="changeDue-{{ selection.id }}">0.00</span> FCFA</p>
         <form method="post" action="{% url 'afficher_medicaments_selectionnes' %}">
             {% csrf_token %}
             <input type="hidden" name="selection_id" value="{{ selection.id }}">
@@ -247,25 +247,27 @@
 </div>
 
 <div id="printableReceipt" style="display:none;">
-    <div class="receipt">
-        <h2>Pharmacie XYZ</h2>
-        <p>Adresse: Rue Exemple, Ville</p>
+    <div class="receipt" style="padding: 20px; border: 1px solid #dee2e6; background-color: #ffffff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px; text-align: center; max-width: 500px; margin: 0 auto;">
+        <h2>Pharmacie PharmApp</h2>
+        <p>Adresse: Rue Bodjona Agbalepedo lossossimé</p>
         <p>Date: {{ date }}</p>
-        <table>
+        <table style="width: 100%; margin-top: 20px; border-collapse: collapse;">
             <thead>
                 <tr>
-                    <th>Nom</th>
-                    <th>Prix Unitaire</th>
-                    <th>Quantité</th>
+                    <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left;">Nom</th>
+                    <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left;">Prix Unitaire</th>
+                    <th style="padding: 10px; border: 1px solid #dee2e6; text-align: left;">Quantité</th>
                 </tr>
             </thead>
             <tbody id="receiptItems">
                 <!-- This will be filled dynamically -->
             </tbody>
         </table>
-        <p>Total: <span id="printTotalPrice">0.00</span> FCFA</p>
-        <p>Montant Reçu: <span id="printAmountReceived">0.00</span> FCFA</p>
-        <p>Reliquat: <span id="printChangeDue">0.00</span> FCFA</p>
+        <div style="margin-top: 20px;">
+            <p style="display: inline-block; margin-right: 20px;">Total: <span id="printTotalPrice">0.00</span> FCFA</p>
+            <p style="display: inline-block; margin-right: 20px;">Montant Reçu: <span id="printAmountReceived">0.00</span> FCFA</p>
+            <p style="display: inline-block;">Reliquat: <span id="printChangeDue">0.00</span> FCFA</p>
+        </div>
     </div>
 </div>
 
@@ -300,6 +302,27 @@
     }
 
     function printReceipt(id) {
+        // Fill the receipt with data from the selected order
+        const receiptItems = document.getElementById('receiptItems');
+        const table = document.getElementById(`table-${id}`);
+        let receiptContent = '';
+        table.querySelectorAll('tbody tr').forEach(row => {
+            const name = row.cells[0].textContent;
+            const price = row.cells[1].textContent;
+            const quantity = row.cells[2].textContent;
+            receiptContent += `<tr><td style="padding: 10px; border: 1px solid #dee2e6; text-align: left;">${name}</td><td style="padding: 10px; border: 1px solid #dee2e6; text-align: left;">${price}</td><td style="padding: 10px; border: 1px solid #dee2e6; text-align: left;">${quantity}</td></tr>`;
+        });
+        receiptItems.innerHTML = receiptContent;
+
+        // Set total price, amount received, and change due
+        const totalPrice = document.getElementById(`totalPrice-${id}`).textContent;
+        const amountReceived = document.getElementById(`amountReceived-${id}`).value;
+        const changeDue = document.getElementById(`changeDue-${id}`).textContent;
+        document.getElementById('printTotalPrice').textContent = totalPrice;
+        document.getElementById('printAmountReceived').textContent = amountReceived;
+        document.getElementById('printChangeDue').textContent = changeDue;
+
+        // Print the receipt
         const receipt = document.getElementById('printableReceipt').innerHTML;
         const originalContents = document.body.innerHTML;
         document.body.innerHTML = receipt;
@@ -307,5 +330,6 @@
         document.body.innerHTML = originalContents;
     }
 </script>
+
 
 {% endblock %}

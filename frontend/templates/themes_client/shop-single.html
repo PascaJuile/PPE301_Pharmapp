@@ -38,6 +38,11 @@
     text-decoration: none;
     cursor: pointer;
 }
+.btn-primary{
+  background-color:#03BB00;
+  border-color: #03BB00;
+  border-radius:20px;
+}
 </style>
 <body>
 
@@ -46,7 +51,7 @@
     <div class="bg-light py-3">
       <div class="container">
         <div class="row">
-          <div class="col-md-12 mb-0"><a href="{% url 'liste_medicaments_client' %}">Home</a> <span class="mx-2 mb-0">/</span> <a
+          <div class="col-md-12 mb-0"><a href="{% url 'liste_medicaments_client' %}">Acceuil</a> <span class="mx-2 mb-0">/</span> <a
               href="shop.html">Store</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">{{ medicament.nomMedicament }}</strong></div>
         </div>
       </div>
@@ -91,8 +96,8 @@
           <div class="col-lg-6 mb-5 mb-lg-0">
             <a href="#" class="banner-1 h-100 d-flex" style="background-image: url({% static 'themes_client/images/bg_1.jpg' %});">
               <div class="banner-1-inner align-self-center">
-                <h2>Pharma Products</h2>
-                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestiae ex ad minus rem odio voluptatem.
+                <h2>Les produits de PharmApp</h2>
+                <p>Les produits de PharmApp garantissent une efficacité maximale. Nous travaillons avec des fabricants réputés pour vous offrir des solutions fiables.
                 </p>
               </div>
             </a>
@@ -100,8 +105,8 @@
           <div class="col-lg-6 mb-5 mb-lg-0">
             <a href="#" class="banner-1 h-100 d-flex" style="background-image: url({% static 'themes_client/images/bg_2.jpg' %});">
               <div class="banner-1-inner ml-auto  align-self-center">
-                <h2>Rated by Experts</h2>
-                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestiae ex ad minus rem odio voluptatem.
+                <h2>Certifiés par des Experts</h2>
+                <p>Les produits de PharmApp garantissent une efficacité maximale. Évalués par des experts, ils vous offrent des solutions fiables et de qualité.
                 </p>
               </div>
             </a>

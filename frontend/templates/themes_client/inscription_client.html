@@ -45,6 +45,19 @@
             max-width: 100%; /* Assure que l'image s'adapte à la largeur disponible */
             height: auto; /* Conserve les proportions de l'image */
         }
+        .btn-primary {
+            max-width: 30%;
+            margin-top: 15px;
+            margin-left: 160px;
+            background-color: #03BB00;
+            border-color: #03BB00;
+        }
+        .label {
+            display: inline-block;
+        }
+        .label:after {
+            content: none; /* Masquer les deux-points après les labels */
+        }
     </style>
 </head>
 <body>
@@ -67,7 +80,7 @@
                             <div class="form-group">
                                 {{ form.emailUtilisateur.label_tag }} {{ form.emailUtilisateur }}
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" class="num">
                                 {{ form.numeroUtilisateur.label_tag }} {{ form.numeroUtilisateur }}
                             </div>
                             <div class="form-group">

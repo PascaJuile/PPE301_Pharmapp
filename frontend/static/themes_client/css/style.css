@@ -254,7 +254,8 @@ a:hover {
   border-radius: 8px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   overflow: hidden;
-  min-width: 220px;
+  max-width: 200px;
+  max-height: 300px;
   z-index: 1000;
 }
 
@@ -269,10 +270,16 @@ a:hover {
 }
 
 .user-profile .user-heading {
-  padding: 15px;
+  padding: 10px;
   background-color: #f8f9fa;
   border-bottom: 1px solid #eee;
   text-align: center;
+}
+
+.user-profile .user-icon {
+  font-size: 2rem;
+  color: #03BB00;
+  margin-bottom: 5px;
 }
 
 .user-profile .user-name2 {
@@ -293,13 +300,13 @@ a:hover {
 .user-wrapper .divider {
   height: 1px;
   background-color: #e9ecef;
-  margin: 10px 0;
+  margin: 5px 0;
 }
 
 .user-wrapper .content {
   display: flex;
   align-items: center;
-  padding: 10px;
+  padding: 5px;
   color: #333;
   text-decoration: none;
   transition: background-color 0.3s, color 0.3s;
@@ -317,7 +324,7 @@ a:hover {
 }
 
 .user-wrapper .p-user {
-  margin: 0;
+  margin-left: 15px;
   font-size: 1rem;
   font-weight: 500;
 }
