@@ -196,10 +196,6 @@
                             {% for med in selection.donnees %}
                             <li data-med-id="{{ med.id }}">
                                 {{ med.nom }} - {{ med.prix }} - Quantité: <span class="med-quantite">{{ med.quantite }}</span>
-                                {% if not selection.etatDeValidation %}
-                                <button class="btn btn-primary btn-sm" onclick="editMedicine('{{ med.id }}', '{{ med.nom }}', '{{ med.quantite }}')">Modifier</button>
-                                <button class="btn btn-danger btn-sm" onclick="removeMedicine('{{ med.id }}')">Supprimer</button>
-                                {% endif %}
                             </li>
                             {% endfor %}
                         </ul>
@@ -225,25 +221,6 @@
     document.getElementById('addOrderBtn').addEventListener('click', function() {
         window.location.href = "{% url 'pharamacien_listeMedicament' %}";
     });
-
-    function editMedicine(id, nom, quantite) {
-        const newQuantite = prompt(`Modifier la quantité pour ${nom}:`, quantite);
-        if (newQuantite !== null && newQuantite !== "") {
-            // Mettez à jour la quantité dans le HTML
-            const liElement = document.querySelector(`li[data-med-id="${id}"]`);
-            liElement.querySelector('.med-quantite').innerText = newQuantite;
-
-            // Optionnellement, envoyez une requête AJAX pour mettre à jour la quantité dans le backend
-        }
-    }
-
-    function removeMedicine(id) {
-        // Mettez l'élément li correspondant comme caché
-        const liElement = document.querySelector(`li[data-med-id="${id}"]`);
-        liElement.style.display = 'none';
-
-        // Optionnellement, envoyez une requête AJAX pour supprimer l'élément dans le backend
-    }
 </script>
 
 {% endblock content %}

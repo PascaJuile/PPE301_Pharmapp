@@ -38,44 +38,54 @@ def cart(request):
         messages.error(request, 'Utilisateur non authentifié.')
         return redirect('page_connexion')
 
-    # Récupérer les données de la session
-    selected_medicines = request.session.get('selected_medicines')
-    selected_total = request.session.get('selected_total')
-    refus_motif = request.session.get('refus_motif')
-    ordonnance_id = request.session.get('ordonnance_id')  
+    # Récupérer la dernière ordonnance associée au client
+    last_ordonnance = Ordonnance.objects.filter(ordonnance_client=client).order_by('-id').first()
 
-    if not ordonnance_id:
-        try:
-            ordonnance = Ordonnance.objects.filter(ordonnance_client=client).last()
-            if ordonnance:
-                ordonnance_id = ordonnance.id
-                request.session['ordonnance_id'] = ordonnance_id
-            else:
-                ordonnance_id = None
-                messages.error(request, 'Aucune ordonnance associée au client.')
-        except Ordonnance.DoesNotExist:
-            ordonnance_id = None
-            messages.error(request, 'Aucune ordonnance associée au client.')
+    # Initialiser les variables
+    selected_medicines = []
+    selected_total = 0
 
-    if selected_medicines and selected_total:
-        context = {
-            'commande_acceptee': True,
-            'selected_medicines': selected_medicines,
-            'selected_total': selected_total,
-            'ordonnance_id': ordonnance_id,  
-        }
-    elif refus_motif:
-        context = {
-            'commande_refusee': True,
-            'refus_motif': refus_motif,
-        }
-    else:
-        context = {
-            'commande_acceptee': False,
-            'commande_refusee': False,
-        }
+    if last_ordonnance:
+        # Filtrer les commandes virtuelles basées sur la dernière ordonnance
+        accepted_order = CommandeVirtuelle.objects.filter(
+            ordonnance=last_ordonnance,
+            etat_validation=True
+        ).order_by('-date_commande').first()
+        
+        refused_order = CommandeVirtuelle.objects.filter(
+            ordonnance=last_ordonnance,
+            etat_validation=False
+        ).order_by('-date_commande').first()
+
+        if accepted_order:
+            for selection in accepted_order.ordonnance.selections.filter(statut='virtuelle', etatOrdonnance=True):
+                # Extraire les données du JSONField (supposé être une liste)
+                for item in selection.donnees:
+                    med_id = item.get('id')
+                    quantity = item.get('quantite', 1)
+                    
+                    try:
+                        medicament = Medicament.objects.get(id=med_id)
+                        total = medicament.prixUnitaire * quantity
+                        selected_medicines.append({
+                            'nom': medicament.nomMedicament,
+                            'prix': medicament.prixUnitaire,
+                            'quantite': quantity,
+                            'total': total
+                        })
+                        selected_total += total
+                    except Medicament.DoesNotExist:
+                        continue  # Ignore les médicaments non trouvés
+
+    context = {
+        'commande_acceptee': accepted_order is not None,
+        'selected_medicines': selected_medicines,
+        'selected_total': selected_total,
+        'commande_refusee': refused_order is not None,
+        'refused_order': refused_order,
+    }
     
-    return render(request, 'themes_client/cart.html', context)
+    return render(request, 'themes_client/cart.html', context)    
 
 def checkout(request):
     return render(request, 'themes_client/checkout.html')
@@ -587,7 +597,8 @@ def medicaments_selectionnés(request):
                 donnees=selected_medicines,
                 statut=selected_statut,
                 pharmacien=pharmacien,
-                ordonnance=ordonnance  # Assigner l'ordonnance récupérée
+                ordonnance=ordonnance,
+                etatOrdonnance=True   
             )
 
             
@@ -639,7 +650,7 @@ def payement_commande(request):
                 messages.error(request, 'Une erreur est survenue lors du traitement de votre paiement.')
 
             # Rediriger vers la page du panier (ou une autre page appropriée)
-            return redirect('cart')
+            return redirect('details_livraison_client')
         
     return render(request, "themes_client/cart.html")
                 
@@ -698,15 +709,24 @@ def afficher_medicaments_selectionnes(request):
 
         messages.success(request, 'Commande validée avec succès.')
 
-    non_validated_medicines = SelectionMedicament.objects.filter(
-            etatDeValidation=False
-        ).exclude(
-            statut='virtuelle', 
-            ordonnance__commandevirtuelle__etat_payement=False
-        ).order_by('-id')    
+    # Filtrer les commandes virtuelles avec etatOrdonnance=True et etatDeValidation=False
+    virtual_orders = SelectionMedicament.objects.filter(
+        etatOrdonnance=True,
+        etatDeValidation=False
+    ).exclude(
+        statut='presentiel'
+    ).order_by('-dateCreation')
+
+    presencial_orders = SelectionMedicament.objects.filter(
+            etatDeValidation=False,
+            statut='presentiel'
+        ).order_by('-id')
+
     context = {
-        'non_validated_medicines': non_validated_medicines,
+        'virtual_orders': virtual_orders,
+        'presencial_orders': presencial_orders
     }
+    
     return render(request, 'themes_admin/themes_caissier/medicine_select.html', context)
 
 def pharmacien_commandeVirtuelle(request, commande_id):
@@ -770,11 +790,9 @@ def refuser_commande(request, commande_id):
         commande.motif = motif
         commande.save()
         
-        request.session['refus_motif'] = motif
-        request.session['commande_image'] = commande.ordonnance.image.url 
 
-        return redirect('cart')
-
+        return redirect('pharmacien_commandeVirtuelle', commande_id=commande.id)
+    
     return HttpResponse(status=405)
 
 
