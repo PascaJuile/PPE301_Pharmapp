@@ -50,8 +50,8 @@
     {% for ordonnance in ordonnances_validées %}
     <div class="card">
         <div class="card-body">
-            <p><strong>Date de Création:</strong> {{ ordonnance.livraison.date_validation }}</p>
-            <p><strong>Image:</strong> <img src="{{ ordonnance.image.url }}" alt="Ordonnance Image" style="max-width: 200px;"></p>
+            <p><strong>Date de Création</strong> {{ ordonnance.livraison.date_validation }}</p>
+            <p><strong>Image</strong> <img src="{{ ordonnance.image.url }}" alt="Ordonnance Image" style="max-width: 200px;"></p>
         </div>
     </div>
     {% endfor %}

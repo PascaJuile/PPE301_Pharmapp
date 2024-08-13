@@ -69,6 +69,20 @@
         border-radius: 8px;
         margin-top: 20px;
     }
+    .btn-primary {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+    }
+    
+    .btn-primary:hover {
+        background-color: #138496; /* Couleur de fond lors du survol */
+        border-color: #117a8b;    /* Couleur de la bordure lors du survol */
+    }
+    
+    .voir{
+        color: #17a2b8;
+        font-weight: bold;
+    }
 </style>
 <script>
     function showMap(livraisonId, geolocalisation) {
@@ -117,7 +131,7 @@
                 <td>{{ livraison.ordonnance.ordonnance_client.numeroUtilisateur }}</td>
                 <td>{{ livraison.etat_de_livraison|yesno:"Livré,Non livré" }}</td>
                 <td>
-                    <a href="{{ livraison.ordonnance.image.url }}" target="_blank">Voir Ordonnance</a>
+                    <a href="{{ livraison.ordonnance.image.url }}" target="_blank" class="voir">Voir Ordonnance</a>
                 </td>
                 <td>
                     <button class="btn btn-primary" onclick="showMap({{ livraison.id }}, '{{ livraison.ordonnance.commandevirtuelle.geolocalisation }}')">Voir sur la carte</button>
