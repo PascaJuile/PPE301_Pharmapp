@@ -82,7 +82,12 @@ urlpatterns = [
 
     #Path gestionnaire en pharmacie
     path('gestionnaire/inscription', views.inscription, name='inscription'),
-    path('gestionnaire/liste_utilisateur', views.liste_utilisateur, name='liste_utilisateur'),
+    path('gestionnaire/liste_gestionnaire', views.liste_utilisateur_ges, name='liste_ges'),
+    path('gestionnaire/liste_preparateur', views.liste_utilisateur_prepa, name='liste_prepa'),
+    path('gestionnaire/liste_caissier', views.liste_utilisateur_cas, name='liste_cas'),
+    path('gestionnaire/liste_pharmacien', views.liste_utilisateur_phar, name='liste_phar'),
+    path('gestionnaire/liste_livreur', views.liste_utilisateur_liv, name='liste_liv'),
+    path('gestionnaire/liste_client', views.liste_utilisateur_client, name='liste_client'),
     path('gestionnaire/statistique', views.rapport, name='rapport'),
 
 

@@ -88,7 +88,12 @@
                         <div class="card-body">
                             <ul>
                                 <li><a href="{% url 'inscription' %}">Création de compte</a></li>
-                                <li><a href="{% url 'liste_utilisateur' %}">Liste Utilisateurs</a></li>
+                                <li><a href="{% url 'liste_ges' %}">Liste Gestionnaires</a></li>
+                                <li><a href="{% url 'liste_prepa' %}">Liste Preparateurs</a></li>
+                                <li><a href="{% url 'liste_cas' %}">Liste Caissiers</a></li>
+                                <li><a href="{% url 'liste_phar' %}">Liste Pharmaciens</a></li>
+                                <li><a href="{% url 'liste_liv' %}">Liste Livreurs</a></li>
+                                <li><a href="{% url 'liste_client' %}">Liste Clients</a></li>
                             </ul>
                         </div>
                     </div>
@@ -299,7 +304,7 @@
         }
     
         .background {
-            background-image: url('{% static "themes_admin/img/Back.jpg" %}');
+            background-image: url('{% static "themes_admin/img/phar.jpg" %}');
             background-size: cover;
             background-position: center;
             width: 100%;

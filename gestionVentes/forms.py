@@ -40,3 +40,11 @@ class CommandeVirtuelleForm(forms.ModelForm):
             formulaire_commande.ordonnance = ordonnance
             formulaire_commande.save()
         return formulaire_commande
+
+class DateRangeForm(forms.Form):
+    start_date = forms.DateField(widget=forms.TextInput(attrs={
+        'class': 'form-control search-date', 'placeholder': 'Start Date', 'data-provide': 'datepicker'
+    }))
+    end_date = forms.DateField(widget=forms.TextInput(attrs={
+        'class': 'form-control search-date', 'placeholder': 'End Date', 'data-provide': 'datepicker'
+    }))

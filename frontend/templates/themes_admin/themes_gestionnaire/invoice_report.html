@@ -27,210 +27,128 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
-                        Invoices Report
+                        Recherche des détails de vente par date
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="row form-search-date">
-
-                        <div class="col-lg-5 col-md-12">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">Start Date</span>
+                        <form method="get">
+                            <div class="col-lg-5 col-md-12">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Start Date</span>
+                                    </div>
+                                    {{ form.start_date }}
                                 </div>
-                                <input class="form-control search-date" placeholder="Start Date"
-                                    aria-describedby="basic-addon1" data-provide="datepicker">
                             </div>
-                        </div>
-                        <div class="col-lg-5 col-md-12">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">End Date</span>
+                            <div class="col-lg-5 col-md-12">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">End Date</span>
+                                    </div>
+                                    {{ form.end_date }}
                                 </div>
-                                <input class="form-control search-date" placeholder="End Date"
-                                    aria-describedby="basic-addon1" data-provide="datepicker">
-
                             </div>
-                        </div>
-                        <div class="col-lg-2">
-                            <button type="button" class="btn float-lg-left float-md-right find">Find</button>
-                        </div>
+                            <div class="col-lg-2">
+                                <button type="submit" class="btn float-lg-left float-md-right find">Find</button>
+                            </div>
+                        </form>
                     </div>
+                </div>
 
-                    <div class="row row-filter">
-                        <div class="btn-group dropdown">
-                            <button type="button" class="btn dropdown-toggle btn-list btn-branch" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false" id="btn-branch">
-                                <a class="btn-add">Select Branch &nbsp;<i class="fas fa-angle-down"></i>
-                            </button>
-                            <div class="dropdown-menu">
-                                <div class="list-group">
-                                    <a href="invoice_list_in_branch.html"
-                                        class="list-group-item list-group-item-action list-group-item-invoice"><i
-                                            class="fas fa-code-branch"></i>Branch 1</a>
-                                    <a href="invoice_list_in_branch.html"
-                                        class="list-group-item list-group-item-action list-group-item-invoice"><i
-                                            class="fas fa-code-branch"></i>Branch 2</a>
+                    
+                <div class="line"></div>
+                <div class="row-total">
+                    <div class="address">
+                        <label class="detailed">Rapport des ventes</label>
+                        <form>
+                            <div class="form-row">
+                                <div class="col-lg-5 col-md-12">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text total-span" id="basic-addon1">Nombre totatal de vente:</span>
+                                        </div>
+                                        <input class="form-control read" readonly value="{{ total_commandes }}">
+                                    </div>
                                 </div>
-
+                                <div class="col-lg-1"></div>
+                                <div class="col-lg-5 col-md-12">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text total-span" id="basic-addon1">Prix total des ventes:</span>
+                                        </div>
+                                        <input class="form-control read" readonly value="{{ total_valeur_commandes }}">
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="btn-group dropdown">
-                            <button type="button" class="btn dropdown-toggle btn-list btn-branch" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false" id="btn-branch">
-                                <a class="btn-add">Select Type &nbsp;<i class="fas fa-angle-down"></i>
-                            </button>
-                            <div class="dropdown-menu">
-                                <div class="list-group">
-                                    <a href="#"
-                                        class="list-group-item list-group-item-action list-group-item-invoice"><i
-                                            class="fa fa-money"></i>All</a>
-                                    <a href="#"
-                                        class="list-group-item list-group-item-action list-group-item-invoice"><i
-                                            class="fa fa-money"></i>Postpaid invoice</a>
+                            <div class="form-row">
+                                <div class="col-lg-5 col-md-12">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text total-span" id="basic-addon1"></span>
+                                        </div>
+                                        <input class="form-control read" readonly value="">
+                                    </div>
                                 </div>
-
+                                <div class="col-lg-1"></div>
+                                <div class="col-lg-5 col-md-12">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text total-span" id="basic-addon1">Nombre total de medicaemnts vendus:</span>
+                                        </div>
+                                        <input class="form-control read" readonly value="{{ total_produits }}">
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
+                </div>
 
-                    <div class="line"></div>
-                    <div class=" row-total">
-                        <div class="address ">
-                            <label class="detailed">Total report</label>
-                            <form>
-                                <div class="form-row">
-                                    <div class="col-lg-5 col-md-12">
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text total-span" id="basic-addon1">Total number
-                                                    of invoices:</span>
-                                            </div>
-                                            <input class="form-control read" readonly value="5">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-1"></div>
-                                    <div class="col-lg-5 col-md-12">
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text total-span" id="basic-addon1">Total value
-                                                    of invoices:</span>
-                                            </div>
-                                            <input class="form-control read" readonly value="10000">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="col-lg-5 col-md-12">
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text total-span" id="basic-addon1">Total value
-                                                    paid of invoices:</span>
-                                            </div>
-                                            <input class="form-control read" readonly value="8500">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-1"></div>
-                                    <div class="col-lg-5 col-md-12">
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text total-span" id="basic-addon1">Total number
-                                                    of products:</span>
-                                            </div>
-                                            <input class="form-control read" readonly value="20">
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
 
 
                     <div class="line"></div>
                     <div class=" row-detailed">
                         <div class="address ">
-                            <label class="detailed">Detailed report</label>
+                            <label class="detailed">Détail des ventes</label>
                         </div>
                     </div>
 
 
-                    <table id="table1" class="table table-striped table-bordered dt-responsive nowrap"
-                        style="width:96.5%">
+                    <table id="table1" class="table table-striped table-bordered dt-responsive nowrap" style="width:96.5%">
                         <thead>
                             <tr>
-                                <th scope="col">Id</th>
-                                <th scope="col">Customer ID</th>
-                                <th scope="col">Customer Name</th>
-                                <th scope="col">Invoice Date</th>
-                                <th scope="col">Employee</th>
-                                <th scope="col">Branch</th>
-                                <th scope="col">Total number of products</th>
-                                <th scope="col">Total</th>
-                                <th scope="col">Paid</th>
+                                <th scope="col">ID Commande</th>
+                                <th scope="col">Pharmacien</th>
+                                <th scope="col">Prix Total</th>
+                                <th scope="col">Caissier</th>
+                                <th scope="col">Date et Heure de Validation</th>
+                                <th scope="col">Statut</th>
+                                {% if commandes_virtuelles %}
+                                    <th scope="col">Client</th>
+                                    <th scope="col">Contact Client</th>
+                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
+                            {% for commande in commandes_presentielles %}
                             <tr>
-                                <th scope="row">1</th>
-                                <td>22</td>
-                                <td>Anas</td>
-                                <td>8-12-2020</td>
-                                <td>Tasneem Anas</td>
-                                <td>PharmaITE</td>
-                                <td>1</td>
-                                <td>700 PS</td>
-                                <td>700 PS</td>
+                                <td>{{ commande.id }}</td>
+                                <td>{{ commande.selection_medicaments.pharmacien.nomUtilisateur }} {{ commande.selection_medicaments.pharmacien.prenomUtilisateur }}</td>
+                                <td>{{ commande.prixTotal }} FCFA</td>
+                                <td>{{ commande.caissier.nomUtilisateur }} {{ commande.caissier.prenomUtilisateur }}</td>
+                                <td>{{ commande.date_validation }}</td>
+                                <td>{{ commande.selection_medicaments.statut }}</td>
+                                {% if commande.selection_medicaments.statut == 'virtuelle' %}
+                                    <td>{{ commande.selection_medicaments.ordonnance.ordonnance_client.nomUtilisateur }} {{ commande.selection_medicaments.ordonnance.ordonnance_client.prenomUtilisateur }}</td>
+                                    <td>{{ commande.selection_medicaments.ordonnance.ordonnance_client.numeroUtilisateur }}</td>
+                                {% endif %}
                             </tr>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>22</td>
-                                <td>Haneen</td>
-                                <td>8-12-2020</td>
-                                <td>Tasneem Anas</td>
-                                <td>PharmaITE</td>
-                                <td>1</td>
-                                <td>582 PS</td>
-                                <td>258 PS</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>22</td>
-                                <td>Hadeel</td>
-                                <td>8-12-2020</td>
-                                <td>Tasneem Anas</td>
-                                <td>PharmaITE</td>
-                                <td>13</td>
-                                <td>170 PS</td>
-                                <td>170 PS</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>22</td>
-                                <td>Maher</td>
-                                <td>8-12-2020</td>
-                                <td>Tasneem Anas</td>
-                                <td>PharmaITE</td>
-                                <td>13</td>
-                                <td>980 PS</td>
-                                <td>950 PS</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>22</td>
-                                <td>Yafa</td>
-                                <td>8-12-2020</td>
-                                <td>Tasneem Anas</td>
-                                <td>PharmaITE</td>
-                                <td>13</td>
-                                <td>1100 PS</td>
-                                <td>1100 PS</td>
-                            </tr>
-                            
+                            {% endfor %}
                         </tbody>
                     </table>
-
-
-
+                    
+                    
+                    
 
                     <div class="line line-graphic"></div>
                     <div class=" row-graphic">

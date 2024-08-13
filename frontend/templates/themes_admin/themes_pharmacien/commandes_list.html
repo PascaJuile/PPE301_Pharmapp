@@ -163,6 +163,7 @@
             <tr>
                 <th>Date de Création</th>
                 <th>État de Validation</th>
+                <th>Statut</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -171,10 +172,14 @@
             <tr>
                 <td>{{ selection.dateCreation }}</td>
                 <td class="table-validation {% if selection.etatDeValidation %}table-validation-valid{% endif %}">
-                    {{ selection.etatDeValidation|yesno:"Validé,Non Validé" }}
+                    {{ selection.etatDeValidation|yesno:"Validé,Non Validé,Expiré" }}
                 </td>
+                <td>{{ selection.statut|capfirst }}</td>
                 <td>
+                    <!-- Bouton Détails -->
                     <button class="btn btn-info" data-toggle="modal" data-target="#detailsModal-{{ selection.id }}">Détails</button>
+    
+                    <!-- Bouton Supprimer, visible uniquement si non validé -->
                     {% if not selection.etatDeValidation %}
                     <button class="btn btn-danger" onclick="window.location.href='{% url 'delete_order' selection.id %}'">Supprimer</button>
                     {% endif %}

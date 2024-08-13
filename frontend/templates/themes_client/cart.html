@@ -167,12 +167,18 @@
         document.getElementById('noOrderMessage').style.display = 'block';
     }
 
+    function startPaymentTimer() {
+        setTimeout(disablePaymentButton, 60000); // 60000ms = 1 minute
+    }
+
     $(document).ready(function() {
         {% if messages %}
             {% for message in messages %}
                 alert("{{ message }}");
             {% endfor %}
         {% endif %}
+        // Lancer le compte à rebours lorsque la page est prête
+        startPaymentTimer();
     });
 </script>
 
@@ -196,7 +202,7 @@
             <p class="mt-2"><strong>Prix Total</strong> {{ selected_total }} FCFA</p>
         </div>
         <div class="card-footer">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#paymentModal">Payer la commande</button>
+            <button type="button" id="paymentButton" class="btn btn-primary" data-toggle="modal" data-target="#paymentModal">Payer la commande</button>
         </div>
     </div>
     {% elif commande_refusee %}

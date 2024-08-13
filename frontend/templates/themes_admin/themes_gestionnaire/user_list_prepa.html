@@ -1,0 +1,67 @@
+{% extends "themes_admin/themes_gestionnaire/homepage_ges.html" %}
+{% block content %}
+{% load static %}
+    <link rel="stylesheet" href="{% static 'themes_admin/css/master.css' %}">
+    <link rel="stylesheet" href="{% static 'themes_admin/css/user_list.css' %}">
+    <link rel="stylesheet" href="{% static 'themes_admin/css/dataTables.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'themes_admin/css/responsive.bootstrap4.min.css' %}">
+
+    <button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+{% for user in preparateurs %}
+<div class="body-page" id="body-page">
+    <div class="user-list">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        Liste des Preparateurs en Pharmacie
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table id="table" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Nom</th>
+                                <th scope="col">Prenom</th>
+                                <th scope="col">Mobile</th>
+                                <th scope="col">Adresse</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Role</th>
+                                <th scope="col">Dernière connexion</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                                <tr>
+                                    <th>{{ user.id }}</th>
+                                    <td>{{ user.nomUtilisateur }}</td>
+                                    <td>{{ user.prenomUtilisateur }}</td>
+                                    <td>{{ user.numeroUtilisateur }}</td>
+                                    <td>{{ user.adresseUtilisateur }}</td>
+                                    <td>{{ user.emailUtilisateur }}</td>
+                                    <td>Preparateur en Pharmacie</td>
+                                    <td>{{ user.last_login }}</td>
+                                    <td>
+                                        <div class="row">
+                                            <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </div>
+                    </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.7/js/responsive.bootstrap4.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/themes.js' %}"></script>
+{% endblock %}

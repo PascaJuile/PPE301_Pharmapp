@@ -1,4 +1,5 @@
 from django.utils import timezone
+from datetime import timedelta
 from datetime import datetime
 import json
 from pyexpat.errors import messages
@@ -12,7 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from gestionStocks.models import *
 from gestionUtilisateurs.models import *
-from gestionVentes.forms import CommandeVirtuelleForm
+from gestionVentes.forms import CommandeVirtuelleForm, DateRangeForm
 from gestionVentes.models import CommandePresentielle, CommandeVirtuelle, Livraison, Ordonnance, SelectionMedicament
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -26,26 +27,88 @@ def about(request):
     return render(request, 'themes_client/about.html')
 
 def rapport(request):
-    return render(request, 'themes_admin/themes_gestionnaire/invoice_report.html')
+    commandes_presentielles = CommandePresentielle.objects.all()
+    commandes_virtuelles = CommandeVirtuelle.objects.all()
+    total_commandes = CommandePresentielle.objects.count()
+    total_valeur_commandes = CommandePresentielle.objects.aggregate(total=models.Sum('prixTotal'))['total'] or 0
+
+    # Calcul du nombre total de produits débités du stock
+    total_produits = 0
+    for commande in commandes_presentielles:
+        selection_donnees = commande.selection_medicaments.donnees
+        if isinstance(selection_donnees, dict):  # Si c'est un dictionnaire
+            total_produits += selection_donnees.get('quantite', 0)
+        elif isinstance(selection_donnees, list):  # Si c'est une liste de dictionnaires
+            for item in selection_donnees:
+                total_produits += item.get('quantite', 0)
+
+    form = DateRangeForm(request.GET or None)
+    if form.is_valid():
+        start_date = form.cleaned_data['start_date']
+        end_date = form.cleaned_data['end_date']
+
+        if start_date == end_date:
+            # Filtrer les commandes pour une date précise
+            commandes_presentielles = commandes_presentielles.filter(date_validation=start_date)
+        else:
+            # Filtrer les commandes par intervalle de dates
+            commandes_presentielles = commandes_presentielles.filter(date_validation__range=[start_date, end_date])
+
+    context = {
+        'commandes_presentielles': commandes_presentielles,
+        'commandes_virtuelles': commandes_virtuelles,
+        'total_commandes': total_commandes,
+        'total_valeur_commandes': total_valeur_commandes,
+        'total_produits': total_produits,
+        'total_valeur_payee': 8500,  # Garder la valeur actuelle
+        'form': form,  # Passer le formulaire au template
+    }
+    return render(request, 'themes_admin/themes_gestionnaire/invoice_report.html', context)
 
 
-def liste_utilisateur(request):
+def liste_utilisateur_ges(request):
     gestionnaires = GestionnairePharmacie.objects.all()
-    preparateurs = PreparateurEnPharmacie.objects.all()
-    caissiers = Caissier.objects.all()
-    clients = Client.objects.all()
-    pharmaciens = Pharmacien.objects.all()
-    livreurs = Livreur.objects.all()
-    
     context = {
         'gestionnaires': gestionnaires,
-        'preparateurs': preparateurs,
-        'caissiers': caissiers,
-        'clients': clients,
-        'pharmaciens': pharmaciens,
-        'livreurs': livreurs,
     }
     return render(request, 'themes_admin/themes_gestionnaire/user_list.html', context)
+
+
+def liste_utilisateur_prepa(request):
+    preparateurs = PreparateurEnPharmacie.objects.all()
+    context = {
+        'preparateurs': preparateurs,
+    }
+    return render(request, 'themes_admin/themes_gestionnaire/user_list_prepa.html', context)
+
+def liste_utilisateur_cas(request):
+    caissiers = Caissier.objects.all()
+    context = {
+        'caissiers': caissiers,
+    }
+    return render(request, 'themes_admin/themes_gestionnaire/user_list_cas.html', context)
+
+def liste_utilisateur_phar(request):
+    pharmaciens = Pharmacien.objects.all()
+    context = {
+        'pharmaciens': pharmaciens,
+    }
+    return render(request, 'themes_admin/themes_gestionnaire/user_list_phar.html', context)
+
+def liste_utilisateur_liv(request):
+    livreurs = Livreur.objects.all()
+    context = {
+        'livreurs': livreurs,
+    }
+    return render(request, 'themes_admin/themes_gestionnaire/user_list_liv.html', context)
+
+def liste_utilisateur_client(request):
+    clients = Client.objects.all()
+    context = {
+        'clients': clients,
+    }
+    return render(request, 'themes_admin/themes_gestionnaire/user_list_client.html', context)
+
 
 
 def cart(request):
@@ -702,7 +765,8 @@ def journal_medicaments_selectionnes(request):
         return redirect('page_connexion')
 
     selections = SelectionMedicament.objects.filter(pharmacien=pharmacien).order_by('-dateCreation')
-    
+
+   
     return render(request, 'themes_admin/themes_pharmacien/commandes_list.html', {'selections': selections})
         
 def afficher_medicaments_selectionnes(request):

@@ -44,6 +44,8 @@ class SelectionMedicament(models.Model):
         blank=True  
     )
 
+    
+
     def recuperer_prix_total(self):
         total = 0
         # Retourner le prix total basé sur la méthode définie dans CommandePresentielle
