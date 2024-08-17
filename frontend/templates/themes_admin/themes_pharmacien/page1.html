@@ -1,0 +1,258 @@
+{% extends "themes_admin/themes_pharmacien/homepage_phar.html" %}
+{% block content %}
+
+<form id="creerCommandeForm" method="post" action="{% url 'creer_commande' %}">
+    {% csrf_token %}
+    <div class="container mt-5">
+        <h2 class="mb-4">Liste des Médicaments</h2>
+        <table class="table" id="tableau1">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Code</th>
+                    <th>Nom du Médicament</th>
+                    <th>Prix Unitaire</th>
+                    <th>Quantité</th>
+                    <th>Prix Total</th>
+                    <th>Action</th> <!-- New Action Column -->
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Les lignes de médicament seront ajoutées dynamiquement ici -->
+            </tbody>
+        </table>
+        <div class="container mt-3">
+            <h4>Total des Prix : <span id="prixTotalGeneral">0</span> FCFA</h4>
+        </div>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMedicamentModal">
+            Ajouter Médicament
+        </button>
+        <button type="submit" class="btn btn-success mt-3" id="creerCommandeBtn" disabled>Créer Commande</button>
+    </div>
+
+    <!-- Champs cachés pour les informations sur les médicaments -->
+    <input type="hidden" name="statutCommandeHidden" id="statutCommandeHidden">
+    <input type="hidden" name="medicaments" id="medicamentNomHidden">
+    <input type="hidden" name="medicament_prix_unitaire" id="medicamentPrixUnitaireHidden">
+    <input type="hidden" name="medicament_quantite" id="medicamentQuantiteHidden">
+    <input type="hidden" name="medicament_prix_total" id="medicamentPrixTotalHidden">
+    <input type="hidden" name="ordonnance_id" id="ordonnance_id" value="{{ ordonnance_details.id }}">
+</form>
+
+<!-- Div pour afficher les détails de l'ordonnance, positionnée en bas à gauche -->
+{% if ordonnance_details %}
+<div id="ordonnanceDetails" style="
+    position: fixed;
+    bottom: 20px;
+    left: 20px; /* Changement de 'right' à 'left' pour le bas gauche */
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    cursor: move;">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{{ ordonnance_details.image_url }}" alt="Ordonnance" class="img-fluid">
+        </div>
+        <div class="col-md-6">
+            <p><strong>Nom:</strong> {{ ordonnance_details.nom }}</p>
+            <p><strong>Contact:</strong> {{ ordonnance_details.contact }}</p>
+        </div>
+        <input type="hidden" name="ordonnance_id" id="ordonnance_id" value="{{ ordonnance_details.id }}">
+    </div>
+</div>
+{% endif %}
+
+<!-- Modal pour ajouter un médicament -->
+<div class="modal fade" id="addMedicamentModal" tabindex="-1" aria-labelledby="addMedicamentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addMedicamentModalLabel">Ajouter un Médicament</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Radio buttons for selecting order status -->
+                <div class="mb-3">
+                    <label for="statutCommande" class="form-label">Statut de la Commande</label>
+                    <div>
+                        <input type="radio" id="presentielle" name="statutCommande" value="presentielle" checked onclick="enableCreerCommande()"> Commande en Présentiel
+                        <input type="radio" id="viruelle" name="statutCommande" value="virtuelle" onclick="enableCreerCommande()"> Commande en Ligne
+                    </div>
+                </div>
+                <form id="rechercheMedicamentForm">
+                    <div class="mb-3">
+                        <label for="rechercheMedicament" class="form-label">Rechercher un Médicament</label>
+                        <input type="text" class="form-control" id="rechercheMedicament" placeholder="Entrez le nom ou le code du médicament">
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="rechercherMedicament()">Rechercher</button>
+                </form>
+                <div id="medicamentResult" class="mt-3"></div>
+
+                <!-- Quantity input for the selected medicine -->
+                <div class="mb-3">
+                    <label for="quantiteMedicament" class="form-label">Quantité</label>
+                    <input type="number" class="form-control" id="quantiteMedicament" value="1" min="1">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary" onclick="ajouterMedicament()">Ajouter</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Rendre la div déplaçable
+        const ordonnanceDetailsDiv = document.getElementById('ordonnanceDetails');
+        let isDragging = false;
+        let offsetX, offsetY;
+
+        ordonnanceDetailsDiv.addEventListener('mousedown', function (e) {
+            isDragging = true;
+            offsetX = e.clientX - ordonnanceDetailsDiv.getBoundingClientRect().left;
+            offsetY = e.clientY - ordonnanceDetailsDiv.getBoundingClientRect().top;
+            ordonnanceDetailsDiv.style.cursor = 'grabbing';
+        });
+
+        document.addEventListener('mousemove', function (e) {
+            if (isDragging) {
+                ordonnanceDetailsDiv.style.left = `${e.clientX - offsetX}px`;
+                ordonnanceDetailsDiv.style.top = `${e.clientY - offsetY}px`;
+            }
+        });
+
+        document.addEventListener('mouseup', function () {
+            isDragging = false;
+            ordonnanceDetailsDiv.style.cursor = 'move';
+        });
+
+    
+        enableCreerCommande();
+        document.querySelectorAll('input[name="statutCommande"]').forEach(radio => {
+            radio.addEventListener('change', enableCreerCommande);
+        });
+    });
+    
+    function enableCreerCommande() {
+        const creerCommandeBtn = document.getElementById('creerCommandeBtn');
+        const statutCommande = document.querySelector('input[name="statutCommande"]:checked');
+        const statutCommandeHidden = document.getElementById('statutCommandeHidden');
+        
+        if (statutCommande) {
+            statutCommandeHidden.value = statutCommande.value; // Met à jour le champ caché avec la valeur sélectionnée
+        }
+        
+        if (creerCommandeBtn) {
+            creerCommandeBtn.disabled = !statutCommande;
+        }
+    }
+    
+    
+    function rechercherMedicament() {
+        const query = document.getElementById('rechercheMedicament').value;
+        if (query) {
+            fetch(`/recherche_medicament/?query=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    const medicamentResult = document.getElementById('medicamentResult');
+                    medicamentResult.innerHTML = ''; 
+                    if (data && data.length > 0) {
+                        const listGroup = document.createElement('div');
+                        listGroup.className = 'list-group';
+                        data.forEach(medicament => {
+                            const item = document.createElement('a');
+                            item.href = '#';
+                            item.className = 'list-group-item list-group-item-action';
+                            item.innerHTML = `${medicament.nom} (${medicament.code}) - Prix: ${medicament.prix}`;
+                            item.onclick = function() {
+                                document.getElementById('rechercheMedicament').value = medicament.nom;
+                                document.getElementById('rechercheMedicamentForm').dataset.selectedMedicament = JSON.stringify(medicament);
+                            };
+                            listGroup.appendChild(item);
+                        });
+                        medicamentResult.appendChild(listGroup);
+                    } else {
+                        medicamentResult.innerHTML = '<p class="text-danger">Aucun médicament trouvé.</p>';
+                    }
+                })
+                .catch(error => console.error('Erreur:', error));
+        }
+    }
+    
+    function ajouterMedicament() {
+        const selectedMedicament = JSON.parse(document.getElementById('rechercheMedicamentForm').dataset.selectedMedicament || '{}');
+        const quantite = parseInt(document.getElementById('quantiteMedicament').value);
+    
+        if (selectedMedicament && selectedMedicament.code && quantite > 0) {
+            const tableau1 = document.getElementById('tableau1').getElementsByTagName('tbody')[0];
+            const newRow = tableau1.insertRow();
+    
+            newRow.insertCell(0).innerHTML = new Date().toLocaleDateString();
+            newRow.insertCell(1).innerHTML = selectedMedicament.code;
+            newRow.insertCell(2).innerHTML = selectedMedicament.nom;
+            newRow.insertCell(3).innerHTML = selectedMedicament.prix;
+            newRow.insertCell(4).innerHTML = quantite;
+            newRow.insertCell(5).innerHTML = selectedMedicament.prix * quantite;
+    
+            // Add the "Action" cell with a delete button
+            const actionCell = newRow.insertCell(6);
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'btn btn-danger';
+            deleteButton.textContent = 'Supprimer';
+            deleteButton.onclick = function() {
+                tableau1.deleteRow(newRow.rowIndex - 1); // Remove the row from the table
+                recalculerPrixTotalGeneral(); // Recalculate the total price
+                updateHiddenFields(); // Update the hidden fields
+            };
+            actionCell.appendChild(deleteButton);
+    
+            recalculerPrixTotalGeneral();
+            updateHiddenFields(); // Update the hidden fields with the current data
+    
+            // Close the modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('addMedicamentModal'));
+            modal.hide();
+        } else {
+            alert('Veuillez sélectionner un médicament valide et entrer une quantité avant d\'ajouter.');
+        }
+    }
+    
+    
+    
+    function updateHiddenFields() {
+        const tableau1 = document.getElementById('tableau1').getElementsByTagName('tbody')[0];
+        const rows = tableau1.getElementsByTagName('tr');
+        let medicaments = [];
+        for (let i = 0; i < rows.length; i++) {
+            const cells = rows[i].getElementsByTagName('td');
+            medicaments.push({
+                'nom': cells[2].textContent,
+                'prix_unitaire': parseFloat(cells[3].textContent),
+                'quantite': parseInt(cells[4].textContent),
+                'prix_total': parseFloat(cells[5].textContent)
+            });
+        }
+        document.getElementById('medicamentNomHidden').value = JSON.stringify(medicaments);
+    }
+    
+    function recalculerPrixTotalGeneral() {
+        let prixTotal = 0;
+        const tableau1 = document.getElementById('tableau1').getElementsByTagName('tbody')[0];
+        const rows = tableau1.getElementsByTagName('tr');
+        for (let i = 0; i < rows.length; i++) {
+            const prixCell = rows[i].getElementsByTagName('td')[5];
+            const prix = parseFloat(prixCell.innerHTML) || 0;
+            prixTotal += prix;
+        }
+        document.getElementById('prixTotalGeneral').innerHTML = prixTotal;
+    }
+    
+</script>
+
+{% endblock %}

@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.utils import timezone
 from datetime import timedelta
 from datetime import datetime
@@ -18,6 +19,7 @@ from gestionVentes.models import CommandePresentielle, CommandeVirtuelle, Livrai
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib import messages
+from django.views.decorators.http import require_POST
 
 
 
@@ -356,7 +358,7 @@ def creation_categorie(request):
         # Validate that both fields are non-empty and contain only alphabetic characters
         if not nomCat.isalpha():
             error_message = "Le nom de la catégorie doit contenir uniquement des lettres."
-        elif not description.isalpha():
+        elif not all(c.isalpha() or c.isspace() for c in description):
             error_message = "La description doit contenir uniquement des lettres."
         else:
             categorie = Categorie.objects.create(nomCat=nomCat, description=description)
@@ -646,20 +648,7 @@ def formulaire_achat(request,ordonnance_id):
     client = ordonnance.ordonnanceClient
     return render(request, 'themes_client/cart.html', {'client': client, 'ordonnance': ordonnance})
 
-
-
-def pharamacien_listeMedicament(request):
-    categories = Categorie.objects.prefetch_related('medicaments').all()
-    user_name = request.session.get('user_name', 'Utilisateur')
-    user_email = request.session.get('user_email', 'email@example.com')
-
-    ordonnance_details = request.session.pop('ordonnance_details', None)
-
-    return render(request, 'themes_admin/themes_pharmacien/medicine_list.html', {'categories': categories, 'user_name': user_name,
-        'user_email': user_email, 'ordonnance_details': ordonnance_details})
-
-  
-def medicaments_selectionnés(request):
+def creer_commande(request):
     user_email = request.session.get('user_email')
 
     if user_email:
@@ -672,45 +661,98 @@ def medicaments_selectionnés(request):
         messages.error(request, 'Utilisateur non authentifié.')
         return redirect('page_connexion')
 
+    ordonnance_details = None 
+    ordonnance_details = request.session.pop('ordonnance_details', None)
+    
     if request.method == 'POST':
-        selected_medicines_data = request.POST.get('selectedMedicinesData')
-        selected_medicines = json.loads(selected_medicines_data)
-        selected_statut = request.POST.get('selectedMedicinesStatut')
-        selected_total = request.POST.get('selectedMedicinesTotal')
+        statut_commande = request.POST.get('statutCommandeHidden')
+        medicaments = request.POST.get('medicaments', '[]')
         ordonnance_id = request.POST.get('ordonnance_id', None)
 
-        ordonnance = None
         if ordonnance_id:   
-            ordonnance = get_object_or_404(Ordonnance, id=ordonnance_id)
+            ordonnance_details = get_object_or_404(Ordonnance, id=ordonnance_id)
 
         try:
-
-            # Lignes ajoutées pour déduire le stock
-            for med in selected_medicines:
-                medicament = Medicament.objects.get(id=med['id'])
-                medicament.deduire_stock(med['quantite'])
-
-            SelectionMedicament.objects.create(
-                donnees=selected_medicines,
-                statut=selected_statut,
-                pharmacien=pharmacien,
-                ordonnance=ordonnance,
-                etatOrdonnance=True   
-            )
-
+            medicaments_data = json.loads(medicaments)
+            total_price = sum(int(med['prix_total']) for med in medicaments_data)
             
-            request.session['selected_medicines'] = selected_medicines
-            request.session['selected_total'] = sum(int(med['prix']) * int(med['quantite']) for med in selected_medicines)
-            request.session['ordonnance_id'] = request.POST.get('ordonnance_id')
+            # Gestion du stock
+            for med in medicaments_data:
+                medicament = Medicament.objects.get(nomMedicament=med['nom'])
+                if medicament.stock >= med['quantite']:
+                    medicament.stock -= med['quantite']
+                    medicament.save()
+                else:
+                    messages.error(request, f"Stock insuffisant pour le médicament {med['nom']}.")
+                    return redirect('journal_medicaments_selectionnes')
 
-            messages.success(request, 'Médicaments sélectionnés enregistrés avec succès.')
-        except Exception as e:
-            messages.error(request, f'Erreur lors de l\'enregistrement des données : {e}')
+            # Créer la commande avec l'ordonnance et le statut correctement associés
+            selection_medicament = SelectionMedicament.objects.create(
+                etatOrdonnance=True,
+                statut=statut_commande,
+                donnees=medicaments_data,
+                ordonnance=ordonnance_details,
+                pharmacien=pharmacien
+            )
+            selection_medicament.save()
+            
+            # Stocker le prix total dans la session
+            if 'commandes_totals' not in request.session:
+                request.session['commandes_totals'] = {}
+            request.session['commandes_totals'][str(selection_medicament.id)] = total_price
+            request.session.modified = True
+            request.session['ordonnance_id'] = ordonnance_id
+            
+            messages.success(request, "La commande a été créée avec succès.")
             return redirect('journal_medicaments_selectionnes')
+        
+        except Exception as e:
+            # Handle errors
+            messages.error(request, f"Erreur lors de la création de la commande: {str(e)}")
+            return redirect('journal_medicaments_selectionnes')
+    
+    return render(request, 'themes_admin/themes_pharmacien/page1.html', {'ordonnance_details': ordonnance_details})
 
-        return redirect('journal_medicaments_selectionnes')
+def recherche_medicament(request):
+    query = request.GET.get('query', '')
+    if query:
+        # Rechercher les médicaments par nom ou code qui contiennent la chaîne de requête
+        medicaments = Medicament.objects.filter(
+            Q(nomMedicament__icontains=query) | Q(code__icontains=query)
+        )
+        # Format des données à retourner au format JSON
+        medicament_data = [
+            {
+                'id': medicament.id,
+                'code': medicament.code,
+                'nom': medicament.nomMedicament,
+                'prix': medicament.prixUnitaire,
+            } for medicament in medicaments
+        ]
     else:
-        return render(request, 'themes_admin/themes_pharmacien/medicine_list.html', {'message': 'Invalid request method.'})    
+        medicament_data = []
+
+    return JsonResponse(medicament_data, safe=False)
+
+def pharamacien_listeMedicament(request):
+    categories = Categorie.objects.prefetch_related('medicaments').all()
+    user_name = request.session.get('user_name', 'Utilisateur')
+    user_email = request.session.get('user_email', 'email@example.com')
+
+    ordonnance_details = request.session.pop('ordonnance_details', None)
+
+    # Choisir le template en fonction du chemin de la requête
+    if request.path == '/pharmacien/listeMedicaments':
+        template_name = 'themes_admin/themes_pharmacien/medicine_list.html'
+    elif request.path == '/pharmacien/page1':
+        template_name = 'themes_admin/themes_pharmacien/page1.html'
+    else:
+        template_name = 'themes_admin/themes_pharmacien/medicine_list.html'
+
+    return render(request, template_name, {'categories': categories, 'user_name': user_name,
+        'user_email': user_email, 'ordonnance_details': ordonnance_details})
+
+  
 
 def payement_commande(request):
     if request.method == "POST":
@@ -766,8 +808,10 @@ def journal_medicaments_selectionnes(request):
 
     selections = SelectionMedicament.objects.filter(pharmacien=pharmacien).order_by('-dateCreation')
 
-   
-    return render(request, 'themes_admin/themes_pharmacien/commandes_list.html', {'selections': selections})
+    # Récupérer les prix totaux depuis la session
+    commandes_totals = request.session.get('commandes_totals', {})
+
+    return render(request, 'themes_admin/themes_pharmacien/commandes_list.html', {'selections': selections, 'commandes_totals': commandes_totals})
         
 def afficher_medicaments_selectionnes(request):
     user_email = request.session.get('user_email')
@@ -867,7 +911,7 @@ def accepter_commande(request, commande_id):
 
     request.session['ordonnance_details'] = ordonnance_details
 
-    return redirect('pharamacien_listeMedicament')
+    return redirect('creer_commande')
 
 def affichage_commande_acceptee(request, commande_id):
     try:

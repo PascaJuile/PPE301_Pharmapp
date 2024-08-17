@@ -1,4 +1,4 @@
-{% extends "themes_admin/themes_pharmacien/medicine_list.html" %}
+{% extends "themes_admin/themes_pharmacien/homepage_phar.html" %}
 {% block content %}
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <style>
@@ -10,7 +10,7 @@
         display: flex-box !important;
     }
     .container {
-        max-width: 900px;
+        max-width: 1200px;
         margin: 20px auto;
         padding: 20px;
         background-color: #fff;
@@ -161,25 +161,28 @@
     <table class="table table-bordered">
         <thead>
             <tr>
+                <th>Référence</th>
                 <th>Date de Création</th>
+                <th>Prix Total</th>
                 <th>État de Validation</th>
                 <th>Statut</th>
-                <th>Actions</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
             {% for selection in selections %}
             <tr>
+                <td>{{ selection.reference_commande }}</td>
                 <td>{{ selection.dateCreation }}</td>
-                <td class="table-validation {% if selection.etatDeValidation %}table-validation-valid{% endif %}">
-                    {{ selection.etatDeValidation|yesno:"Validé,Non Validé,Expiré" }}
-                </td>
-                <td>{{ selection.statut|capfirst }}</td>
                 <td>
-                    <!-- Bouton Détails -->
+                    
+                </td>
+                <td class="table-validation {% if selection.etatDeValidation %}table-validation-valid{% endif %}">
+                    {{ selection.etatDeValidation|yesno:"Validé,Non Validé" }}
+                </td>
+                <td>{{selection.statut}}</td>
+                <td>
                     <button class="btn btn-info" data-toggle="modal" data-target="#detailsModal-{{ selection.id }}">Détails</button>
-    
-                    <!-- Bouton Supprimer, visible uniquement si non validé -->
                     {% if not selection.etatDeValidation %}
                     <button class="btn btn-danger" onclick="window.location.href='{% url 'delete_order' selection.id %}'">Supprimer</button>
                     {% endif %}
@@ -200,7 +203,7 @@
                         <ul>
                             {% for med in selection.donnees %}
                             <li data-med-id="{{ med.id }}">
-                                {{ med.nom }} - {{ med.prix }} - Quantité: <span class="med-quantite">{{ med.quantite }}</span>
+                                {{ med.nom }} - {{ med.prix_total }} - Quantité: <span class="med-quantite">{{ med.quantite }}</span>
                             </li>
                             {% endfor %}
                         </ul>
@@ -224,7 +227,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
     document.getElementById('addOrderBtn').addEventListener('click', function() {
-        window.location.href = "{% url 'pharamacien_listeMedicament' %}";
+        window.location.href = "{% url 'creer_commande' %}";
     });
 </script>
 

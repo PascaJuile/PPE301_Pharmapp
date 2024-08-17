@@ -1,4 +1,3 @@
-{% extends "themes_admin/themes_pharmacien/medicine_list.html" %}
 {% load static %}
 <!DOCTYPE html>
 <html>
@@ -31,7 +30,6 @@
 <body>
 
     <button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
-{% block sidebar %}
      <!-- Start Sidebar -->
 
      <div class="wrapper">
@@ -89,7 +87,7 @@
                         data-parent="#accordionExample">
                         <div class="card-body">
                             <ul>
-                                <li><a href="{% url 'pharamacien_listeMedicament' %}">Ventes de Médicaments</a></li>
+                                <li><a href="{% url 'creer_commande' %}">Creation de commande</a></li>
                                 <li><a href="{% url 'pharmacien_affichage_med' %}">Liste des médicaments</a></li>
                             </ul>
                         </div>
@@ -111,7 +109,7 @@
                         data-parent="#accordionExample">
                         <div class="card-body">
                             <ul>
-                                <li><a href="{% url 'journal_medicaments_selectionnes' %}">Commandes en présentielles</a></li>
+                                <li><a href="{% url 'journal_medicaments_selectionnes' %}">Liste des commandes</a></li>
                                 
                                 <li><a href="{% url 'liste_commandes_virtuelles' %}">Commandes virtuelles</a></li>
                                                          
@@ -125,7 +123,6 @@
 
     <!-- End Sidebar -->
   
-{% endblock sidebar %}
 
     <!-- Start Navbar -->
 
@@ -384,96 +381,5 @@
 <script src="{% static 'themes_admin/js/main.js' %}"></script>
 <script src="{% static 'themes_admin/js/themes.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-<script>
-    function showSelectedMedicines() {
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-        let selectedMedicines = [];
-        checkboxes.forEach(checkbox => {
-            const row = checkbox.closest('tr');
-            const id = checkbox.name.split('_')[1];
-            const nom = row.querySelector('td:nth-child(2)').textContent;
-            const prix = row.querySelector('td:nth-child(3)').textContent;
-            const quantite = row.querySelector('input[type="number"]').value;
-
-            selectedMedicines.push({
-                id: id,
-                nom: nom,
-                prix: prix,
-                quantite: quantite
-            });
-        });
-
-        if (selectedMedicines.length > 0) {
-            let medicinesHtml = selectedMedicines.map(med => `
-                <li class="list-group-item">
-                    ${med.nom} - ${med.prix} - Quantité: ${med.quantite}
-                    <div class="float-right">
-                        <button type="button" class="btn btn-sm btn-warning" onclick="editMedicine('${med.id}', '${med.nom}', '${med.quantite}')">Modifier</button>
-                        <button type="button" class="btn btn-sm btn-danger" onclick="removeMedicine('${med.id}')">Supprimer</button>
-                    </div>
-                </li>
-            `).join('');
-
-            Swal.fire({
-                title: 'Médicaments Sélectionnés',
-                html: `<ul class="list-group">${medicinesHtml}</ul>`,
-                showCancelButton: true,
-                confirmButtonText: 'Envoyer',
-                cancelButtonText: 'Fermer',
-                customClass: {
-                    popup: 'large-swal-popup',  /* Utiliser la classe personnalisée pour agrandir la boîte */
-                    title: 'swal2-title',
-                    htmlContainer: 'swal2-html-container'
-                },
-                preConfirm: () => {
-                    document.getElementById('selectedMedicinesData').value = JSON.stringify(selectedMedicines);
-                    return new Promise((resolve) => {
-                        resolve();
-                    });
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('selectedMedicinesForm').submit();
-                }
-            });
-        } else {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Aucun médicament sélectionné',
-                text: 'Veuillez sélectionner des médicaments pour afficher la liste.'
-            });
-        }
-    }
-
-    function editMedicine(id, nom, quantite) {
-        const newQuantite = prompt(`Modifier la quantité pour ${nom}:`, quantite);
-        if (newQuantite !== null && newQuantite !== "") {
-            document.querySelector(`input[name="quantite_${id}"]`).value = newQuantite;
-            showSelectedMedicines();
-        }
-    }
-
-    function removeMedicine(id) {
-        document.querySelector(`input[name="selection_${id}"]`).checked = false;
-        showSelectedMedicines();
-    }
-
-    function confirmSubmit() {
-        Swal.fire({
-            title: 'Êtes-vous sûr ?',
-            text: "Voulez-vous envoyer les médicaments sélectionnés ?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Oui, envoyer',
-            cancelButtonText: 'Annuler'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('selectedMedicinesForm').submit();
-            }
-        });
-    }
-</script>
 </body>
 </html>

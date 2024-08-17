@@ -1,3 +1,4 @@
+from datetime import datetime
 from decimal import Decimal
 import uuid
 from django.db import models
@@ -43,7 +44,39 @@ class SelectionMedicament(models.Model):
         null=True,
         blank=True  
     )
+    reference_commande = models.CharField(max_length=100, unique=True, blank=True)
 
+    def generate_reference_commande(self):
+        try:
+            # Préfixe de la pharmacie
+            prefix = "PHAR"
+
+            # Date actuelle au format YYYYMMDD
+            date_str = datetime.now().strftime('%Y%m%d')
+            print(f"Date String: {date_str}")  # Debug line
+
+            # Générer un identifiant unique
+            unique_id = SelectionMedicament.objects.count() + 1
+            print(f"Unique ID: {unique_id}")  # Debug line
+
+            # Construction du code unique
+            reference_commande = f"{prefix}{date_str}{unique_id:05d}"
+            print(f"Generated Reference Commande: {reference_commande}")  # Debug line
+
+            return reference_commande
+        except Exception as e:
+            print(f"Error generating reference_commande: {e}")  # Error handling
+            raise e
+
+    def save(self, *args, **kwargs):
+        if not self.reference_commande:
+            print("Generating reference commande...")  # Debug line
+            self.reference_commande = self.generate_reference_commande()
+            print(f"Reference commande generated: {self.reference_commande}")  # Debug line
+        else:
+            print(f"Existing reference commande: {self.reference_commande}")  # Debug line
+
+        super().save(*args, **kwargs)
     
 
     def recuperer_prix_total(self):

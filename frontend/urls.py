@@ -57,12 +57,14 @@ urlpatterns = [
     path('preparateur/show_details/<int:id>/', views.show_details, name='show_details'),
 
     # Paths pour le pharmacien
+    #path('pharmacien/page1', views.pharamacien_listeMedicament, name='page1'),
+    path('pharmacien/creer_commande', views.creer_commande, name='creer_commande'),
+    path('recherche_medicament/', views.recherche_medicament, name='recherche_medicament'),
     path('pharmacien/listeMedicaments', views.pharamacien_listeMedicament, name='pharamacien_listeMedicament'),
     path('pharmacien/list_affichage_medicaments', views.pharmacien_affichage_med, name='pharmacien_affichage_med'),
     path('pharmacien/grid_affichage_medicaments', views.pharmacien_affichage_med_grid, name='pharmacien_affichage_med_grid'),
     path('pharmacien/show_details/<int:id>/', views.pharmacien_show_details, name='pharmacien_show_details'),
     path('pharmacien/listeCommande', views.journal_medicaments_selectionnes, name='journal_medicaments_selectionnes'),
-    path('pharmacien/medicaments_selectionnés', views.medicaments_selectionnés, name='medicaments_selectionnés'),
     path('pharmacien/supprimer_commande/<int:pk>', views.delete_order, name='delete_order'),  
     path('pharmacien/commandeVirtuelle/<int:commande_id>/', views.pharmacien_commandeVirtuelle, name='pharmacien_commandeVirtuelle'),
     path('pharmacien/commandeVirtuelle', views.liste_commandes_virtuelles, name='liste_commandes_virtuelles'),
