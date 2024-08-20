@@ -192,13 +192,26 @@
         </div>
         <div class="card-body">
             <h6 class="mt-2">Liste des Médicaments Sélectionnés</h6>
-            <ul class="list-group">
-                {% for med in selected_medicines %}
-                <li class="list-group-item">
-                    {{ med.nom }} - {{ med.prix }} FCFA - Quantité {{ med.quantite }} - Total: {{ med.total }} FCFA
-                </li>
-                {% endfor %}
-            </ul>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prix</th>
+                        <th>Quantité</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for med in selected_medicines %}
+                    <tr>
+                        <td>{{ med.nom }}</td>
+                        <td>{{ med.prix }} FCFA</td>
+                        <td>{{ med.quantite }}</td>
+                        <td>{{ med.total }} FCFA</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             <p class="mt-2"><strong>Prix Total</strong> {{ selected_total }} FCFA</p>
         </div>
         <div class="card-footer">

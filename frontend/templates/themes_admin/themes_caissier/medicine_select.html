@@ -28,7 +28,7 @@
         margin-top: 25px;
         border-bottom: 2px solid #03BB00;
         padding-bottom: 8px;
-        color: #03BB00;
+        color: #0085B2;
         text-align: center;
     }
 
@@ -42,10 +42,10 @@
     }
 
     .med-table th, .med-table td {
-        padding: 12px;
+        padding: 3px;
         text-align: center;
         border: 1px solid #dee2e6;
-        font-size: 18px;
+        font-size: 15px;
     }
 
     .med-table th {
@@ -189,12 +189,12 @@
     </table>
     <button class="btn btn-main" onclick="toggleDetails('{{ selection.id }}')">Valider la commande</button>
     <div id="details-{{ selection.id }}" class="form-container" style="display: none;">
-        <p>Total: <span id="totalPrice-{{ selection.id }}">0.00</span> €</p>
+        <p>Total: <span id="totalPrice-{{ selection.id }}">0.00</span> FCFA</p>
         <div class="form-group">
             <label for="amountReceived-{{ selection.id }}">Montant Reçu:</label>
             <input type="number" class="form-control" id="amountReceived-{{ selection.id }}" placeholder="Entrez le montant reçu" oninput="calculateChange('{{ selection.id }}')">
         </div>
-        <p>Reliquat: <span id="changeDue-{{ selection.id }}">0.00</span> €</p>
+        <p>Reliquat: <span id="changeDue-{{ selection.id }}">0.00</span> FCFA</p>
         <form method="post" action="{% url 'afficher_medicaments_selectionnes' %}">
             {% csrf_token %}
             <input type="hidden" name="selection_id" value="{{ selection.id }}">
