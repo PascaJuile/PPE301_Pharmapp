@@ -162,6 +162,8 @@
     <input type="hidden" name="medicament_quantite" id="medicamentQuantiteHidden">
     <input type="hidden" name="medicament_prix_total" id="medicamentPrixTotalHidden">
     <input type="hidden" name="ordonnance_id" id="ordonnance_id" value="{{ ordonnance_details.id }}">
+    <input type="hidden" name="prixTotalHidden" id="prixTotalHidden">
+
 </form>
 
 <!-- Div pour afficher les détails de l'ordonnance -->
@@ -391,7 +393,11 @@
             });
         }
         document.getElementById('medicamentNomHidden').value = JSON.stringify(medicaments);
+    
+        // Mise à jour du champ caché avec le total des prix
+        document.getElementById('prixTotalHidden').value = document.getElementById('prixTotalGeneral').textContent;
     }
+    
     
     function recalculerPrixTotalGeneral() {
         let prixTotal = 0;
@@ -403,6 +409,9 @@
             prixTotal += prix;
         }
         document.getElementById('prixTotalGeneral').innerHTML = prixTotal;
+    
+        // Mise à jour du champ caché avec le total des prix
+        document.getElementById('prixTotalHidden').value = prixTotal;
     }
     
 </script>

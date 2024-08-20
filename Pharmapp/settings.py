@@ -90,7 +90,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'pharmapp',
         'USER': 'root',
-        'PASSWORD': '46676997',
+        'PASSWORD': '96741711',
         'HOST': 'localhost',  
         'PORT': '3307',     
     }

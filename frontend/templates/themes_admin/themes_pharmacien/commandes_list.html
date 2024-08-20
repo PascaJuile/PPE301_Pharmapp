@@ -175,7 +175,7 @@
                 <td>{{ selection.reference_commande }}</td>
                 <td>{{ selection.dateCreation }}</td>
                 <td>
-                    
+                   {{ selection.prixTotal }}
                 </td>
                 <td class="table-validation {% if selection.etatDeValidation %}table-validation-valid{% endif %}">
                     {{ selection.etatDeValidation|yesno:"Validé,Non Validé" }}
