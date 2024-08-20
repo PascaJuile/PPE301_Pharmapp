@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from .views import chart_data
 
 urlpatterns = [
     # Paths pour le template client
@@ -31,7 +32,9 @@ urlpatterns = [
 
     # Paths pour le template admin
     path('preparateur/homepage', views.homepage_prepa, name='homepage_prepa'),
+    path('client/homepage', views.homepage_cli, name='homepage_cli'),
     path('pharmacien/homepage', views.homepage_phar, name='homepage_phar'),
+    path('chart-data/', chart_data, name='chart_data'),
     path('caissier/homepage', views.homepage_car, name='homepage_car'),
     path('livreur/homepage', views.homepage_liv, name='homepage_liv'),
     path('page/admin', views.homepage_ges, name='homepage_ges'),

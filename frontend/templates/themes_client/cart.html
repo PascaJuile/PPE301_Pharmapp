@@ -1,4 +1,4 @@
-{% extends "themes_client/index.html" %}
+{% extends "themes_client/homepage_cli.html" %}
 
 {% block content %}
 {% load static %}
@@ -219,11 +219,13 @@
             <button type="button" class="btn btn-secondary mt-3" onclick="dismissRefusedOrdonnance()">OK, j'ai compris</button>
         </div>
     </div>
-    {% endif %}
-    <div class="alert alert-warning" role="alert" id="noOrderMessage" style="display: {% if commande_refusee %}none{% else %}block{% endif %};">
+    {% elif no_current_order %}
+    <div class="alert alert-warning" role="alert" id="noOrderMessage">
         Aucune commande en cours.
     </div>
+    {% endif %}
 </div>
+
 <!-- Payment Modal -->
 <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

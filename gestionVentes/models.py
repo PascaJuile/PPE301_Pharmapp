@@ -1,9 +1,27 @@
 from datetime import datetime
-from decimal import Decimal
-import uuid
 from django.db import models
+from django.db.models import Count
 from gestionStocks.models import Medicament
-from gestionUtilisateurs.models import Caissier,Client,Pharmacien,Livreur
+from gestionUtilisateurs.models import Caissier, Client, Pharmacien, Livreur
+
+
+class SelectionMedicamentManager(models.Manager):
+    def count_by_day(self):
+        return self.filter(
+            dateCreation__date=datetime.now().date()
+        ).values('etatDeValidation').annotate(count=Count('id'))
+
+    def count_by_month(self):
+        return self.filter(
+            dateCreation__month=datetime.now().month,
+            dateCreation__year=datetime.now().year
+        ).values('etatDeValidation').annotate(count=Count('id'))
+
+    def count_by_year(self):
+        return self.filter(
+            dateCreation__year=datetime.now().year
+        ).values('etatDeValidation').annotate(count=Count('id'))
+
 
 class Ordonnance(models.Model):
     image = models.ImageField(upload_to='ordonnance_images/', verbose_name='Photo', blank=False)
@@ -33,6 +51,7 @@ class SelectionMedicament(models.Model):
     donnees = models.JSONField()
     dateCreation = models.DateTimeField(auto_now_add=True)
     etatDeValidation = models.BooleanField(default=False)
+    prixTotal = models.IntegerField()
     pharmacien = models.ForeignKey(
         Pharmacien,
         on_delete=models.CASCADE
@@ -46,42 +65,25 @@ class SelectionMedicament(models.Model):
     )
     reference_commande = models.CharField(max_length=100, unique=True, blank=True)
 
+    objects = SelectionMedicamentManager()
+
     def generate_reference_commande(self):
         try:
-            # Préfixe de la pharmacie
             prefix = "PHAR"
-
-            # Date actuelle au format YYYYMMDD
             date_str = datetime.now().strftime('%Y%m%d')
-            print(f"Date String: {date_str}")  # Debug line
-
-            # Générer un identifiant unique
             unique_id = SelectionMedicament.objects.count() + 1
-            print(f"Unique ID: {unique_id}")  # Debug line
-
-            # Construction du code unique
             reference_commande = f"{prefix}{date_str}{unique_id:05d}"
-            print(f"Generated Reference Commande: {reference_commande}")  # Debug line
-
             return reference_commande
         except Exception as e:
-            print(f"Error generating reference_commande: {e}")  # Error handling
             raise e
 
     def save(self, *args, **kwargs):
         if not self.reference_commande:
-            print("Generating reference commande...")  # Debug line
             self.reference_commande = self.generate_reference_commande()
-            print(f"Reference commande generated: {self.reference_commande}")  # Debug line
-        else:
-            print(f"Existing reference commande: {self.reference_commande}")  # Debug line
-
         super().save(*args, **kwargs)
     
-
     def recuperer_prix_total(self):
         total = 0
-        # Retourner le prix total basé sur la méthode définie dans CommandePresentielle
         commande = CommandePresentielle.objects.filter(selection_medicaments=self).first()
         if commande:
             total = commande.prixTotal
@@ -91,7 +93,7 @@ class SelectionMedicament(models.Model):
         return Livraison.objects.filter(ordonnance=self.ordonnance).exists()
 
 class CommandePresentielle(models.Model):
-    prixTotal= models.IntegerField()
+    prixTotal = models.IntegerField()
     selection_medicaments = models.OneToOneField(SelectionMedicament, on_delete=models.CASCADE)
     caissier = models.ForeignKey(Caissier, on_delete=models.CASCADE)
     date_validation = models.DateTimeField(auto_now_add=True)

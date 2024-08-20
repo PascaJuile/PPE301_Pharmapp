@@ -34,6 +34,11 @@
         padding: 0.75rem 1.5rem; /* Agrandir les boutons */
         font-size: 1rem; /* Agrandir le texte des boutons */
     }
+    .low-stock {
+        background-color: red !important;
+        color: white !important; /* Optional: to make the text more readable */
+    }
+    
 </style>
 
 <body>
@@ -64,16 +69,16 @@
                         </thead>
                         <tbody>
                             {% for medicament in medicaments %}
-                                <tr>
-                                    <th scope="row">{{medicament.id}}</th>
-                                    <td>{{medicament.nomMedicament}}</td>
-                                    <td>{{medicament.code}}</td>
-                                    <td>{{medicament.medicamentCategorie.nomCat}}</td>
-                                    <td>{{medicament.prixUnitaire}}</td>
-                                    <td>{{medicament.dateExpiration}}</td>
+                                <tr class="{% if medicament.stock <= 5 %}low-stock{% endif %}">
+                                    <th scope="row">{{ medicament.id }}</th>
+                                    <td>{{ medicament.nomMedicament }}</td>
+                                    <td>{{ medicament.code }}</td>
+                                    <td>{{ medicament.medicamentCategorie.nomCat }}</td>
+                                    <td>{{ medicament.prixUnitaire }}</td>
+                                    <td>{{ medicament.dateExpiration }}</td>
                                     <td>
                                         {% if medicament.image and medicament.image.url %}
-                                            <img src="{{ medicament.image.url }}" class="medicine-img" alt="{{ medicament.nomMedicament}}">
+                                            <img src="{{ medicament.image.url }}" class="medicine-img" alt="{{ medicament.nomMedicament }}">
                                         {% else %}
                                             Image non disponible
                                         {% endif %}
@@ -87,7 +92,7 @@
                                     </td>
                                 </tr>
                             {% endfor %}
-                        </tbody>
+                        </tbody>                       
                     </table>
                 </div>
             </div>

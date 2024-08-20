@@ -20,6 +20,7 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib import messages
 from django.views.decorators.http import require_POST
+from django.db.models import Count, Sum
 
 
 
@@ -132,6 +133,8 @@ def cart(request):
     # Initialiser les variables
     selected_medicines = []
     selected_total = 0
+    accepted_order = None
+    refused_order = None
 
     if last_ordonnance:
         # Filtrer les commandes virtuelles basées sur la dernière ordonnance
@@ -165,15 +168,19 @@ def cart(request):
                     except Medicament.DoesNotExist:
                         continue  # Ignore les médicaments non trouvés
 
+    # Flag for no current order
+    no_current_order = not accepted_order and not refused_order
+
     context = {
         'commande_acceptee': accepted_order is not None,
         'selected_medicines': selected_medicines,
         'selected_total': selected_total,
         'commande_refusee': refused_order is not None,
         'refused_order': refused_order,
+        'no_current_order': no_current_order,
     }
     
-    return render(request, 'themes_client/cart.html', context)    
+    return render(request, 'themes_client/cart.html', context)
 
 def checkout(request):
     return render(request, 'themes_client/checkout.html')
@@ -256,8 +263,52 @@ def inscription_client(request):
 def homepage_prepa(request):
     return render(request, 'themes_admin/homepage_prepa.html')
 
+def homepage_cli(request):
+    return render(request, 'themes_client/homepage_cli.html')
+
+
+def chart_data(request):
+    now = timezone.now()  # Utiliser timezone pour obtenir la date et l'heure actuelles
+    today = now.date()
+
+    # Exemple de récupération de données journalières
+    daily_data = SelectionMedicament.objects.filter(dateCreation__date=today).values('etatDeValidation').annotate(count=Count('id'))
+
+    validated = daily_data.filter(etatDeValidation=True).aggregate(total=Sum('count'))['total'] or 0
+    not_validated = daily_data.filter(etatDeValidation=False).aggregate(total=Sum('count'))['total'] or 0
+
+    # Exemple de récupération de données mensuelles
+    start_of_month = today.replace(day=1)
+    monthly_data = SelectionMedicament.objects.filter(dateCreation__date__gte=start_of_month).values('etatDeValidation').annotate(count=Count('id'))
+
+    monthly_validated = monthly_data.filter(etatDeValidation=True).aggregate(total=Sum('count'))['total'] or 0
+    monthly_not_validated = monthly_data.filter(etatDeValidation=False).aggregate(total=Sum('count'))['total'] or 0
+
+    # Préparation des données pour le graphique
+    data = {
+        'daily': {
+            'labels': ['Validé', 'Non Validé'],
+            'data': [validated, not_validated],
+        },
+        'monthly': {
+            'labels': ['Validé', 'Non Validé'],
+            'data': [monthly_validated, monthly_not_validated],
+        },
+    }
+
+    return JsonResponse(data)
+
 def homepage_phar(request):
-    return render(request, 'themes_admin/themes_pharmacien/homepage_phar.html')
+    daily_data = SelectionMedicament.objects.count_by_day()
+    monthly_data = SelectionMedicament.objects.count_by_month()
+    yearly_data = SelectionMedicament.objects.count_by_year()
+
+    context = {
+        'daily_data': daily_data,
+        'monthly_data': monthly_data,
+        'yearly_data': yearly_data,
+    }
+    return render(request, 'themes_admin/themes_pharmacien/homepage_phar.html', context)
 
 def homepage_car(request):
     return render(request, 'themes_admin/themes_caissier/homepage_car.html')
@@ -464,7 +515,7 @@ def page_connexion(request):
                         elif isinstance(user, PreparateurEnPharmacie):
                             return redirect('homepage_prepa')
                         else:
-                            return redirect('liste_medicaments_client')
+                            return redirect('homepage_cli')
                     else:
                         form.add_error(None, "Email ou mot de passe incorrect.")
                         break
@@ -629,7 +680,7 @@ def show_details(request, id):
 
 def liste_medicaments_client(request):
     # Récupérer tous les médicaments avec leurs catégories associées
-    medicaments = Medicament.objects.all()
+    medicaments = Medicament.objects.filter(stock__gt=0)
     categories = Categorie.objects.all()
 
     return render(request, 'themes_client/index.html', {'medicaments': medicaments, 'categories': categories})
@@ -661,20 +712,21 @@ def creer_commande(request):
         messages.error(request, 'Utilisateur non authentifié.')
         return redirect('page_connexion')
 
-    ordonnance_details = None 
+    ordonnance_details = None
     ordonnance_details = request.session.pop('ordonnance_details', None)
-    
+
     if request.method == 'POST':
         statut_commande = request.POST.get('statutCommandeHidden')
         medicaments = request.POST.get('medicaments', '[]')
         ordonnance_id = request.POST.get('ordonnance_id', None)
+        prix_total = request.POST.get('prixTotalHidden', 0)
 
         if ordonnance_id:   
             ordonnance_details = get_object_or_404(Ordonnance, id=ordonnance_id)
 
         try:
             medicaments_data = json.loads(medicaments)
-            total_price = sum(int(med['prix_total']) for med in medicaments_data)
+            print(f"Medicaments Data: {medicaments_data}")
             
             # Gestion du stock
             for med in medicaments_data:
@@ -686,20 +738,23 @@ def creer_commande(request):
                     messages.error(request, f"Stock insuffisant pour le médicament {med['nom']}.")
                     return redirect('journal_medicaments_selectionnes')
 
-            # Créer la commande avec l'ordonnance et le statut correctement associés
+            # Créer la commande avec l'ordonnance, statut, et prix total correctement associés
             selection_medicament = SelectionMedicament.objects.create(
                 etatOrdonnance=True,
                 statut=statut_commande,
                 donnees=medicaments_data,
                 ordonnance=ordonnance_details,
-                pharmacien=pharmacien
+                pharmacien=pharmacien,
+                prixTotal=int(prix_total)  
             )
+            print(f"Selection Medicament Created: {selection_medicament}")
+
             selection_medicament.save()
-            
+
             # Stocker le prix total dans la session
             if 'commandes_totals' not in request.session:
                 request.session['commandes_totals'] = {}
-            request.session['commandes_totals'][str(selection_medicament.id)] = total_price
+            request.session['commandes_totals'][str(selection_medicament.id)] = prix_total
             request.session.modified = True
             request.session['ordonnance_id'] = ordonnance_id
             
@@ -707,7 +762,8 @@ def creer_commande(request):
             return redirect('journal_medicaments_selectionnes')
         
         except Exception as e:
-            # Handle errors
+            # Log the error for debugging
+            print(f"Erreur lors de la création de la commande: {e}")
             messages.error(request, f"Erreur lors de la création de la commande: {str(e)}")
             return redirect('journal_medicaments_selectionnes')
     
@@ -718,7 +774,7 @@ def recherche_medicament(request):
     if query:
         # Rechercher les médicaments par nom ou code qui contiennent la chaîne de requête
         medicaments = Medicament.objects.filter(
-            Q(nomMedicament__icontains=query) | Q(code__icontains=query)
+            (Q(nomMedicament__icontains=query) | Q(code__icontains=query)) & Q(stock__gt=0)
         )
         # Format des données à retourner au format JSON
         medicament_data = [
