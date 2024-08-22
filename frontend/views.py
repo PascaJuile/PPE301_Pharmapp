@@ -21,6 +21,8 @@ from channels.layers import get_channel_layer
 from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.db.models import Count, Sum
+from django.db.models.functions import TruncMonth
+
 
 
 
@@ -261,30 +263,84 @@ def inscription_client(request):
 
 
 def homepage_prepa(request):
-    return render(request, 'themes_admin/homepage_prepa.html')
+    user_email = request.session.get('user_email')
+    
+    if user_email:
+        try:
+            preparateur = PreparateurEnPharmacie.objects.get(emailUtilisateur=user_email)
+        except PreparateurEnPharmacie.DoesNotExist:
+            # Redirigez ou affichez un message d'erreur si l'utilisateur n'est pas un préparateur en pharmacie
+            return redirect('inscription')
+
+    # Total medications created
+    total_medicaments = Medicament.objects.filter(medicamentPreparateur=preparateur).count()
+
+    # Medications by category
+    categories = Categorie.objects.all()
+    medicaments_by_category = {category.nomCat: Medicament.objects.filter(medicamentCategorie=category, medicamentPreparateur=preparateur).count() for category in categories}
+
+    # Expired medications
+    expired_medicaments = Medicament.objects.filter(medicamentPreparateur=preparateur, dateExpiration__lte=timezone.now()).count()
+
+    # Number of modifications (assuming modifications are tracked, e.g., via a `modified_at` field)
+    medicament_modifications = Medicament.objects.filter(medicamentPreparateur=preparateur, stock__lte=5).count() or 0 # If you track modifications, this needs to be updated accordingly
+
+    context = {
+        'total_medicaments': total_medicaments,
+        'medicaments_by_category': medicaments_by_category,
+        'expired_medicaments': expired_medicaments,
+        'medicament_modifications': medicament_modifications,
+    }
+    return render(request, 'themes_admin/homepage_prepa.html', context)
 
 def homepage_cli(request):
     return render(request, 'themes_client/homepage_cli.html')
 
 
 def chart_data(request):
-    now = timezone.now()  # Utiliser timezone pour obtenir la date et l'heure actuelles
+    now = timezone.now()
     today = now.date()
 
-    # Exemple de récupération de données journalières
+    # Données journalières
     daily_data = SelectionMedicament.objects.filter(dateCreation__date=today).values('etatDeValidation').annotate(count=Count('id'))
 
     validated = daily_data.filter(etatDeValidation=True).aggregate(total=Sum('count'))['total'] or 0
     not_validated = daily_data.filter(etatDeValidation=False).aggregate(total=Sum('count'))['total'] or 0
 
-    # Exemple de récupération de données mensuelles
+    # Données mensuelles
     start_of_month = today.replace(day=1)
     monthly_data = SelectionMedicament.objects.filter(dateCreation__date__gte=start_of_month).values('etatDeValidation').annotate(count=Count('id'))
 
     monthly_validated = monthly_data.filter(etatDeValidation=True).aggregate(total=Sum('count'))['total'] or 0
     monthly_not_validated = monthly_data.filter(etatDeValidation=False).aggregate(total=Sum('count'))['total'] or 0
 
-    # Préparation des données pour le graphique
+    # Total des Commandes Validées
+    total_validated = CommandePresentielle.objects.count()
+
+    # Commandes par Mois
+    monthly_orders = CommandePresentielle.objects.annotate(
+        month=TruncMonth('date_validation')
+    ).values('month').annotate(
+        count=Count('id')
+    ).order_by('month')
+
+    monthly_labels = [entry['month'].strftime('%b %Y') for entry in monthly_orders]
+    monthly_data_orders = [entry['count'] for entry in monthly_orders]
+
+    # Total des Paiements Traités
+    total_payments = CommandePresentielle.objects.aggregate(
+        total=Sum('prixTotal')
+    )['total'] or 0
+
+    # Commandes Refusées (ici, nous comptons simplement les commandes qui ne sont pas validées)
+    rejected_count = CommandePresentielle.objects.filter(
+        selection_medicaments__etatDeValidation=False
+    ).count()
+
+    rejected_labels = ['Refusées']
+    rejected_data = [rejected_count]
+
+    # Préparation des données pour les graphiques
     data = {
         'daily': {
             'labels': ['Validé', 'Non Validé'],
@@ -294,6 +350,16 @@ def chart_data(request):
             'labels': ['Validé', 'Non Validé'],
             'data': [monthly_validated, monthly_not_validated],
         },
+        'total_validated': total_validated,
+        'monthly_orders': {
+            'labels': monthly_labels,
+            'data': monthly_data_orders
+        },
+        'total_payments': total_payments,
+        'rejected_orders': {
+            'labels': rejected_labels,
+            'data': rejected_data
+        }
     }
 
     return JsonResponse(data)
@@ -303,14 +369,44 @@ def homepage_phar(request):
     monthly_data = SelectionMedicament.objects.count_by_month()
     yearly_data = SelectionMedicament.objects.count_by_year()
 
+    # Total des Commandes Créées
+    total_commandes_creees = SelectionMedicament.objects.count()
+
+    # Commandes Validées
+    commandes_validees = CommandePresentielle.objects.count()
+
+    # Commandes Virtuelles vs Présentielles
+    commandes_virtuelles = SelectionMedicament.objects.filter(statut='virtuelle').count()
+    commandes_presentielles = SelectionMedicament.objects.filter(statut='presentiel').count()
+
+    # Délai Moyen de Validation
+    total_délai = timezone.timedelta()
+    validees = CommandePresentielle.objects.all()
+
+    for commande in validees:
+        délai = commande.date_validation - commande.selection_medicaments.dateCreation
+        total_délai += délai
+
+    if validees.count() > 0:
+        délai_moyen_validation = total_délai / validees.count()
+    else:
+        délai_moyen_validation = timezone.timedelta()
+
     context = {
         'daily_data': daily_data,
         'monthly_data': monthly_data,
         'yearly_data': yearly_data,
+        'total_commandes_creees': total_commandes_creees,
+        'commandes_validees': commandes_validees,
+        'commandes_virtuelles': commandes_virtuelles,
+        'commandes_presentielles': commandes_presentielles,
+        'délai_moyen_validation': délai_moyen_validation,
     }
     return render(request, 'themes_admin/themes_pharmacien/homepage_phar.html', context)
 
+
 def homepage_car(request):
+
     return render(request, 'themes_admin/themes_caissier/homepage_car.html')
 
 def homepage_liv(request):

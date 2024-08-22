@@ -241,109 +241,268 @@
     <!-- End Navbar -->
 
     <!-- Start Body -->
-{% block content %}
-<style>
-    body, html {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        font-family: 'Arial', sans-serif;
-        background-color: #f4f4f9;
-    }
-
-    .background {
-        background-image: url('{% static "themes_admin/img/phar.jpg" %}');
-        background-size: cover;
-        background-position: center;
-        width: 100%;
-        height: 100vh; /* Full viewport height */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-    }
-
-    .centered-text {
-        color: white;
-        font-size: 64px;
-        font-weight: bold;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        text-align: center;
-        margin: 0;
-    }
-
-    .content-container {
-        max-width: 800px;
-        padding: 20px;
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        margin: 40px auto;
-        text-align: center;
-        animation: fadeIn 1.5s ease-in-out;
-    }
-
-    .title {
-        font-size: 36px;
-        color: #333;
-        margin-bottom: 20px;
-    }
-
-    .description {
-        font-size: 18px;
-        color: #666;
-        line-height: 1.6;
-        text-align: justify;
-        margin-bottom: 20px;
-    }
-
-    .description strong {
-        color: #333;
-    }
-
-    .cta-button {
-        display: inline-block;
-        padding: 10px 20px;
-        font-size: 18px;
-        color: #fff;
-        background-color: #03BB00;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease-in-out;
-        text-decoration: none;
-    }
-
-    .cta-button:hover {
-        background-color: #028a07;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
+    {% block content %}
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
         }
-        to {
-            opacity: 1;
-            transform: translateY(0);
+    
+        .content-container {
+            max-width: 1200px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            margin: 40px auto;
+            text-align: center;
+            animation: fadeIn 1.5s ease-in-out;
         }
-    }
-</style>
-
-<div class="background">
-    <div class="centered-text">Bienvenue caissier(ère) <br>de la pharmacie PharmApp</div>
-</div>
-
-<div class="content-container">
-    <h2 class="title">Bienvenue à PharmApp</h2>
-    <p class="description">
-        Découvrez notre large gamme de médicaments et profitez de nos services de santé en ligne. Chez <strong>PharmApp</strong>, nous nous engageons à vous fournir les meilleurs produits et conseils pour votre bien-être.
-    </p>
-</div>
-
-{% endblock content %}
-
+    
+        .title {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+    
+        .description {
+            font-size: 18px;
+            color: #666;
+            line-height: 1.6;
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+    
+        .description strong {
+            color: #333;
+        }
+    
+        .chart-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+    
+        .chart-container {
+            width: 100%;
+            max-width: 400px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+    
+        .chart-title {
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+            margin-top: 10px;
+        }
+    
+        @media (max-width: 768px) {
+            .chart-container {
+                width: 100%;
+                height: 250px;
+            }
+        }
+    
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    
+    <div class="content-container">
+        <h2 class="title">Statistiques des Commandes</h2>
+        <p class="description">
+            Voici les statistiques récentes sur les commandes traitées dans notre système. Ces données vous permettront de suivre les performances et les tendances.
+        </p>
+    
+        <div class="chart-row">
+            <div class="chart-container">
+                <canvas id="validatedOrdersChart"></canvas>
+                <div class="chart-title">Commandes Validées</div>
+            </div>
+    
+            <div class="chart-container">
+                <canvas id="monthlyOrdersChart"></canvas>
+                <div class="chart-title">Commandes par Mois</div>
+            </div>
+    
+            <div class="chart-container">
+                <canvas id="paymentsChart"></canvas>
+                <div class="chart-title">Total des Paiements Traités</div>
+            </div>
+    
+            <div class="chart-container">
+                <canvas id="rejectedOrdersChart"></canvas>
+                <div class="chart-title">Commandes Refusées</div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        async function fetchChartData() {
+            try {
+                const response = await fetch("{% url 'chart_data' %}");
+                const data = await response.json();
+    
+                // Data for validated orders chart
+                const validatedOrdersData = {
+                    labels: ['Total Validé'],
+                    datasets: [{
+                        label: 'Commandes Validées',
+                        data: [data.total_validated],
+                        backgroundColor: ['#4CAF50'],
+                        borderColor: ['#388E3C'],
+                        borderWidth: 1
+                    }]
+                };
+    
+                // Data for monthly orders chart (Bar Chart)
+                const monthlyOrdersData = {
+                    labels: data.monthly_orders.labels,
+                    datasets: [{
+                        label: 'Commandes par Mois',
+                        data: data.monthly_orders.data,
+                        backgroundColor: '#03BB00',
+                        borderColor: '#028a07',
+                        borderWidth: 1
+                    }]
+                };
+    
+                // Data for payments chart (Bar Chart)
+                const paymentsData = {
+                    labels: ['Total Paiements'],
+                    datasets: [{
+                        label: 'Total des Paiements Traités',
+                        data: [data.total_payments],
+                        backgroundColor: '#FF9800',
+                        borderColor: '#F57C00',
+                        borderWidth: 1
+                    }]
+                };
+    
+                // Data for rejected orders chart (Pie Chart)
+                const rejectedOrdersData = {
+                    labels: data.rejected_orders.labels,
+                    datasets: [{
+                        label: 'Commandes Refusées',
+                        data: data.rejected_orders.data,
+                        backgroundColor: ['#F44336', '#FFC107'],
+                        borderColor: ['#D32F2F', '#FFA000'],
+                        borderWidth: 1
+                    }]
+                };
+    
+                // Create the charts
+                new Chart(document.getElementById('validatedOrdersChart'), {
+                    type: 'doughnut',
+                    data: validatedOrdersData,
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Nombre de Commandes Validées'
+                            }
+                        }
+                    }
+                });
+    
+                new Chart(document.getElementById('monthlyOrdersChart'), {
+                    type: 'bar',
+                    data: monthlyOrdersData,
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Commandes par Mois'
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true
+                            },
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+    
+                new Chart(document.getElementById('paymentsChart'), {
+                    type: 'bar',
+                    data: paymentsData,
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Total des Paiements Traités'
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true
+                            },
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+    
+                new Chart(document.getElementById('rejectedOrdersChart'), {
+                    type: 'pie',
+                    data: rejectedOrdersData,
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Commandes Refusées'
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Erreur de récupération des données:', error);
+            }
+        }
+    
+        fetchChartData();
+    </script>
+    
+    {% endblock content %}
+        
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
