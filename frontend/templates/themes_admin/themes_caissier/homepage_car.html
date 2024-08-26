@@ -265,8 +265,9 @@
     
         .title {
             font-size: 36px;
-            color: #333;
+            color: #03BB00;
             margin-bottom: 20px;
+            font-weight: bold;
         }
     
         .description {
@@ -300,7 +301,7 @@
         }
     
         .chart-title {
-            font-size: 18px;
+            font-size: 20px;
             color: #333;
             text-align: center;
             margin-top: 10px;
@@ -323,17 +324,34 @@
                 transform: translateY(0);
             }
         }
+        .chart-container {
+            margin: 40px; /* Ajoute de l'espace autour de chaque conteneur */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .chart-container:hover {
+            transform: scale(1.08); /* Agrandir légèrement le conteneur */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Ajouter une ombre */
+        }
+        .description{
+            text-align: center;
+            font-size: 20px;
+        }
+        .chart.title{
+            text-align: center;
+        }
     </style>
     
     <div class="content-container">
         <h2 class="title">Statistiques des Commandes</h2>
         <p class="description">
-            Voici les statistiques récentes sur les commandes traitées dans notre système. Ces données vous permettront de suivre les performances et les tendances.
+            Voici les statistiques récentes sur les commandes traitées dans notre système.
         </p>
     
         <div class="chart-row">
             <div class="chart-container">
                 <canvas id="validatedOrdersChart"></canvas>
+                <br>
                 <div class="chart-title">Commandes Validées</div>
             </div>
     
@@ -349,6 +367,7 @@
     
             <div class="chart-container">
                 <canvas id="rejectedOrdersChart"></canvas>
+                <br>
                 <div class="chart-title">Commandes Refusées</div>
             </div>
         </div>

@@ -297,6 +297,10 @@
         
         .stat-box h3 {
             margin-bottom: 15px;
+            font-size: 20px;
+        }
+        .stat-box p {
+            font-size: 20px;
         }
         
         .chart-row {
@@ -305,20 +309,69 @@
             gap: 20px;
             justify-content: center;
         }
+
+        /* Styles existants */
+
+        .stat-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            min-width: 250px;
+            color: #fff;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            justify-content: center;
+        }
+        
+        .stat-box:hover {
+            transform: scale(1.05); /* Agrandissement au survol */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Ombre plus marquée */
+        }
+        
+
+        /* Couleurs spécifiques pour chaque stat-box */
+        .stat-box.total-commandes {
+            background-color: #4e73df; /* Bleu */
+        }
+
+        .stat-box.commandes-validees {
+            background-color: #1cc88a; /* Vert */
+        }
+
+        .stat-box.commandes-virtuelles-presentielles {
+            background-color: #f6c23e; /* Jaune */
+        }
+
+        .stat-box.delai-validation {
+            background-color: #e74a3b; /* Rouge */
+        }
+
         
         .chart-container {
-            width: 100%;
-            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 400px;
             height: 300px;
             background: rgba(255, 255, 255, 0.8);
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            padding: 10px;
+            padding: 30px;
             margin-bottom: 20px;
+            margin: 50px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animation for hover */
+        }
+        .chart-container:hover {
+            transform: scale(1.05); /* Slightly enlarge the div on hover */
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.2); /* Darken the shadow on hover */
         }
         
+        
         .chart-title {
-            font-size: 18px;
+            font-size: 20px;
             color: #333;
             text-align: center;
             margin-top: 10px;
@@ -339,39 +392,50 @@
             height: 300px; /* Ajustez la hauteur selon vos besoins */
             width: 100%;
             position: relative;
-        
+
+        .center-card {
+            display: flex;
+            justify-content: center;
+        }
+        .h5{
+            text-align: center;
+        } 
+        .stat-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
     </style>
     
     <div class="container">
         <div class="stats-container">
-            <div class="stat-box">
+            <div class="stat-box total-commandes">
                 <h3>Total des Commandes Créées</h3>
                 <p>{{ total_commandes_creees }}</p>
             </div>
-
-            <div class="stat-box">
+    
+            <div class="stat-box commandes-validees">
                 <h3>Commandes Validées</h3>
                 <p>{{ commandes_validees }}</p>
             </div>
             
-            <div class="stat-box">
+            <div class="stat-box commandes-virtuelles-presentielles">
                 <h3>Commandes Virtuelles vs Présentielles</h3>
                 <p>Virtuelles: {{ commandes_virtuelles }}</p>
                 <p>Présentielles: {{ commandes_presentielles }}</p>
             </div>
-
-            <div class="stat-box">
+    
+            <div class="stat-box delai-validation">
                 <h3>Délai Moyen de Validation</h3>
-                <p>
-                    
-                </p>
+                <p>{{ delai_moyen_validation }}</p>
             </div>
         </div>
     </div>
+    <br>
+    <br>
 
     <!-- Chart and Widgets Row -->
 
-    <div class="row">
+    <div class="row d-flex justify-content-center">
         <div class="col-lg-8">
             <div class="card">
                 <div class="card-body">
@@ -383,6 +447,9 @@
             </div>
         </div>                      
     </div>
+    <br>
+    <br>
+    
 
     <div class="chart-row">
         
