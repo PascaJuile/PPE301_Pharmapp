@@ -154,21 +154,20 @@
 <script>
     function openConfirmationModal(mode_paiement) {
         var total_price = "{{ selected_total }}";
+        var delivery_fees = "{{ delivery_fees }}";  // Récupérer les frais de livraison
+        var final_total = parseFloat(total_price) + parseFloat(delivery_fees);  // Ajouter les frais de livraison au prix total
         var ordonnance_id = "{{ ordonnance_id }}";
-        var confirmationMessage = "Vous avez choisi de payer avec " + mode_paiement + ". Le montant total à payer est de " + total_price + " FCFA.";
+        var confirmationMessage = "Vous avez choisi de payer avec " + mode_paiement + ". Le montant total à payer est de " + final_total + " FCFA.";
         document.getElementById('confirmationMessage').textContent = confirmationMessage;
         document.getElementById('mode_paiement').value = mode_paiement;
         $('#paymentModal').modal('hide');
         $('#confirmationModal').modal('show');
     }
-
+    
+    
     function dismissRefusedOrdonnance() {
         document.getElementById('refusedOrdonnance').style.display = 'none';
         document.getElementById('noOrderMessage').style.display = 'block';
-    }
-
-    function startPaymentTimer() {
-        setTimeout(disablePaymentButton, 60000); // 60000ms = 1 minute
     }
 
     $(document).ready(function() {
@@ -177,8 +176,6 @@
                 alert("{{ message }}");
             {% endfor %}
         {% endif %}
-        // Lancer le compte à rebours lorsque la page est prête
-        startPaymentTimer();
     });
 </script>
 
@@ -213,9 +210,11 @@
                 </tbody>
             </table>
             <p class="mt-2"><strong>Prix Total</strong> {{ selected_total }} FCFA</p>
+            <p class="mt-2"><strong>Frais de Livraison</strong> {{ delivery_fees }} FCFA</p>
+            <p class="mt-2"><strong>Total Final</strong> {{ final_total }} FCFA</p>
         </div>
         <div class="card-footer">
-            <button type="button" id="paymentButton" class="btn btn-primary" data-toggle="modal" data-target="#paymentModal">Payer la commande</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#paymentModal">Payer la commande</button>
         </div>
     </div>
     {% elif commande_refusee %}

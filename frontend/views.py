@@ -128,6 +128,16 @@ def cart(request):
     else:
         messages.error(request, 'Utilisateur non authentifié.')
         return redirect('page_connexion')
+    
+    # Vérifier si le paiement est terminé
+    payment_completed = request.GET.get('payment_completed', False)
+
+    if payment_completed:
+        # Effacer les données de la session après le paiement
+        request.session.pop('delivery_fees', None)
+        # Ajouter un message de succès
+        messages.success(request, 'Paiement réussi. Aucune commande en cours.')
+        return render(request, 'themes_client/cart.html', {'no_current_order': True})
 
     # Récupérer la dernière ordonnance associée au client
     last_ordonnance = Ordonnance.objects.filter(ordonnance_client=client).order_by('-id').first()
@@ -137,6 +147,7 @@ def cart(request):
     selected_total = 0
     accepted_order = None
     refused_order = None
+    no_current_order = True  # Affichage par défaut "Aucune commande en cours"
 
     if last_ordonnance:
         # Filtrer les commandes virtuelles basées sur la dernière ordonnance
@@ -144,21 +155,21 @@ def cart(request):
             ordonnance=last_ordonnance,
             etat_validation=True
         ).order_by('-date_commande').first()
-        
+
         refused_order = CommandeVirtuelle.objects.filter(
             ordonnance=last_ordonnance,
             etat_validation=False
         ).order_by('-date_commande').first()
 
         if accepted_order:
+            no_current_order = False  # Une commande acceptée est trouvée
             for selection in accepted_order.ordonnance.selections.filter(statut='virtuelle', etatOrdonnance=True):
-                # Extraire les données du JSONField (supposé être une liste)
                 for item in selection.donnees:
-                    med_id = item.get('id')
+                    med_name = item.get('nom')
                     quantity = item.get('quantite', 1)
-                    
+
                     try:
-                        medicament = Medicament.objects.get(id=med_id)
+                        medicament = Medicament.objects.get(nomMedicament=med_name)
                         total = medicament.prixUnitaire * quantity
                         selected_medicines.append({
                             'nom': medicament.nomMedicament,
@@ -168,15 +179,22 @@ def cart(request):
                         })
                         selected_total += total
                     except Medicament.DoesNotExist:
+                        print(f"Médicament non trouvé pour le nom: {med_name}")
                         continue  # Ignore les médicaments non trouvés
 
-    # Flag for no current order
-    no_current_order = not accepted_order and not refused_order
+        elif refused_order:
+            no_current_order = False  # Une commande refusée est trouvée
+
+    # Ajouter les frais de livraison au total si présents dans la session
+    delivery_fees = request.session.get('delivery_fees', 0)
+    final_total = selected_total + delivery_fees
 
     context = {
         'commande_acceptee': accepted_order is not None,
         'selected_medicines': selected_medicines,
         'selected_total': selected_total,
+        'final_total': final_total,
+        'delivery_fees': delivery_fees,
         'commande_refusee': refused_order is not None,
         'refused_order': refused_order,
         'no_current_order': no_current_order,
@@ -225,6 +243,11 @@ def commande_client(request):
     
     if request.method == 'POST':
         form = CommandeVirtuelleForm(request.POST, request.FILES)
+        delivery_fees = request.POST.get('delivery_fees')
+
+        if delivery_fees:
+            request.session['delivery_fees'] = int(delivery_fees)
+
         if form.is_valid():
             # Créez une nouvelle ordonnance d'abord
             ordonnance = Ordonnance(
@@ -237,6 +260,10 @@ def commande_client(request):
             formulaire_commande = form.save(commit=False)
             formulaire_commande.ordonnance = ordonnance
             formulaire_commande.geolocalisation = form.cleaned_data['geolocalisation']  # Sauvegarder la géolocalisation
+            # Assignez les frais de livraison
+            if delivery_fees:
+                formulaire_commande.frais_livraison = int(delivery_fees)
+            
             formulaire_commande.save()
             
             return redirect('thankyou')  # Redirige vers une page de confirmation ou autre
@@ -413,7 +440,22 @@ def homepage_liv(request):
     return render(request, 'themes_admin/themes_livreur/homepage_liv.html')
 
 def homepage_ges(request):
-    return render(request, 'themes_admin/themes_gestionnaire/homepage_ges.html')
+    user_roles_data = {
+    'Gestionnaire': 10,
+    'Pharmacien': 5,
+    'Caissier': 15,
+    'Livreur': 7,
+    'Client': 83
+    }
+
+    monthly_sales_data = [120, 150, 180, 220, 170, 130, 140, 190, 210, 230, 200, 250]
+    
+    context = {
+        'user_roles_data': user_roles_data,
+        'monthly_sales_data': monthly_sales_data,
+    }
+
+    return render(request, 'themes_admin/themes_gestionnaire/homepage_ges.html', context)
 
 
 
@@ -912,11 +954,6 @@ def payement_commande(request):
         password = request.POST.get('password')
         ordonnance_id = request.POST.get('ordonnance_id')  # Récupérer l'ID de l'ordonnance à partir du formulaire POST
 
-        # Debugging: Check received POST data
-        print(f"Mode de paiement: {mode_paiement}")
-        print(f"Mot de passe: {password}")
-        print(f"Ordonnance ID: {ordonnance_id}")
-
         if ordonnance_id:
             try:
                 commande = get_object_or_404(CommandeVirtuelle, ordonnance_id=ordonnance_id)
@@ -932,6 +969,7 @@ def payement_commande(request):
                 request.session.pop('selected_medicines', None)
                 request.session.pop('selected_total', None)
                 request.session.pop('ordonnance_id', None)
+                request.session.pop('delivery_fees', None)
                 
                 # Ajouter un message de succès
                 messages.success(request, 'Votre paiement a été traité avec succès. Merci pour votre commande!')
@@ -941,7 +979,7 @@ def payement_commande(request):
                 messages.error(request, 'Une erreur est survenue lors du traitement de votre paiement.')
 
             # Rediriger vers la page du panier (ou une autre page appropriée)
-            return redirect('details_livraison_client')
+            return redirect(reverse('cart') + '?payment_completed=True')
         
     return render(request, "themes_client/cart.html")
                 
@@ -1003,13 +1041,31 @@ def afficher_medicaments_selectionnes(request):
 
         messages.success(request, 'Commande validée avec succès.')
 
+
     # Filtrer les commandes virtuelles avec etatOrdonnance=True et etatDeValidation=False
     virtual_orders = SelectionMedicament.objects.filter(
         etatOrdonnance=True,
-        etatDeValidation=False
+        etatDeValidation=False,
     ).exclude(
         statut='presentiel'
     ).order_by('-dateCreation')
+
+
+    # Ajouter frais_livraison et calculer le prix total pour chaque commande
+    virtual_orders_with_fees = []
+    for order in virtual_orders:
+        commande_virtuelle = CommandeVirtuelle.objects.filter(ordonnance=order.ordonnance).last()
+        frais_livraison = commande_virtuelle.frais_livraison if commande_virtuelle else 0
+
+        # Calculer le prix total des médicaments
+        total_medicament_price = sum(item['prix_total'] for item in order.donnees)
+        total_price = total_medicament_price + frais_livraison
+
+        virtual_orders_with_fees.append({
+            'selection': order,
+            'frais_livraison': frais_livraison,
+            'total_price': total_price
+        })
 
     presencial_orders = SelectionMedicament.objects.filter(
             etatDeValidation=False,
@@ -1017,7 +1073,7 @@ def afficher_medicaments_selectionnes(request):
         ).order_by('-id')
 
     context = {
-        'virtual_orders': virtual_orders,
+        'virtual_orders_with_fees': virtual_orders_with_fees,
         'presencial_orders': presencial_orders
     }
     

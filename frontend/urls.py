@@ -98,6 +98,7 @@ urlpatterns = [
 
 
 
+
 ]
 
 # Configuration pour servir les fichiers statiques et médias en développement

@@ -278,98 +278,215 @@
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f9;
         }
-    
-        .background {
-            background-image: url('{% static "themes_admin/img/phar.jpg" %}');
-            background-size: cover;
-            background-position: center;
-            width: 100%;
-            height: 100vh; /* Full viewport height */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-    
-        .centered-text {
-            color: white;
-            font-size: 64px;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            text-align: center;
-            margin: 0;
-        }
-    
-        .content-container {
-            max-width: 800px;
+        
+        .dashboard {
             padding: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            margin: 40px auto;
-            text-align: center;
-            animation: fadeIn 1.5s ease-in-out;
         }
-    
-        .title {
+        
+        .dashboard .card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard .card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .card .number {
             font-size: 36px;
-            color: #333;
-            margin-bottom: 20px;
+            font-weight: bold;
+            color: #007bff;
         }
-    
-        .description {
-            font-size: 18px;
-            color: #666;
-            line-height: 1.6;
-            text-align: justify;
-            margin-bottom: 20px;
+        
+        .dashboard .row {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
         }
-    
-        .description strong {
-            color: #333;
+        
+        .dashboard .row .col {
+            flex: 1;
+            margin-right: 20px;
+            min-width: 200px;
         }
-    
-        .cta-button {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 18px;
-            color: #fff;
-            background-color: #03BB00;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease-in-out;
-            text-decoration: none;
+        
+        .dashboard .row .col:last-child {
+            margin-right: 0;
         }
-    
-        .cta-button:hover {
-            background-color: #028a07;
+        
+        .charts {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
         }
-    
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
+        
+        .charts .chart-container {
+            flex: 1;
+            margin-right: 20px;
+        }
+        
+        .charts .chart-container:last-child {
+            margin-right: 0;
+        }
+        .chart {
+            width: 100%;
+            height: 300px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard .row {
+                flex-direction: column;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            
+            .dashboard .row .col {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .charts {
+                flex-direction: column;
+            }
+            
+            .charts .chart-container {
+                margin-right: 0;
+                margin-bottom: 20px;
             }
         }
     </style>
     
-    <div class="background">
-        <div class="centered-text">Bienvenue Gestionnaire de <br>la pharmacie PharmApp</div>
+    <div class="dashboard">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <h3>Vue d'Ensemble des Utilisateurs</h3>
+                    <div class="number">120</div> <!-- Replace with dynamic data -->
+                    <p>Total d'utilisateurs par rôle.</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <h3>Performance des Employés</h3>
+                    <div class="number">200</div> <!-- Replace with dynamic data -->
+                    <p>Commandes traitées, médicaments créés.</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <h3>Statistiques de Ventes</h3>
+                    <div class="number">500</div> <!-- Replace with dynamic data -->
+                    <p>Ventes totales par mois.</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <h3>Rapports Financiers</h3>
+                    <div class="number">$10,000</div> <!-- Replace with dynamic data -->
+                    <p>Revenus, dépenses, marges bénéficiaires.</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <h3>État du Stock</h3>
+                    <div class="number">80%</div> <!-- Replace with dynamic data -->
+                    <p>Médicaments en stock, alertes pour stocks faibles ou expirés.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="charts">
+            <div class="chart-container">
+                
+                <canvas id="doughnutChart"></canvas>
+            </div>
+            <div class="chart-container">
+                
+                <canvas id="barChart"></canvas>
+            </div>
+        </div>
     </div>
     
-    <div class="content-container">
-        <h2 class="title">Bienvenue à PharmApp</h2>
-        <p class="description">
-            Découvrez notre large gamme de médicaments et profitez de nos services de santé en ligne. Chez <strong>PharmApp</strong>, nous nous engageons à vous fournir les meilleurs produits et conseils pour votre bien-être.
-        </p>
-    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Variables dynamiques
+            const userRolesData = {{ user_roles_data|safe }};
+            const monthlySalesData = {{ monthly_sales_data|safe }};
+    
+            // Vérification des données dans la console
+            console.log('userRolesData:', userRolesData);
+            console.log('monthlySalesData:', monthlySalesData);
+    
+            // Doughnut Chart - Vue d'ensemble des rôles utilisateurs
+            const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
+            const doughnutChart = new Chart(ctxDoughnut, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(userRolesData),
+                    datasets: [{
+                        label: 'Nombre d\'Utilisateurs',
+                        data: Object.values(userRolesData),
+                        backgroundColor: [
+                            '#FF6384',
+                            '#36A2EB',
+                            '#FFCE56',
+                            '#4BC0C0',
+                            '#9966FF'
+                        ],
+                        hoverBackgroundColor: [
+                            '#FF6384',
+                            '#36A2EB',
+                            '#FFCE56',
+                            '#4BC0C0',
+                            '#9966FF'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                }
+            });
+    
+            // Bar Chart - Statistiques des ventes mensuelles
+            const ctxBar = document.getElementById('barChart').getContext('2d');
+            const barChart = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Ventes Totales',
+                        data: monthlySalesData,
+                        backgroundColor: '#36A2EB',
+                        borderColor: '#36A2EB',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
     
     {% endblock content %}
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>

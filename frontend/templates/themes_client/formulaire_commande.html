@@ -131,47 +131,104 @@
     <div>
         {{ form.image.label_tag }} {{ form.image }}
     </div>
+    <div id="delivery-fees"></div>
+    <input type="hidden" id="delivery_fees" name="delivery_fees">
     <div>
         <label for="map">Géolocalisation</label>
         <div id="map"></div>
         <input type="hidden" id="id_geolocalisation" name="geolocalisation">
         <script>
-            // Fonction pour initialiser la carte
-            function initializeMap(lat, lng) {
-                var map = L.map('map').setView([lat, lng], 13);
-                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 19,
-                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                }).addTo(map);
-                var marker = L.marker([lat, lng]).addTo(map);
-                map.on('click', function(e) {
-                    marker.setLatLng(e.latlng);
-                    document.getElementById('id_geolocalisation').value = e.latlng.lat + ',' + e.latlng.lng;
-                });
-            }
-        
-            // Fonction pour obtenir la position actuelle
-            function getCurrentPosition() {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(function(position) {
-                        var lat = position.coords.latitude;
-                        var lng = position.coords.longitude;
-                        initializeMap(lat, lng);
-                        document.getElementById('id_geolocalisation').value = lat + ',' + lng;
-                    }, function() {
-                        // En cas d'erreur de géolocalisation
-                        alert("Impossible de récupérer votre position. La carte sera centrée sur une position par défaut.");
-                        initializeMap(6.229350438061403, 1.2016786235635935); // Position par défaut si géolocalisation échoue
+            document.addEventListener('DOMContentLoaded', function() {
+                // Place ici tout ton code JavaScript
+                 // Fonction pour initialiser la carte
+                function initializeMap(lat, lng) {
+                    var map = L.map('map').setView([lat, lng], 13);
+                    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                    }).addTo(map);
+                    var marker = L.marker([lat, lng]).addTo(map);
+                    map.on('click', function(e) {
+                        marker.setLatLng(e.latlng);
+                        document.getElementById('id_geolocalisation').value = e.latlng.lat + ',' + e.latlng.lng;
+                    
+                        // Recalculer la distance et appliquer les frais de livraison
+                        var distance = calculateDistance(e.latlng.lat, e.latlng.lng, pharmacyLat, pharmacyLng);
+                        applyDeliveryFees(distance);
                     });
-                } else {
-                    // La géolocalisation n'est pas supportée par le navigateur
-                    alert("Votre navigateur ne supporte pas la géolocalisation. La carte sera centrée sur une position par défaut.");
-                    initializeMap(6.229350438061403, 1.2016786235635935); // Position par défaut
+                    
                 }
-            }
-        
-            // Appel de la fonction pour obtenir la position actuelle
-            getCurrentPosition();
+            
+                            // Coordonnées de la pharmacie
+                var pharmacyLat = 6.229350438061403;
+                var pharmacyLng = 1.2016786235635935;
+
+                function applyDeliveryFees(distance) {
+                    var deliveryFees = 0;
+                
+                    if (distance <= 5) {
+                        deliveryFees = 1000;
+                    } else if (distance <= 10) {
+                        deliveryFees = 1500;
+                    } else if (distance <= 20) {
+                        deliveryFees = 2000;
+                    } else {
+                        deliveryFees = 3000;
+                    }
+                
+                    // Affichage des frais de livraison sur la page
+                    var deliveryFeesElement = document.getElementById('delivery-fees');
+                    if (deliveryFeesElement) {
+                        deliveryFeesElement.textContent = "Frais de livraison : " + deliveryFees + " FCFA";
+                    }
+                
+                    // Stocker les frais de livraison dans le champ caché
+                    document.getElementById('delivery_fees').value = deliveryFees;
+                }
+                
+
+                // Appeler cette fonction après avoir obtenu la géolocalisation du client
+                function getCurrentPosition() {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(function(position) {
+                            var lat = position.coords.latitude;
+                            var lng = position.coords.longitude;
+                            initializeMap(lat, lng);
+                            document.getElementById('id_geolocalisation').value = lat + ',' + lng;
+                        
+                            // Calculer la distance et appliquer les frais de livraison
+                            var distance = calculateDistance(lat, lng, pharmacyLat, pharmacyLng);
+                            applyDeliveryFees(distance);
+                        
+                        }, function() {
+                            alert("Impossible de récupérer votre position. La carte sera centrée sur une position par défaut.");
+                            initializeMap(pharmacyLat, pharmacyLng); // Position par défaut si géolocalisation échoue
+                        });                       
+                    } else {
+                        alert("Votre navigateur ne supporte pas la géolocalisation. La carte sera centrée sur une position par défaut.");
+                        initializeMap(pharmacyLat, pharmacyLng); // Position par défaut
+                    }
+                }
+
+            
+                // Appel de la fonction pour obtenir la position actuelle
+                getCurrentPosition();
+                // Fonction pour calculer la distance entre deux points géographiques
+                function calculateDistance(lat1, lng1, lat2, lng2) {
+                    var R = 6371; // Rayon de la Terre en kilomètres
+                    var dLat = (lat2 - lat1) * Math.PI / 180;
+                    var dLng = (lng2 - lng1) * Math.PI / 180;
+                    var a = 
+                        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+                    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                    var distance = R * c; // Distance en kilomètres
+                    return distance;
+                }
+            });
+           
+
         </script>
         
     </div>

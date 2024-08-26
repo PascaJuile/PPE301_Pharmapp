@@ -35,6 +35,7 @@ class CommandeVirtuelle(models.Model):
     mode_paiement = models.CharField(max_length=50, choices=[('tmoney', 'Tmoney'), ('flooz', 'Flooz')])
     etat_payement = models.BooleanField(default=False)
     etat_validation = models.BooleanField(default=False)
+    frais_livraison = models.IntegerField(default=0)
     motif = models.CharField(max_length=255, default="Ordonnance correcte" )
 
     def recuperer_mode_payement(self):

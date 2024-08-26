@@ -167,9 +167,9 @@
 
     <!-- Affichage des commandes virtuelles -->
     <h2 class="section-title">Commandes Virtuelles</h2>
-    {% for selection in virtual_orders %}
-    <h2 class="section-title">Commande N° {{ selection.id }}</h2>
-    <table class="med-table" id="table-{{ selection.id }}">
+    {% for order in virtual_orders_with_fees %}
+    <h2 class="section-title">Commande N° {{ order.selection.id }}</h2>
+    <table class="med-table" id="table-{{ order.selection.id }}" data-frais-livraison="{{ order.frais_livraison }}">
         <thead>
             <tr>
                 <th>Nom</th>
@@ -178,7 +178,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for medicament in selection.donnees %}
+            {% for medicament in order.selection.donnees %}
             <tr>
                 <td>{{ medicament.nom }}</td>
                 <td>{{ medicament.prix_unitaire }}</td>
@@ -187,21 +187,21 @@
             {% endfor %}
         </tbody>
     </table>
-    <button class="btn btn-main" onclick="toggleDetails('{{ selection.id }}')">Valider la commande</button>
-    <div id="details-{{ selection.id }}" class="form-container" style="display: none;">
-        <p>Total: <span id="totalPrice-{{ selection.id }}">0.00</span> FCFA</p>
+    <button class="btn btn-main" onclick="toggleDetails('{{ order.selection.id }}')">Valider la commande</button>
+    <div id="details-{{ order.selection.id }}" class="form-container" style="display: none;">
+        <p>Total: <span id="totalPrice-{{ order.selection.id }}">0.00</span> FCFA</p>
         <div class="form-group">
-            <label for="amountReceived-{{ selection.id }}">Montant Reçu:</label>
-            <input type="number" class="form-control" id="amountReceived-{{ selection.id }}" placeholder="Entrez le montant reçu" oninput="calculateChange('{{ selection.id }}')">
+            <label for="amountReceived-{{ order.selection.id }}">Montant Reçu:</label>
+            <input type="number" class="form-control" id="amountReceived-{{ order.selection.id }}" placeholder="Entrez le montant reçu" oninput="calculateChange('{{ order.selection.id }}')">
         </div>
-        <p>Reliquat: <span id="changeDue-{{ selection.id }}">0.00</span> FCFA</p>
+        <p>Reliquat: <span id="changeDue-{{ order.selection.id }}">0.00</span> FCFA</p>
         <form method="post" action="{% url 'afficher_medicaments_selectionnes' %}">
             {% csrf_token %}
-            <input type="hidden" name="selection_id" value="{{ selection.id }}">
-            <input type="hidden" name="total_price" id="hiddenTotalPrice-{{ selection.id }}" value="">
+            <input type="hidden" name="selection_id" value="{{ order.selection.id }}">
+            <input type="hidden" name="total_price" id="hiddenTotalPrice-{{ order.selection.id }}" value="">
             <button class="btn btn-validate" type="submit">Confirmer</button>
         </form>
-        <button class="btn btn-print" onclick="printReceipt('{{ selection.id }}')">Imprimer le Reçu</button>
+        <button class="btn btn-print" onclick="printReceipt('{{ order.selection.id }}')">Imprimer le Reçu</button>
     </div>
     {% endfor %}
 
@@ -284,25 +284,32 @@
     function calculateTotal(id) {
         const table = document.getElementById(`table-${id}`);
         let total = 0;
+    
+        // Calculer le total des médicaments
         table.querySelectorAll('tbody tr').forEach(row => {
             const price = parseFloat(row.cells[1].textContent);
             const quantity = parseInt(row.cells[2].textContent, 10);
             total += price * quantity;
         });
+    
+        // Ajouter les frais de livraison si c'est une commande virtuelle
+        const fraisLivraison = parseFloat(table.getAttribute('data-frais-livraison')) || 0;
+        total += fraisLivraison;
+    
+        // Mettre à jour l'affichage du total
         document.getElementById(`totalPrice-${id}`).textContent = total.toFixed(2);
         document.getElementById(`hiddenTotalPrice-${id}`).value = total.toFixed(2);
         document.getElementById(`changeDue-${id}`).textContent = '0.00';
     }
-
+    
     function calculateChange(id) {
         const amountReceived = parseFloat(document.getElementById(`amountReceived-${id}`).value) || 0;
         const totalPrice = parseFloat(document.getElementById(`totalPrice-${id}`).textContent);
         const changeDue = amountReceived - totalPrice;
         document.getElementById(`changeDue-${id}`).textContent = changeDue.toFixed(2);
     }
-
+    
     function printReceipt(id) {
-        // Fill the receipt with data from the selected order
         const receiptItems = document.getElementById('receiptItems');
         const table = document.getElementById(`table-${id}`);
         let receiptContent = '';
@@ -313,22 +320,21 @@
             receiptContent += `<tr><td style="padding: 10px; border: 1px solid #dee2e6; text-align: left;">${name}</td><td style="padding: 10px; border: 1px solid #dee2e6; text-align: left;">${price}</td><td style="padding: 10px; border: 1px solid #dee2e6; text-align: left;">${quantity}</td></tr>`;
         });
         receiptItems.innerHTML = receiptContent;
-
-        // Set total price, amount received, and change due
+    
         const totalPrice = document.getElementById(`totalPrice-${id}`).textContent;
         const amountReceived = document.getElementById(`amountReceived-${id}`).value;
         const changeDue = document.getElementById(`changeDue-${id}`).textContent;
         document.getElementById('printTotalPrice').textContent = totalPrice;
         document.getElementById('printAmountReceived').textContent = amountReceived;
         document.getElementById('printChangeDue').textContent = changeDue;
-
-        // Print the receipt
+    
         const receipt = document.getElementById('printableReceipt').innerHTML;
         const originalContents = document.body.innerHTML;
         document.body.innerHTML = receipt;
         window.print();
         document.body.innerHTML = originalContents;
     }
+    
 </script>
 
 
