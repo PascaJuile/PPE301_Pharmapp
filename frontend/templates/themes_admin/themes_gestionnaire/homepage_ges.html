@@ -266,7 +266,6 @@
 
     <!-- End Navbar -->
 
-    <!-- Start Body -->
     {% block content %}
 
     <style>
@@ -276,214 +275,154 @@
             width: 100%;
             height: 100%;
             font-family: 'Arial', sans-serif;
-            background-color: #f4f4f9;
+            background-color: #f4f4f9; /* Couleur de fond de la page */
         }
-        
+    
         .dashboard {
-            padding: 20px;
+            padding: 20px; /* Espacement interne du conteneur */
+            max-width: 900px; /* Largeur maximale du tableau de bord */
+            margin: 0 auto; /* Centre le tableau de bord horizontalement */
         }
-        
+    
         .dashboard .card {
-            background-color: #ffffff;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px; /* Coins arrondis */
+            padding: 10px; /* Espacement interne de la carte réduit */
+            margin-bottom: 20px; /* Espacement inférieur entre les cartes */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombre portée pour effet de profondeur */
+            transition: transform 0.5s ease; /* Effet de transition pour le zoom au survol */
+            aspect-ratio: 1 / 1; /* Maintient une forme carrée pour les cartes */
+            display: flex; /* Utilise flexbox pour centrer le contenu */
+            flex-direction: column; /* Organise le contenu en colonne */
+            justify-content: center; /* Centre le contenu verticalement */
+            align-items: center; /* Centre le contenu horizontalement */
+            text-align: center; /* Centre le texte */
+            width: 250px; /* Largeur réduite pour les cartes */
+            height: 250px; /* Hauteur réduite pour les cartes */
         }
-
+    
+        /* Styles pour les titres dans les cartes */
         .dashboard .card h3 {
-            font-size: 24px;
-            margin-bottom: 15px;
-            color: #333;
+            font-size: 25px; /* Taille de la police du titre réduite */
+            margin-bottom: 10px; /* Espacement inférieur du titre réduit */
+            color: #ffffff; /* Couleur du texte du titre */
         }
-        
+        .dashboard .card p {
+            font-size: 15px; /* Taille de la police du titre réduite */
+            margin-bottom: 10px; /* Espacement inférieur du titre réduit */
+            color: #ffffff; /* Couleur du texte du titre */
+        }
+    
+        /* Styles pour le nombre affiché dans les cartes */
         .card .number {
-            font-size: 36px;
-            font-weight: bold;
-            color: #007bff;
+            font-size: 24px; /* Taille de la police du nombre réduite */
+            font-weight: bold; /* Poids de la police pour le rendre gras */
+            color: #ffffff; /* Couleur du texte du nombre */
         }
-        
+    
+        /* Styles pour les lignes contenant les cartes */
         .dashboard .row {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
+            display: flex; /* Utilisation de flexbox pour l'alignement */
+            flex-wrap: wrap; /* Permet le retour à la ligne des éléments */
+            justify-content: center; /* Centre les cartes horizontalement */
         }
-        
+    
+        /* Styles pour chaque colonne dans les lignes */
         .dashboard .row .col {
-            flex: 1;
-            margin-right: 20px;
-            min-width: 200px;
+            flex: 1 1 calc(33.333% - 20px); /* Chaque colonne occupe environ un tiers de la largeur moins l'espacement */
+            margin-right: 20px; /* Espacement à droite de chaque colonne */
+            margin-bottom: 20px; /* Espacement inférieur entre les colonnes */
+            box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur et la hauteur */
         }
-        
-        .dashboard .row .col:last-child {
-            margin-right: 0;
+    
+        .dashboard .row .col:nth-child(3n) {
+            margin-right: 0; /* Supprime l'espacement à droite pour la dernière colonne de chaque ligne */
         }
-        
-        .charts {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
+    
+        /* Effet de survol pour les cartes */
+        .dashboard .card:hover {
+            transform: scale(1.05); /* Agrandit légèrement la carte au survol */
         }
-        
-        .charts .chart-container {
-            flex: 1;
-            margin-right: 20px;
+    
+        /* Couleurs spécifiques pour chaque carte */
+        .card-1 {
+            background-color: #FF5733; /* Couleur de fond vive pour la carte 1 */
         }
-        
-        .charts .chart-container:last-child {
-            margin-right: 0;
+    
+        .card-2 {
+            background-color: #33C1FF; /* Couleur de fond vive pour la carte 2 */
         }
-        .chart {
-            width: 100%;
-            height: 300px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+        .card-3 {
+            background-color: #17a2b8; /* Couleur de fond vive pour la carte 3 */
         }
-        
+    
+        .card-4 {
+            background-color: rgb(81, 154, 214); /* Couleur de fond vive pour la carte 4 */
+        }
+    
+        .card-5 {
+            background-color: #FFAA33; /* Couleur de fond vive pour la carte 5 */
+        }
+    
+        /* Styles pour les écrans plus petits */
         @media (max-width: 768px) {
             .dashboard .row {
-                flex-direction: column;
+                flex-direction: column; /* Affiche les cartes en colonne sur les petits écrans */
             }
-            
+    
             .dashboard .row .col {
-                margin-right: 0;
-                margin-bottom: 20px;
-            }
-            
-            .charts {
-                flex-direction: column;
-            }
-            
-            .charts .chart-container {
-                margin-right: 0;
-                margin-bottom: 20px;
+                margin-right: 0; /* Supprime l'espacement à droite pour les petits écrans */
+                margin-bottom: 20px; /* Conserve l'espacement inférieur entre les colonnes */
             }
         }
     </style>
     
     <div class="dashboard">
         <div class="row">
+            <!-- Première ligne de cartes -->
             <div class="col">
-                <div class="card">
+                <div class="card card-1">
                     <h3>Vue d'Ensemble des Utilisateurs</h3>
-                    <div class="number">120</div> <!-- Replace with dynamic data -->
+                    <div class="number">120</div> <!-- Remplacer avec les données dynamiques -->
                     <p>Total d'utilisateurs par rôle.</p>
                 </div>
             </div>
             <div class="col">
-                <div class="card">
+                <div class="card card-2">
                     <h3>Performance des Employés</h3>
-                    <div class="number">200</div> <!-- Replace with dynamic data -->
+                    <div class="number">200</div> <!-- Remplacer avec les données dynamiques -->
                     <p>Commandes traitées, médicaments créés.</p>
                 </div>
             </div>
             <div class="col">
-                <div class="card">
+                <div class="card card-3">
                     <h3>Statistiques de Ventes</h3>
-                    <div class="number">500</div> <!-- Replace with dynamic data -->
+                    <div class="number">500</div> <!-- Remplacer avec les données dynamiques -->
                     <p>Ventes totales par mois.</p>
                 </div>
             </div>
+       
             <div class="col">
-                <div class="card">
+                <div class="card card-4">
                     <h3>Rapports Financiers</h3>
-                    <div class="number">$10,000</div> <!-- Replace with dynamic data -->
+                    <div class="number">$10,000</div> <!-- Remplacer avec les données dynamiques -->
                     <p>Revenus, dépenses, marges bénéficiaires.</p>
                 </div>
             </div>
             <div class="col">
-                <div class="card">
+                <div class="card card-5">
                     <h3>État du Stock</h3>
-                    <div class="number">80%</div> <!-- Replace with dynamic data -->
+                    <div class="number">80%</div> <!-- Remplacer avec les données dynamiques -->
                     <p>Médicaments en stock, alertes pour stocks faibles ou expirés.</p>
                 </div>
             </div>
         </div>
-        
-        <div class="charts">
-            <div class="chart-container">
-                
-                <canvas id="doughnutChart"></canvas>
-            </div>
-            <div class="chart-container">
-                
-                <canvas id="barChart"></canvas>
-            </div>
-        </div>
     </div>
     
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock content %}
+
     
-    <script>
-        $(document).ready(function() {
-            // Variables dynamiques
-            const userRolesData = {{ user_roles_data|safe }};
-            const monthlySalesData = {{ monthly_sales_data|safe }};
-    
-            // Vérification des données dans la console
-            console.log('userRolesData:', userRolesData);
-            console.log('monthlySalesData:', monthlySalesData);
-    
-            // Doughnut Chart - Vue d'ensemble des rôles utilisateurs
-            const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
-            const doughnutChart = new Chart(ctxDoughnut, {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(userRolesData),
-                    datasets: [{
-                        label: 'Nombre d\'Utilisateurs',
-                        data: Object.values(userRolesData),
-                        backgroundColor: [
-                            '#FF6384',
-                            '#36A2EB',
-                            '#FFCE56',
-                            '#4BC0C0',
-                            '#9966FF'
-                        ],
-                        hoverBackgroundColor: [
-                            '#FF6384',
-                            '#36A2EB',
-                            '#FFCE56',
-                            '#4BC0C0',
-                            '#9966FF'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                }
-            });
-    
-            // Bar Chart - Statistiques des ventes mensuelles
-            const ctxBar = document.getElementById('barChart').getContext('2d');
-            const barChart = new Chart(ctxBar, {
-                type: 'bar',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                    datasets: [{
-                        label: 'Ventes Totales',
-                        data: monthlySalesData,
-                        backgroundColor: '#36A2EB',
-                        borderColor: '#36A2EB',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        });
-    </script>
-    
-    {% endblock content %}
+
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 

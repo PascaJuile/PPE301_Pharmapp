@@ -1,11 +1,11 @@
 
-.add-medicine .card{
-    height: auto;
+.add-medicine .carde{
+    height: 800px;
     margin-bottom: 20px;
     padding-bottom: 40px;
     box-shadow: 0 1rem 1rem rgb(0 0 0 / 8%);
 }
-.add-medicine .card-header{
+.add-medicine .carde-header{
     font-size: 20px;
     padding:15px;
     background-color:white;
@@ -60,7 +60,7 @@
     margin: 0 auto;  /* Centre le conteneur */
 }
 
-.card {
+.carde {
     height: auto;
     margin-bottom: 20px;
     padding-bottom: 40px;
@@ -68,7 +68,7 @@
 }
 
 /* Assurez-vous que la largeur de la carte est contrôlée par le conteneur add-medicine */
-.add-medicine .card-body {
+.add-medicine .carde-body {
     padding: 20px; /* Ajustez le padding si nécessaire */
 }
 
@@ -156,7 +156,7 @@ select.form-control2:not([size]):not([multiple]) {
         margin-top: 40px;
     }
 }
-.add-medicine .card-body button{
+.add-medicine .carde-body button{
     font-size: 15px;
     border-radius: 2px;
     padding: 5px;
