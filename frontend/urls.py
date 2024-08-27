@@ -47,7 +47,6 @@ urlpatterns = [
     path('notification_out_stock', views.notification_out_of_stock, name='notification_out_of_stock'),
     path('email', views.send_email, name='send_email'),
     path('user_activity', views.user_activity, name='user_medicine'),
-    path('user_list', views.user_list, name='user_list'),
     path('preparateur/category_creation', views.creation_categorie, name='creation_categorie'),
     path('preparateur/medicament_creation', views.creation_medicament, name='creation_medicament'),
     path('page_connexion', views.page_connexion, name='page_connexion'),
@@ -94,6 +93,7 @@ urlpatterns = [
     path('gestionnaire/liste_pharmacien', views.liste_utilisateur_phar, name='liste_phar'),
     path('gestionnaire/liste_livreur', views.liste_utilisateur_liv, name='liste_liv'),
     path('gestionnaire/liste_client', views.liste_utilisateur_client, name='liste_client'),
+    path('user_list', views.user_list, name='user_list'),
     path('gestionnaire/statistique', views.rapport, name='rapport'),
 
 

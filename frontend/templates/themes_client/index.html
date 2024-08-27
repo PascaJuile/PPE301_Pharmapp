@@ -98,6 +98,7 @@
         <div class="container">
           <a href="#" class="search-close js-search-close"><span class="icon-close2"></span></a>
           <form id="search-form" action="{% url 'rechercher_medicament' %}" method="post">
+            {% csrf_token %}
             <input type="text" class="form-control" name="q" placeholder="Rechercher un mot-clé et appuyer sur Entrée...">
           </form>
         </div>

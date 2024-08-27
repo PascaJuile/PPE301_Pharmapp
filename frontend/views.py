@@ -76,7 +76,7 @@ def liste_utilisateur_ges(request):
     context = {
         'gestionnaires': gestionnaires,
     }
-    return render(request, 'themes_admin/themes_gestionnaire/user_list.html', context)
+    return render(request, 'themes_admin/themes_gestionnaire/user_list_ges.html', context)
 
 
 def liste_utilisateur_prepa(request):
@@ -531,7 +531,7 @@ def user_activity(request):
     return render(request, 'themes_admin/user_activity.html')
 
 def user_list(request):
-    return render(request, 'themes_admin/user_list.html')
+    return render(request, 'themes_admin/themes_gestionnaire/user_list.html')
 
 #Fin de la liste des vues du template admin
 
@@ -829,7 +829,8 @@ def shop_single(request, medicament_id):
 
 def rechercher_medicament(request):
     query = request.GET.get('q', '')
-    medicaments = Medicament.objects.filter(nomMedicament__icontains=query) | Medicament.objects.filter(medicamentCategorie__nomCat__icontains=query)
+    medicaments = Medicament.objects.filter(
+        Q(nomMedicament__icontains=query) | Q(medicamentCategorie__nomCat__icontains=query)).distinct()    
     return render(request, 'themes_client/index.html', {'medicaments': medicaments, 'query': query})
 
 def formulaire_achat(request,ordonnance_id):

@@ -12,26 +12,18 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-  
     <link rel="stylesheet" href="{% static 'themes_admin/css/bootstrap.min.css' %}">
     <script src="{% static 'themes_admin/js/popper.min.js' %}"></script>
 
-    <link rel="stylesheet" href="{% static 'themes_client/css/magnific-popup.css' %}">
-    <link rel="stylesheet" href="{% static 'themes_client/css/jquery-ui.css' %}">
-  
     <link rel="stylesheet" href="{% static 'themes_admin/css/master.css' %}">
     <link rel="stylesheet" href="{% static 'themes_admin/css/add_category.css' %}">
-
+    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
        crossorigin="">
     </script>
-  
+    
 
     <title>PharmApp</title>
     <link rel="icon" href="{% static 'themes_admin/img/logo.jpg' %}" sizes="64x64 128x128" type="image/jpg">
@@ -150,60 +142,7 @@
                 <div class="row">
 
 
-                    <div class="dropdown d-flex notification" style="margin-left: auto;" id="notification">
-                        <a role="button" data-toggle="dropdown" data-target="#" href="">
-                            <i class="fas fa-bell"></i>
-                            <span class="badge">0</span>
-                        </a>
-
-                        <ul class="dropdown-menu notifications" role="menu" aria-labelledby="dLabel">
-
-                            <div class="notification-heading">
-                                <h4 class="menu-title">NOTIFICATIONS</h4>
-                                <h4 class="menu-title pull-right">Tout voir<i
-                                        class="glyphicon glyphicon-circle-arrow-right"></i>
-                                </h4>
-                            </div>
-                            <li class="divider"></li>
-                            <div class="notifications-wrapper">
-                                <a class="content" href="{% url 'notification_date_expired' %}">
-
-                                    <div class="notification-item">
-                                        <div class="row">
-                                            <div class="clock">
-                                                <i class="fas fa-hourglass-end"></i>
-                                            </div>
-                                            <div>
-                                                <h4 class="item-title">Date de péremption du médicament</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-
-                                <li class="divider"></li>
-
-                                <a class="content" href="{% url 'notification_out_of_stock' %}">
-                                    <div class="notification-item">
-                                        <div class="row">
-                                            <div class="battery">
-                                                <i class="fas fa-battery-quarter"></i>
-                                            </div>
-                                            <div>
-                                                <h4 class="item-title">Médicaments à réapprovisionner</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-
-                            </div>
-                            <li class="divider"></li>
-                            <div class="notification-footer">
-                                <h4 class="menu-title">View all<i class="glyphicon glyphicon-circle-arrow-right"></i>
-                                </h4>
-                            </div>
-                        </ul>
-
-                    </div>
+                    
 
 
                     <div class="user dropdown d-flex" id="user">
@@ -244,7 +183,7 @@
                                                 <i class="fas fa-edit" id="fa-edit"></i>
                                             </div>
                                             <div class="p-user">
-                                                <p>Edit Profile</p>
+                                                <p>Modifier le Profil</p>
                                             </div>
                                         </div>
                                     </div>
@@ -369,14 +308,15 @@
     <div class="background">
         <div class="centered-text">Bienvenue {{ request.session.user_name }}</div>
     </div>
-       
+    
+    
     {% endblock content %}
     
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
@@ -390,16 +330,15 @@
     <script src="https://cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.2.7/js/responsive.bootstrap4.min.js"></script>
 
+        <!-- Scripts spécifiques à cart.html -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js" integrity="sha384-3I6ZjLBb6yDew0HCJ6VD+KZq0eFSZbDQsp/qJP33kJ/zBeypUHFmeA9BczxX1y1" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha384-gXQ6TyazZZzFEGD8D91Xj8iQWzcbDQXy0zpEZZQyDb2jpOG+9IVbxS9l/aQcoiUy" crossorigin="anonymous"></script>
 
-    <script src="{% static 'themes_client/js/jquery-3.7.1.min.js' %}"></script>
-    <script src="{% static 'themes_client/js/jquery-ui.js' %}"></script>
-    <script src="{% static 'themes_client/js/popper.min.js' %}"></script>
-    <script src="{% static 'themes_client/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'themes_client/js/owl.carousel.min.js' %}"></script>
-    <script src="{% static 'themes_client/js/jquery.magnific-popup.min.js' %}"></script>
-  
+
     <script src="{% static 'themes_admin/js/main.js' %}"></script>
     <script src="{% static 'themes_admin/js/themes.js' %}"></script>
+
 </body>
 
 </html>
