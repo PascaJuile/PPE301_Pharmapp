@@ -191,27 +191,27 @@
 
            <!-- Modal -->
            <div class="modal fade" id="detailsModal-{{ selection.id }}" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel-{{ selection.id }}" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="detailsModalLabel-{{ selection.id }}">Détails de la Commande</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="detailsModalLabel-{{ selection.id }}">Détails de la Commande</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <ul>
+                                {% for med in selection.donnees %}
+                                <li data-med-id="{{ med.id }}">
+                                    {{ med.nom }} - {{ med.prix_total }} - Quantité: <span class="med-quantite">{{ med.quantite }}</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        </div>
                     </div>
-                    <div class="modal-body">
-                        <ul>
-                            {% for med in selection.donnees %}
-                            <li data-med-id="{{ med.id }}">
-                                {{ med.nom }} - {{ med.prix_total }} - Quantité: <span class="med-quantite">{{ med.quantite }}</span>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                    </div>
-                </div>
             </div>
         </div>
         {% endfor %}
