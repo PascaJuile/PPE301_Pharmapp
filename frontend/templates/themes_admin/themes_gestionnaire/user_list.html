@@ -5,54 +5,105 @@
     <link rel="stylesheet" href="{% static 'themes_admin/css/user_list.css' %}">
     <link rel="stylesheet" href="{% static 'themes_admin/css/dataTables.bootstrap4.min.css' %}">
     <link rel="stylesheet" href="{% static 'themes_admin/css/responsive.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-<style>
-    .div {
-        text-align: center;
-        margin: 20px auto; /* Centrage automatique des divs */
-        padding: 10px;
-        width: 50%; /* Ajustez la largeur selon vos besoins */
-        background-color: #f2f2f2; /* Couleur de fond pour les divs */
-        border-radius: 8px; /* Bords arrondis */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre pour un effet de relief */
-    }
-    
-    .div a {
-        color: #333; /* Couleur du texte */
-        text-decoration: none; /* Supprimer le soulignement des liens */
-        font-weight: bold;
-        font-size: 16px; /* Ajustez la taille du texte selon vos besoins */
-    }
-    
-    .div a:hover {
-        color: #007bff; /* Changer la couleur lors du survol */
-    }
-    
-</style>
-<div class="div">
-    <a href="{% url 'liste_ges' %}"> Liste des Gestionnaires</a>
-</div>
-<div class="div">
-    <a href="{% url 'liste_prepa' %}"> Liste des Preparateurs</a>
-</div>
+    <style>
+        /* Style général pour le conteneur centré */
+        .centered-container {
+            display: flex;
+            flex-wrap: wrap; /* Permet au contenu de passer à la ligne suivante si nécessaire */
+            justify-content: center; /* Centre les divs horizontalement */
+            align-items: center; /* Centre les divs verticalement */
+            gap: 90px; /* Espacement entre les divs */
+            margin: 50px; /* Marge autour du conteneur */
+            max-width: 80%;
+            margin-left: 150px;
 
-<div class="div">
-    <a href="{% url 'liste_phar' %}"> Liste des Pharmaciens</a>
-</div>
+        }
 
-<div class="div">
-    <a href="{% url 'liste_cas' %}"> Liste des Caissiers</a>
-</div>
+        /* Style général pour les divs en carré */
+        .square-div {
+            text-align: center; /* Centrer le texte */
+            padding: 20px; /* Ajouter de l'espace à l'intérieur de chaque div */
+            width: 250px; /* Largeur fixe pour chaque div */
+            height: 250px; /* Hauteur fixe pour chaque div */
+            border-radius: 10px; /* Bords légèrement arrondis */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre pour donner un effet de relief */
+            display: flex;
+            flex-direction: column; /* Aligner les éléments en colonne */
+            align-items: center; /* Centrer verticalement le texte et l'icône */
+            justify-content: center; /* Centrer horizontalement le texte et l'icône */
+            transition: transform 0.3s ease; /* Transition pour l'effet de survol */
+        }
 
-<div class="div">
-    <a href="{% url 'liste_liv' %}"> Liste des Livreurs</a>
-</div>
+        /* Styles pour chaque div avec des couleurs différentes */
+        .square-ges {
+            background-color: #4e73df; /* Couleur pour les gestionnaires */
+        }
+        .square-prepa {
+            background-color: #f6c23e; /* Couleur pour les préparateurs */
+        }
+        .square-phar {
+            background-color: #068a04; /* Couleur pour les pharmaciens */
+        }
+        .square-cas {
+            background-color: #1cc88a; /* Couleur pour les caissiers */
+        }
+        .square-liv {
+            background-color: #914003; /* Couleur pour les livreurs */
+        }
+        .square-client {
+            background-color: #17a2b8; /* Couleur pour les clients */
+        }
 
-<div class="div">
-    <a href="{% url 'liste_client' %}"> Liste des clients</a>
-</div>
+        /* Style pour les icônes */
+        .square-div i {
+            font-size: 60px; /* Taille des icônes */
+            margin-bottom: 10px; /* Marge entre l'icône et le texte */
+            color: #fff;
+        }
 
+        /* Style pour les liens à l'intérieur des divs */
+        .square-div a {
+            color: #fff; /* Couleur du texte */
+            text-decoration: none; /* Supprimer le soulignement des liens */
+            font-weight: bold;
+            font-size: 18px; /* Taille du texte */
+            display: block; /* Le lien prend toute la largeur du div */
+        }
 
+        /* Effet de survol (hover) */
+        .square-div:hover {
+            transform: scale(1.1); /* Agrandir légèrement le div au survol */
+        }
+    </style>
+
+    <div class="centered-container">
+        <div class="square-div square-ges">
+            <i class="fas fa-users"></i>
+            <a href="{% url 'liste_ges' %}"> Liste des Gestionnaires</a>
+        </div>
+        <div class="square-div square-prepa">
+            <i class="fas fa-cogs"></i>
+            <a href="{% url 'liste_prepa' %}"> Liste des Préparateurs</a>
+        </div>
+        <div class="square-div square-phar">
+            <i class="fas fa-pills"></i>
+            <a href="{% url 'liste_phar' %}"> Liste des Pharmaciens</a>
+        </div>
+        <div class="square-div square-cas">
+            <i class="fas fa-cash-register"></i>
+            <a href="{% url 'liste_cas' %}"> Liste des Caissiers</a>
+        </div>
+        <div class="square-div square-liv">
+            <i class="fas fa-truck"></i>
+            <a href="{% url 'liste_liv' %}"> Liste des Livreurs</a>
+        </div>
+        <div class="square-div square-client">
+            <i class="fas fa-user"></i>
+            <a href="{% url 'liste_client' %}"> Liste des Clients</a>
+        </div>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
@@ -61,4 +112,5 @@
     <script src="https://cdn.datatables.net/responsive/2.2.7/js/responsive.bootstrap4.min.js"></script>
     <script src="{% static 'js/main.js' %}"></script>
     <script src="{% static 'js/themes.js' %}"></script>
+
 {% endblock %}

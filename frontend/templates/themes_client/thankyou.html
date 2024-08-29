@@ -2,25 +2,63 @@
 {% block content %}
 {% load static %}
 <style>
-  btn-primary {
+  body {
+    background-image: url('{% static "themes_client/images/Back2.jpg" %}');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #333;
+    font-family: Arial, sans-serif;
+  }
+
+  .site-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .site-section {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-primary {
     background-color: #03BB00 !important;
     border-color: #03BB00 !important;
-    
+    color: #fff;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: #028a00 !important;
+    transform: scale(1.05);
+  }
+
+  .icon-check_circle {
+    font-size: 100px;
+  }
+
+  .display-3 {
+    font-weight: bold;
+  }
+
+  .lead {
+    font-size: 1.2rem;
   }
 </style>
+
 <body>
-
   <div class="site-wrap">
-
-
-    
     <div class="site-section">
       <div class="container">
         <div class="row">
           <div class="col-md-12 text-center">
             <span class="icon-check_circle display-3 text-success"></span>
             <h2 class="display-3 text-black">Merci!</h2>
-            <p class="lead mb-5">Votre commande a été finalisée avec succès et est en cours de traitement.</br> Vous serez notifié de l'issu de votre commande dans l'onglet "SUIVI DE COMMANDE" de votre menu de navigation</p>
+            <p class="lead mb-5">Votre commande a été finalisée avec succès et est en cours de traitement.<br> Vous serez notifié de l'issue de votre commande dans l'onglet "SUIVI DE COMMANDE" de votre menu de navigation</p>
             <p><a href="{% url 'cart' %}" class="btn btn-md height-auto px-4 py-3 btn-primary">Suivre la Commande</a></p>
           </div>
         </div>
