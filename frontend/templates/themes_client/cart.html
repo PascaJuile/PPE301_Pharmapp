@@ -210,6 +210,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+            <p>ID de l'ordonnance: {{ accepted_order.ordonnance.id }}</p> 
             <p class="mt-2"><strong>Prix Total</strong> {{ selected_total }} FCFA</p>
             <p class="mt-2"><strong>Frais de Livraison</strong> {{ delivery_fees }} FCFA</p>
             <p class="mt-2"><strong>Total Final</strong> {{ final_total }} FCFA</p>
@@ -289,7 +290,7 @@
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <input type="hidden" name="mode_paiement" id="mode_paiement">
-                    <input type="hidden" name="ordonnance_id" value="{{ ordonnance_id }}">  <!-- Champ caché pour l'ID de l'ordonnance -->
+                    <input type="hidden" name="ordonnance_id" value="{% if ordonnance_id %}{{ ordonnance_id }}{% endif %}">
                     <button type="submit" class="btn btn-primary">Confirmer le Paiement</button>
                 </form>
             </div>

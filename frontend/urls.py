@@ -15,7 +15,7 @@ urlpatterns = [
     path('shop_single', views.shop_single, name='shop_single'),
     path('contact/', views.contact, name='contact'),
     path('shop', views.shop, name='shop'),
-    path('thankyou', views.thankyou, name='thankyou'),
+    path('client/thankyou', views.thankyou, name='thankyou'),
     path('', views.liste_medicaments_client, name='liste_medicaments_client'),
     path('shop_single/<int:medicament_id>/', views.shop_single, name='shop_single'),
     path('rechercher_medicament', views.rechercher_medicament, name='rechercher_medicament'),
@@ -26,6 +26,8 @@ urlpatterns = [
     path('client/payement_commande', views.payement_commande, name='payement_commande'),
     path('client/details_livraison', views.details_livraison_client, name='details_livraison_client'),
     path('client/historique_commandes/', views.historique_commandes_client, name='historique_commandes'),
+    path('client/attente_livraison', views.attente, name='attente'),
+
 
 
 

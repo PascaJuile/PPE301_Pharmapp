@@ -31,6 +31,10 @@ from django.db.models.functions import TruncMonth
 def about(request):
     return render(request, 'themes_client/about.html')
 
+def attente(request):
+    return render(request, 'themes_client/attente.html')
+
+
 def rapport(request):
     commandes_presentielles = CommandePresentielle.objects.all()
     commandes_virtuelles = CommandeVirtuelle.objects.all()
@@ -129,22 +133,13 @@ def cart(request):
         messages.error(request, 'Utilisateur non authentifié.')
         return redirect('page_connexion')
     
-    # Vérifier si le paiement est terminé
-    payment_completed = request.GET.get('payment_completed', False)
-
-    if payment_completed:
-        # Effacer les données de la session après le paiement
-        request.session.pop('delivery_fees', None)
-        # Ajouter un message de succès
-        messages.success(request, 'Paiement réussi. Aucune commande en cours.')
-        return render(request, 'themes_client/cart.html', {'no_current_order': True})
-
     # Récupérer la dernière ordonnance associée au client
     last_ordonnance = Ordonnance.objects.filter(ordonnance_client=client).order_by('-id').first()
 
     # Initialiser les variables
     selected_medicines = []
     selected_total = 0
+    final_total = 0
     accepted_order = None
     refused_order = None
     no_current_order = True  # Affichage par défaut "Aucune commande en cours"
@@ -181,9 +176,21 @@ def cart(request):
                     except Medicament.DoesNotExist:
                         print(f"Médicament non trouvé pour le nom: {med_name}")
                         continue  # Ignore les médicaments non trouvés
+                    # Stocker les infos dans la session
+            request.session['commande_acceptee'] = True
+            request.session['selected_medicines'] = selected_medicines
+            request.session['selected_total'] = selected_total
+            request.session['final_total'] = final_total
+            request.session['ordonnance_id'] = accepted_order.ordonnance.id
 
         elif refused_order:
             no_current_order = False  # Une commande refusée est trouvée
+             # Stocker les infos dans la session
+            request.session['commande_refusee'] = True
+            request.session['refused_order'] = {
+                'motif': refused_order.motif,
+                'image_url': refused_order.ordonnance.image.url
+            }
 
     # Ajouter les frais de livraison au total si présents dans la session
     delivery_fees = request.session.get('delivery_fees', 0)
@@ -198,6 +205,7 @@ def cart(request):
         'commande_refusee': refused_order is not None,
         'refused_order': refused_order,
         'no_current_order': no_current_order,
+        'ordonnance_id': accepted_order.ordonnance.id if accepted_order else None,
     }
     
     return render(request, 'themes_client/cart.html', context)
@@ -953,35 +961,42 @@ def payement_commande(request):
     if request.method == "POST":
         mode_paiement = request.POST.get('mode_paiement')
         password = request.POST.get('password')
-        ordonnance_id = request.POST.get('ordonnance_id')  # Récupérer l'ID de l'ordonnance à partir du formulaire POST
+        ordonnance_id = request.POST.get('ordonnance_id')
 
         if ordonnance_id:
             try:
                 commande = get_object_or_404(CommandeVirtuelle, ordonnance_id=ordonnance_id)
-                print(f"Commande trouvée: {commande}")
-                
-                # Update the payment status
+                selection = get_object_or_404(SelectionMedicament, ordonnance_id=ordonnance_id)
+
                 commande.etat_payement = True
+                selection.etatDeValidation = True
                 commande.mode_paiement = mode_paiement
+
                 commande.save()
-                print(f"Commande mise à jour: {commande.etat_payement}, {commande.mode_paiement}")
+                selection.save()
+
+                # Effacer uniquement les données spécifiques à la commande de la session
+                keys_to_remove = [
+                    'commande_acceptee', 
+                    'commande_refusee', 
+                    'selected_medicines', 
+                    'selected_total', 
+                    'final_total', 
+                    'ordonnance_id', 
+                    'delivery_fees'
+                ]
+                for key in keys_to_remove:
+                    if key in request.session:
+                        del request.session[key]
+
                 
-                # Effacer les données de la session
-                request.session.pop('selected_medicines', None)
-                request.session.pop('selected_total', None)
-                request.session.pop('ordonnance_id', None)
-                request.session.pop('delivery_fees', None)
-                
-                # Ajouter un message de succès
                 messages.success(request, 'Votre paiement a été traité avec succès. Merci pour votre commande!')
             except Exception as e:
-                # Log any exceptions
                 print(f"Erreur lors de la mise à jour de la commande: {e}")
                 messages.error(request, 'Une erreur est survenue lors du traitement de votre paiement.')
 
-            # Rediriger vers la page du panier (ou une autre page appropriée)
-            return redirect(reverse('cart') + '?payment_completed=True')
-        
+            return redirect(attente)
+
     return render(request, "themes_client/cart.html")
                 
 def journal_medicaments_selectionnes(request):   
@@ -1042,15 +1057,13 @@ def afficher_medicaments_selectionnes(request):
 
         messages.success(request, 'Commande validée avec succès.')
 
-
     # Filtrer les commandes virtuelles avec etatOrdonnance=True et etatDeValidation=False
     virtual_orders = SelectionMedicament.objects.filter(
         etatOrdonnance=True,
-        etatDeValidation=False,
+        etatDeValidation=True,
     ).exclude(
         statut='presentiel'
     ).order_by('-dateCreation')
-
 
     # Ajouter frais_livraison et calculer le prix total pour chaque commande
     virtual_orders_with_fees = []
@@ -1062,20 +1075,29 @@ def afficher_medicaments_selectionnes(request):
         total_medicament_price = sum(item['prix_total'] for item in order.donnees)
         total_price = total_medicament_price + frais_livraison
 
+        # Vérifier si un livreur est assigné
+        livraison = Livraison.objects.filter(ordonnance=order.ordonnance).first()
+        livreur_assigne = True if livraison else False
+
         virtual_orders_with_fees.append({
             'selection': order,
             'frais_livraison': frais_livraison,
-            'total_price': total_price
+            'total_price': total_price,
+            'livreur_assigne': livreur_assigne
         })
 
     presencial_orders = SelectionMedicament.objects.filter(
-            etatDeValidation=False,
-            statut='presentiel'
-        ).order_by('-id')
+        etatDeValidation=False,
+        statut='presentiel'
+    ).order_by('-id')
+
+    # Récupérer tous les livreurs disponibles
+    livreurs = Livreur.objects.all()
 
     context = {
         'virtual_orders_with_fees': virtual_orders_with_fees,
-        'presencial_orders': presencial_orders
+        'presencial_orders': presencial_orders,
+        'livreurs': livreurs  # Ajouter les livreurs au contexte
     }
     
     return render(request, 'themes_admin/themes_caissier/medicine_select.html', context)
@@ -1208,7 +1230,7 @@ def assigner_livreur(request):
         except (SelectionMedicament.DoesNotExist, Livreur.DoesNotExist):
             messages.error(request, "Erreur lors de l'assignation du livreur.")
 
-    return redirect('caissier_commandes_validees')
+    return redirect('afficher_medicaments_selectionnes')
 
 def liste_livraisons_livreur(request):
     user_email = request.session.get('user_email')

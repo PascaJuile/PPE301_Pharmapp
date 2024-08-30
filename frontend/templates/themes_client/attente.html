@@ -1,0 +1,31 @@
+{% extends "themes_client/homepage_cli.html" %}
+{% block content %}
+{% load static %}
+<style>
+  btn-primary {
+    background-color: #03BB00 !important;
+    border-color: #03BB00 !important;
+    
+  }
+</style>
+<body>
+
+  <div class="site-wrap">
+
+
+    
+    <div class="site-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <span class="icon-check_circle display-3 text-success"></span>
+            <h2 class="display-3 text-black">Félicitations!</h2>
+            <p class="lead mb-5">Votre payement a été effectuée avec succès et votre livraison en cours de traitement.</br> Vous serez notifié des détails de livraison dans l'onglet "SUIVRE LA LIVRAISON" de votre menu de navigation</p>
+            <p><a href="{% url 'details_livraison_client' %}" class="btn btn-md height-auto px-4 py-3 btn-primary">Suivre la livraison</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+{% endblock %}
