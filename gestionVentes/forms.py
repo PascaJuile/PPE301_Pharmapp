@@ -23,7 +23,7 @@ class CommandeVirtuelleForm(forms.ModelForm):
         # Modifier les labels des champs pour enlever les deux-points
         self.fields['image'].label = "Ajouter l'ordonnance"
         self.fields['geolocalisation'].label = 'Géolocalisation'
-        self.fields['consentement'].label = 'J\'accepte les conditions de validation'
+        self.fields['consentement'].label = 'J\'accepte les conditions de confidentialité et de livraison liée à ce formulaire'
         self.fields['mode_paiement'].label = 'Mode de paiement'
 
         # Définir les choix pour le champ 'mode_paiement'

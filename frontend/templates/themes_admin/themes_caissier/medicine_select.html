@@ -160,44 +160,6 @@
     .receipt-box tbody tr:nth-child(even) {
         background-color: #f9f9f9;
     }
-    /* Modal Styles */
-    .modal-dialog {
-        display: flex;
-        align-items: center;
-        min-height: calc(100% - 1.75rem);
-    }
-    .modal-content {
-        border-radius: 8px;
-        border: 1px solid #dee2e6;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-    .modal-header {
-        background-color: #03BB00;
-        color: #fff;
-        border-bottom: none;
-        border-radius: 8px 8px 0 0;
-    }
-    .modal-title {
-        font-size: 1.5em;
-        font-weight: bold;
-    }
-    .modal-footer {
-        border-top: none;
-        border-radius: 0 0 8px 8px;
-    }
-    .modal-body ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-    .modal-body li {
-        border-bottom: 1px solid #dee2e6;
-        padding: 15px 0;
-        font-size: 1.2em;
-    }
-    .modal-body li:last-child {
-        border-bottom: none;
-    }
 </style>
 
 <div class="med-container">
@@ -206,119 +168,83 @@
     <!-- Affichage des commandes virtuelles -->
     <h2 class="section-title">Commandes Virtuelles</h2>
     {% for order in virtual_orders_with_fees %}
-    <h2 class="section-title">Commande N° {{ order.selection.id }}</h2>
-    <table class="med-table" id="table-{{ order.selection.id }}" data-frais-livraison="{{ order.frais_livraison }}">
-        <thead>
-            <tr>
-                <th>Nom</th>
-                <th>Prix Unitaire</th>
-                <th>Quantité</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for medicament in order.selection.donnees %}
-            <tr>
-                <td>{{ medicament.nom }}</td>
-                <td>{{ medicament.prix_unitaire }}</td>
-                <td>{{ medicament.quantite }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% if order.livreur_assigne %}
-        <button class="btn btn-main" disabled>Livreur Assigné</button>
-    {% else %}
-        <button class="btn btn-main" data-toggle="modal" data-target="#assignDeliveryModal-{{ order.selection.id }}">Assigner Livreur</button>
-    {% endif %}    
-    <button class="btn btn-main" onclick="toggleDetails('{{ order.selection.id }}')">Valider la commande</button>
-    <div id="details-{{ order.selection.id }}" class="form-container" style="display: none;">
-        <p>Total: <span id="totalPrice-{{ order.selection.id }}">0.00</span> FCFA</p>
-        <div class="form-group">
-            <label for="amountReceived-{{ order.selection.id }}">Montant Reçu:</label>
-            <input type="number" class="form-control" id="amountReceived-{{ order.selection.id }}" placeholder="Entrez le montant reçu" oninput="calculateChange('{{ order.selection.id }}')">
+        <h2 class="section-title">Commande N° {{ order.selection.id }}</h2>
+        <table class="med-table" id="table-{{ order.selection.id }}" data-frais-livraison="{{ order.frais_livraison }}">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Prix Unitaire</th>
+                    <th>Quantité</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for medicament in order.selection.donnees %}
+                <tr>
+                    <td>{{ medicament.nom }}</td>
+                    <td>{{ medicament.prix_unitaire }}</td>
+                    <td>{{ medicament.quantite }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button class="btn btn-main" onclick="toggleDetails('{{ order.selection.id }}')">Valider la commande</button>
+        <div id="details-{{ order.selection.id }}" class="form-container" style="display: none;">
+            <p>Total: <span id="totalPrice-{{ order.selection.id }}">0.00</span> FCFA</p>
+            <div class="form-group">
+                <label for="amountReceived-{{ order.selection.id }}">Montant Reçu:</label>
+                <input type="number" class="form-control" id="amountReceived-{{ order.selection.id }}" placeholder="Entrez le montant reçu" oninput="calculateChange('{{ order.selection.id }}')">
+            </div>
+            <p>Reliquat: <span id="changeDue-{{ order.selection.id }}">0.00</span> FCFA</p>
+            <form method="post" action="{% url 'afficher_medicaments_selectionnes' %}">
+                {% csrf_token %}
+                <input type="hidden" name="selection_id" value="{{ order.selection.id }}">
+                <input type="hidden" name="total_price" id="hiddenTotalPrice-{{ order.selection.id }}" value="">
+                <button class="btn btn-validate" type="submit">Confirmer</button>
+            </form>
+            <button class="btn btn-print" onclick="printReceipt('{{ order.selection.id }}')">Imprimer le Reçu</button>
         </div>
-        <p>Reliquat: <span id="changeDue-{{ order.selection.id }}">0.00</span> FCFA</p>
-        <form method="post" action="{% url 'afficher_medicaments_selectionnes' %}">
-            {% csrf_token %}
-            <input type="hidden" name="selection_id" value="{{ order.selection.id }}">
-            <input type="hidden" name="total_price" id="hiddenTotalPrice-{{ order.selection.id }}" value="">
-            <button class="btn btn-validate" type="submit">Confirmer</button>
-        </form>
-        <button class="btn btn-print" onclick="printReceipt('{{ order.selection.id }}')">Imprimer le Reçu</button>
-    </div>
     {% endfor %}
 
     <!-- Affichage des commandes présentielles -->
     <h2 class="section-title">Commandes Présentielles</h2>
     {% for selection in presencial_orders %}
-    <h2 class="section-title">Commande N° {{ selection.id }}</h2>
-    <table class="med-table" id="table-{{ selection.id }}">
-        <thead>
-            <tr>
-                <th>Nom</th>
-                <th>Prix Unitaire</th>
-                <th>Quantité</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for medicament in selection.donnees %}
-            <tr>
-                <td>{{ medicament.nom }}</td>
-                <td>{{ medicament.prix }}</td>
-                <td>{{ medicament.quantite }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <button class="btn btn-main" onclick="toggleDetails('{{ selection.id }}')">Valider la commande</button>
-    <div id="details-{{ selection.id }}" class="form-container" style="display: none;">
-        <p>Total: <span id="totalPrice-{{ selection.id }}">0.00</span> FCFA</p>
-        <div class="form-group">
-            <label for="amountReceived-{{ selection.id }}">Montant Reçu:</label>
-            <input type="number" class="form-control" id="amountReceived-{{ selection.id }}" placeholder="Entrez le montant reçu" oninput="calculateChange('{{ selection.id }}')">
+        <h2 class="section-title">Commande N° {{ selection.id }}</h2>
+        <table class="med-table" id="table-{{ selection.id }}">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Prix Unitaire</th>
+                    <th>Quantité</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for medicament in selection.donnees %}
+                <tr>
+                    <td>{{ medicament.nom }}</td>
+                    <td>{{ medicament.prix_unitaire }}</td>
+                    <td>{{ medicament.quantite }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button class="btn btn-main" onclick="toggleDetails('{{ selection.id }}')">Valider la commande</button>
+        <div id="details-{{ selection.id }}" class="form-container" style="display: none;">
+            <p>Total: <span id="totalPrice-{{ selection.id }}">0.00</span> FCFA</p>
+            <div class="form-group">
+                <label for="amountReceived-{{ selection.id }}">Montant Reçu:</label>
+                <input type="number" class="form-control" id="amountReceived-{{ selection.id }}" placeholder="Entrez le montant reçu" oninput="calculateChange('{{ selection.id }}')">
+            </div>
+            <p>Reliquat: <span id="changeDue-{{ selection.id }}">0.00</span> FCFA</p>
+            <form method="post" action="{% url 'afficher_medicaments_selectionnes' %}">
+                {% csrf_token %}
+                <input type="hidden" name="selection_id" value="{{ selection.id }}">
+                <input type="hidden" name="total_price" id="hiddenTotalPrice-{{ selection.id }}" value="">
+                <button class="btn btn-validate" type="submit">Confirmer</button>
+            </form>
+            <button class="btn btn-print" onclick="printReceipt('{{ selection.id }}')">Imprimer le Reçu</button>
         </div>
-        <p>Reliquat: <span id="changeDue-{{ selection.id }}">0.00</span> FCFA</p>
-        <form method="post" action="{% url 'afficher_medicaments_selectionnes' %}">
-            {% csrf_token %}
-            <input type="hidden" name="selection_id" value="{{ selection.id }}">
-            <input type="hidden" name="total_price" id="hiddenTotalPrice-{{ selection.id }}" value="">
-            <button class="btn btn-validate" type="submit">Confirmer</button>
-        </form>
-        <button class="btn btn-print" onclick="printReceipt('{{ selection.id }}')">Imprimer le Reçu</button>
-    </div>
     {% endfor %}
 </div>
-
-<!-- Modal d'Assignation de Livreur -->
-{% for order in virtual_orders_with_fees %}
-<div class="modal fade" id="assignDeliveryModal-{{ order.selection.id }}" tabindex="-1" role="dialog" aria-labelledby="assignDeliveryModalLabel-{{ order.selection.id }}" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="assignDeliveryModalLabel-{{ order.selection.id }}">Assigner Livreur</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="{% url 'assigner_livreur' %}">
-                    {% csrf_token %}
-                    <input type="hidden" name="selection_id" value="{{ order.selection.id }}">
-                    <div class="form-group">
-                        <label for="livreur-{{ order.selection.id }}">Sélectionner un livreur</label>
-                        <select class="form-control" id="livreur-{{ order.selection.id }}" name="livreur">
-                            {% for livreur in livreurs %}
-                            <option value="{{ livreur.id }}">{{ livreur.nomUtilisateur }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Assigner</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-{% endfor %}
 
 <div id="printableReceipt" style="display:none;">
     <div class="receipt" style="padding: 20px; border: 1px solid #dee2e6; background-color: #ffffff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px; text-align: center; max-width: 500px; margin: 0 auto;">
@@ -408,7 +334,7 @@
         window.print();
         document.body.innerHTML = originalContents;
     }
-    
+            
 </script>
 
 

@@ -1057,12 +1057,17 @@ def afficher_medicaments_selectionnes(request):
 
         messages.success(request, 'Commande validée avec succès.')
 
+        # Vérifier si la commande est virtuelle
+        if selection_medicaments.statut == 'virtuelle':
+            return redirect('caissier_commandes_validees')
+
     # Filtrer les commandes virtuelles avec etatOrdonnance=True et etatDeValidation=False
     virtual_orders = SelectionMedicament.objects.filter(
         etatOrdonnance=True,
         etatDeValidation=True,
+        ordonnance__isnull=False
     ).exclude(
-        statut='presentiel'
+        statut='presentielle'
     ).order_by('-dateCreation')
 
     # Ajouter frais_livraison et calculer le prix total pour chaque commande
@@ -1075,29 +1080,20 @@ def afficher_medicaments_selectionnes(request):
         total_medicament_price = sum(item['prix_total'] for item in order.donnees)
         total_price = total_medicament_price + frais_livraison
 
-        # Vérifier si un livreur est assigné
-        livraison = Livraison.objects.filter(ordonnance=order.ordonnance).first()
-        livreur_assigne = True if livraison else False
-
         virtual_orders_with_fees.append({
             'selection': order,
             'frais_livraison': frais_livraison,
             'total_price': total_price,
-            'livreur_assigne': livreur_assigne
         })
 
     presencial_orders = SelectionMedicament.objects.filter(
         etatDeValidation=False,
-        statut='presentiel'
+        statut='presentielle'
     ).order_by('-id')
-
-    # Récupérer tous les livreurs disponibles
-    livreurs = Livreur.objects.all()
 
     context = {
         'virtual_orders_with_fees': virtual_orders_with_fees,
         'presencial_orders': presencial_orders,
-        'livreurs': livreurs  # Ajouter les livreurs au contexte
     }
     
     return render(request, 'themes_admin/themes_caissier/medicine_select.html', context)
@@ -1199,7 +1195,7 @@ def caissier_commandes_validees(request):
         messages.error(request, 'Utilisateur non authentifié.')
         return redirect('page_connexion')
     
-    selections = SelectionMedicament.objects.filter(etatDeValidation=True)
+    selections = SelectionMedicament.objects.filter(etatDeValidation=True).order_by('-dateCreation')
     livreurs = Livreur.objects.all()
     context = {
         'selections': selections,
