@@ -552,11 +552,11 @@ def creation_categorie(request):
         nomCat = request.POST.get('nomCat', '').strip()
         description = request.POST.get('description', '').strip()
 
-        # Validate that both fields are non-empty and contain only alphabetic characters
-        if not nomCat.isalpha():
-            error_message = "Le nom de la catégorie doit contenir uniquement des lettres."
+        # Validate that both fields are non-empty and contain only alphabetic characters and spaces
+        if not all(c.isalpha() or c.isspace() for c in nomCat):
+            error_message = "Le nom de la catégorie doit contenir uniquement des lettres et des espaces."
         elif not all(c.isalpha() or c.isspace() for c in description):
-            error_message = "La description doit contenir uniquement des lettres."
+            error_message = "La description doit contenir uniquement des lettres et des espaces."
         else:
             categorie = Categorie.objects.create(nomCat=nomCat, description=description)
             return redirect('liste_category')
