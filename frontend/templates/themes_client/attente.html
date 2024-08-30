@@ -2,10 +2,51 @@
 {% block content %}
 {% load static %}
 <style>
-  btn-primary {
+  body {
+    background-image: url('{% static "themes_client/images/Back2.jpg" %}');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #333;
+    font-family: Arial, sans-serif;
+  }
+
+  .site-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .site-section {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-primary {
     background-color: #03BB00 !important;
     border-color: #03BB00 !important;
-    
+    color: #fff;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: #028a00 !important;
+    transform: scale(1.05);
+  }
+
+  .icon-check_circle {
+    font-size: 100px;
+  }
+
+  .display-3 {
+    font-weight: bold;
+  }
+
+  .lead {
+    font-size: 1.2rem;
   }
 </style>
 <body>
