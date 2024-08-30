@@ -966,14 +966,11 @@ def payement_commande(request):
         if ordonnance_id:
             try:
                 commande = get_object_or_404(CommandeVirtuelle, ordonnance_id=ordonnance_id)
-                selection = get_object_or_404(SelectionMedicament, ordonnance_id=ordonnance_id)
 
                 commande.etat_payement = True
-                selection.etatDeValidation = True
                 commande.mode_paiement = mode_paiement
 
                 commande.save()
-                selection.save()
 
                 # Effacer uniquement les données spécifiques à la commande de la session
                 keys_to_remove = [
@@ -1063,12 +1060,18 @@ def afficher_medicaments_selectionnes(request):
 
     # Filtrer les commandes virtuelles avec etatOrdonnance=True et etatDeValidation=False
     virtual_orders = SelectionMedicament.objects.filter(
-        etatOrdonnance=True,
-        etatDeValidation=True,
-        ordonnance__isnull=False
-    ).exclude(
-        statut='presentielle'
-    ).order_by('-dateCreation')
+    etatOrdonnance=True,
+    ordonnance__isnull=False,
+    etatDeValidation=False,
+    statut='virtuelle'
+    ).annotate(
+        has_valid_payment=models.Exists(
+            CommandeVirtuelle.objects.filter(
+                ordonnance=models.OuterRef('ordonnance'),
+                etat_payement=True
+            )
+        )
+    ).filter(has_valid_payment=True).order_by('-dateCreation')
 
     # Ajouter frais_livraison et calculer le prix total pour chaque commande
     virtual_orders_with_fees = []
