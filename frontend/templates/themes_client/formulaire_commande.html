@@ -122,6 +122,9 @@
         justify-content: center;
         margin: 0 auto; /* Pour s'assurer qu'il est centré dans le formulaire */
     }
+    form .consentement{
+        font-size: 0.8em;
+    }
 </style>
 
 <h1>Passer une Commande</h1>
@@ -131,7 +134,7 @@
     <div>
         {{ form.image.label_tag }} {{ form.image }}
     </div>
-    <div id="delivery-fees"></div>
+    <div id="delivery-fees" style="font-weight:bold"></div>
     <input type="hidden" id="delivery_fees" name="delivery_fees">
     <div>
         <label for="map">Géolocalisation</label>
@@ -232,10 +235,10 @@
         </script>
         
     </div>
-    <div>
+    <div class="consentement">
         {{ form.consentement }} {{ form.consentement.label_tag }}
     </div>
-    <div>
+        <div>
         <label>Mode de paiement</label>
         <div class="payment-options">
             <label>
